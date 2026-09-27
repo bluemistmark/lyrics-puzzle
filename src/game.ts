@@ -7,7 +7,7 @@ const englishKey=(s:string)=>s.normalize('NFKC').toLowerCase().replace(/[’‘]
 const hangul=(c:string)=>/^[가-힣]$/.test(c);
 export const initial=(c:string)=>{const n=c.charCodeAt(0)-0xac00;return n>=0&&n<=11171?'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'[Math.floor(n/588)]:c;};
 const dictionary=[...catalog.dictionary].sort((a,b)=>b.english.length-a.english.length);
-const latin=(c:string)=>!!c&&/[\p{Script=Latin}\d']/u.test(c);
+const latin=(c:string)=>!!c&&/[\p{Script=Latin}\d'’‘]/u.test(c);
 export function tokenize(line:string):Token[]{const tokens:Token[]=[];let i=0;while(i<line.length){const entry=dictionary.find(d=>englishKey(line.slice(i,i+d.english.length))===englishKey(d.english)&&!latin(line[i-1]||'')&&!latin(line[i+d.english.length]||''));if(entry){tokens.push({text:line.slice(i,i+entry.english.length),pronunciation:entry.pronunciation,alternatives:entry.alternatives});i+=entry.english.length;continue;}if(/[\p{Script=Latin}]/u.test(line[i]))throw Error(`영어 사전에 없는 단어: ${line.slice(i).split(/\s/)[0]}`);const text=line.slice(i).match(/^[가-힣]+|^\s+|^[^가-힣\s\p{Script=Latin}]/u)?.[0]||line[i];tokens.push({text});i+=text.length;}return tokens;}
 export const songs:Song[]=catalog.songs;
 export const questions:Question[]=catalog.questions.map(q=>{const song=songs.find(s=>s.id===q.songId)!;return {...q,section:'',unit:song.unit,title:song.title,lines:q.lines.map(tokenize)};});

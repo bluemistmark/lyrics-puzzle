@@ -673,6 +673,489 @@ export const catalog = {
       "unit": "NCT DREAM",
       "title": "Broken Melodies",
       "aliases": []
+    },
+    {
+      "id": "D_028",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Yogurt Shake",
+      "aliases": []
+    },
+    {
+      "id": "D_029",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Skateboard",
+      "aliases": []
+    },
+    {
+      "id": "D_030",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "파랑 (Blue Wave)",
+      "aliases": []
+    },
+    {
+      "id": "D_031",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Poison (모래성)",
+      "aliases": []
+    },
+    {
+      "id": "D_032",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "SOS",
+      "aliases": []
+    },
+    {
+      "id": "D_033",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Pretzel (♡)",
+      "aliases": []
+    },
+    {
+      "id": "D_034",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "제자리 걸음 (Starry Night)",
+      "aliases": []
+    },
+    {
+      "id": "D_035",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Like We Just Met",
+      "aliases": []
+    },
+    {
+      "id": "D_036",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Candy",
+      "aliases": []
+    },
+    {
+      "id": "D_037",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Graduation",
+      "aliases": []
+    },
+    {
+      "id": "D_038",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Tangerine Love (Favorite)",
+      "aliases": []
+    },
+    {
+      "id": "D_039",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "입김 (Take My Breath)",
+      "aliases": []
+    },
+    {
+      "id": "D_040",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "문 (Moon)",
+      "aliases": []
+    },
+    {
+      "id": "D_041",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "발자국 (Walk With You",
+      "aliases": []
+    },
+    {
+      "id": "D_042",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Beatbox",
+      "aliases": []
+    },
+    {
+      "id": "D_043",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Fire Alarm",
+      "aliases": []
+    },
+    {
+      "id": "D_044",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "버퍼링 (Glitch Mode)",
+      "aliases": []
+    },
+    {
+      "id": "D_045",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Arcade",
+      "aliases": []
+    },
+    {
+      "id": "D_046",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "마지막 인사 (To My First)",
+      "aliases": []
+    },
+    {
+      "id": "D_047",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "너를 위한 단어 (It’s Yours)",
+      "aliases": []
+    },
+    {
+      "id": "D_048",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "잘 자 (Teddy Bear)",
+      "aliases": []
+    },
+    {
+      "id": "D_049",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Better Than Gold (지금)",
+      "aliases": []
+    },
+    {
+      "id": "D_050",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "북극성 (Never Goodbye)",
+      "aliases": []
+    },
+    {
+      "id": "D_051",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "별 밤 (On the way)",
+      "aliases": []
+    },
+    {
+      "id": "D_052",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Hello Future",
+      "aliases": []
+    },
+    {
+      "id": "D_053",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "맛 (Hot Sauce)",
+      "aliases": []
+    },
+    {
+      "id": "D_054",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Diggity",
+      "aliases": []
+    },
+    {
+      "id": "D_055",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "오르골 (Life Is Still Going On)",
+      "aliases": []
+    },
+    {
+      "id": "D_056",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "고래 (Dive Into You)",
+      "aliases": []
+    },
+    {
+      "id": "D_057",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "우리의 계절 (My Youth)",
+      "aliases": []
+    },
+    {
+      "id": "D_058",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "ANL",
+      "aliases": []
+    },
+    {
+      "id": "D_059",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "주인공 (Irreplaceable)",
+      "aliases": []
+    },
+    {
+      "id": "D_060",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "무대로 (Déjà Vu; 舞代路)",
+      "aliases": []
+    },
+    {
+      "id": "D_061",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Ridin'",
+      "aliases": []
+    },
+    {
+      "id": "D_062",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "내게 말해줘 (7 Days)",
+      "aliases": []
+    },
+    {
+      "id": "D_063",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "BOOM",
+      "aliases": []
+    },
+    {
+      "id": "D_064",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "119",
+      "aliases": []
+    },
+    {
+      "id": "D_065",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "We Go Up",
+      "aliases": []
+    },
+    {
+      "id": "D_066",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "GO",
+      "aliases": []
+    },
+    {
+      "id": "D_067",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "We Young",
+      "aliases": []
+    },
+    {
+      "id": "D_068",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "같은 시간 같은 자리 (Walk you home)",
+      "aliases": []
+    },
+    {
+      "id": "D_069",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "My Page",
+      "aliases": []
+    },
+    {
+      "id": "D_070",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "마지막 첫사랑 (My First and Last)",
+      "aliases": []
+    },
+    {
+      "id": "D_071",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "덩크슛 (Dunk Shot)",
+      "aliases": []
+    },
+    {
+      "id": "D_072",
+      "artist": "NCT DREAM",
+      "unit": "NCT DREAM",
+      "title": "Chewing Gum",
+      "aliases": []
+    },
+    {
+      "id": "W_001",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "2.0 (TWO POINT O)",
+      "aliases": []
+    },
+    {
+      "id": "W_002",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Ode to Love",
+      "aliases": []
+    },
+    {
+      "id": "W_003",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Sticky",
+      "aliases": []
+    },
+    {
+      "id": "W_004",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Feel The Beat",
+      "aliases": []
+    },
+    {
+      "id": "W_005",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "여우비 (Crush)",
+      "aliases": []
+    },
+    {
+      "id": "W_006",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Street (2AM)",
+      "aliases": []
+    },
+    {
+      "id": "W_007",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Don't Say You Love Me",
+      "aliases": []
+    },
+    {
+      "id": "W_008",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "COLOR",
+      "aliases": []
+    },
+    {
+      "id": "W_009",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Baby Blue",
+      "aliases": []
+    },
+    {
+      "id": "W_010",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Surf",
+      "aliases": []
+    },
+    {
+      "id": "W_011",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Cheat Code",
+      "aliases": []
+    },
+    {
+      "id": "W_012",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Videohood",
+      "aliases": []
+    },
+    {
+      "id": "W_013",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "WICHU",
+      "aliases": []
+    },
+    {
+      "id": "W_014",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "고양이 릴스 (Reel-ationship)",
+      "aliases": []
+    },
+    {
+      "id": "W_015",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "poppop",
+      "aliases": []
+    },
+    {
+      "id": "W_016",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Melt Inside My Pocket",
+      "aliases": []
+    },
+    {
+      "id": "W_017",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Design",
+      "aliases": []
+    },
+    {
+      "id": "W_018",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "1000",
+      "aliases": []
+    },
+    {
+      "id": "W_019",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Silly Dance",
+      "aliases": []
+    },
+    {
+      "id": "W_020",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Miracle",
+      "aliases": []
+    },
+    {
+      "id": "W_021",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Steady",
+      "aliases": []
+    },
+    {
+      "id": "W_022",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Supercute",
+      "aliases": []
+    },
+    {
+      "id": "W_023",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "Songbird",
+      "aliases": []
+    },
+    {
+      "id": "W_024",
+      "artist": "NCT WISH",
+      "unit": "NCT WISH",
+      "title": "WISH",
+      "aliases": []
     }
   ],
   "questions": [
@@ -3908,6 +4391,2445 @@ export const catalog = {
         "종말 앞에 내게 쏟아지는",
         "Purple rain ah"
       ]
+    },
+    {
+      "id": "NCT_0363",
+      "songId": "D_028",
+      "lines": [
+        "네 앞에선 왜 나답질 못해",
+        "넌 너무 Sweet and sour",
+        "내 하룰 흔들어"
+      ]
+    },
+    {
+      "id": "NCT_0364",
+      "songId": "D_028",
+      "lines": [
+        "마치 넌 Yogurt Shake Yogurt Shake",
+        "Yogurt Shake for me",
+        "나를 왜 Hurricane 속에 가두지"
+      ]
+    },
+    {
+      "id": "NCT_0365",
+      "songId": "D_028",
+      "lines": [
+        "가끔은 톡 쏘네 그럴 때면 머릿속은 Wild wild west",
+        "가끔 넌 날 너무 헷갈리게",
+        "하지 계획이었다면 Success"
+      ]
+    },
+    {
+      "id": "NCT_0366",
+      "songId": "D_028",
+      "lines": [
+        "너만 보면 나도 모르게 난 맘이",
+        "더 급해져 턱까지 차는 숨 yeah"
+      ]
+    },
+    {
+      "id": "NCT_0367",
+      "songId": "D_028",
+      "lines": [
+        "난 왜 또 두근대 네 앞에서 나답질 못해",
+        "휘몰아치지 내 속은 더 Shake",
+        "싫지만은 않지 기분이 왜"
+      ]
+    },
+    {
+      "id": "NCT_0368",
+      "songId": "D_029",
+      "lines": [
+        "답답한 마음은 두 발아래 내려놔",
+        "꽉 막힌 도시를 누비며 나로 새겨봐"
+      ]
+    },
+    {
+      "id": "NCT_0369",
+      "songId": "D_029",
+      "lines": [
+        "바람결을 따라 그냥 달려 난",
+        "있는 힘껏 발을 굴러 속돌 더 높여"
+      ]
+    },
+    {
+      "id": "NCT_0370",
+      "songId": "D_030",
+      "lines": [
+        "잔잔했던 맘이 조금씩 일렁여 왜 이러지",
+        "하얀 물거품 천천히 살랑여 오듯 Sailing"
+      ]
+    },
+    {
+      "id": "NCT_0371",
+      "songId": "D_030",
+      "lines": [
+        "장난스런 바람처럼 불어와",
+        "넌 내 맘을 뺏어 But no matter",
+        "하루 종일 오르내린 기분은 꼭 푸른빛 Heaven"
+      ]
+    },
+    {
+      "id": "NCT_0372",
+      "songId": "D_030",
+      "lines": [
+        "When I'm with ya",
+        "파도쳐 난 춤을 춰 헤엄치고 있어",
+        "태양도 내 모든 여름도 전부 주고 싶어"
+      ]
+    },
+    {
+      "id": "NCT_0373",
+      "songId": "D_030",
+      "lines": [
+        "품에 안은 그 순간",
+        "젖어 드는 Motion",
+        "푸른빛의 Ocean 여름빛 눈부셔"
+      ]
+    },
+    {
+      "id": "NCT_0374",
+      "songId": "D_030",
+      "lines": [
+        "두 눈 가득 파랗게 더 물이 드는",
+        "네 맘에 안겨 깊이 안겨",
+        "비로소 난 네 안에서 머물 곳을 찾은 것 같아 yeah"
+      ]
+    },
+    {
+      "id": "NCT_0375",
+      "songId": "D_031",
+      "lines": [
+        "수없이 허물어져도 좋을 맘은",
+        "네게 기울어 기울어 또",
+        "Why why why yeah"
+      ]
+    },
+    {
+      "id": "NCT_0376",
+      "songId": "D_031",
+      "lines": [
+        "긴 밤 내내 쌓아 올린 기억",
+        "아마 그건 네게 의미 없는 장난이었는지",
+        "아이처럼 날 무너뜨리곤 웃지"
+      ]
+    },
+    {
+      "id": "NCT_0377",
+      "songId": "D_031",
+      "lines": [
+        "굳게 다진 맘을 적신 Poison",
+        "참은 숨을 파고든 넌 Poison",
+        "투명한 그 발걸음이 천천히 휩쓸다 끝끝내 무너뜨려 나를"
+      ]
+    },
+    {
+      "id": "NCT_0378",
+      "songId": "D_031",
+      "lines": [
+        "흔적조차도 없지",
+        "수도 없이 뺏긴 마음은 또다시",
+        "발을 적셔오는 Ocean 이젠 알지"
+      ]
+    },
+    {
+      "id": "NCT_0379",
+      "songId": "D_031",
+      "lines": [
+        "이 감정들을 되짚곤 삼켜 깊이",
+        "또다시 나를 헤집곤 달아나도 난"
+      ]
+    },
+    {
+      "id": "NCT_0380",
+      "songId": "D_032",
+      "lines": [
+        "Hot like desert cold like blizzard",
+        "집중 이건 Breaking news",
+        "우린 저질러 Big accident"
+      ]
+    },
+    {
+      "id": "NCT_0381",
+      "songId": "D_032",
+      "lines": [
+        "잘 봐 하나둘씩 움직이는 걸",
+        "Venom in the medicine 도시를 삼켜",
+        "This is code red 다음 타겟은 너"
+      ]
+    },
+    {
+      "id": "NCT_0382",
+      "songId": "D_032",
+      "lines": [
+        "I go round and around",
+        "like a merry go",
+        "감당할 수 없다면 You better run"
+      ]
+    },
+    {
+      "id": "NCT_0383",
+      "songId": "D_033",
+      "lines": [
+        "꼭 달콤할 필욘 없는 걸",
+        "살짝 비틀어 봐 그래 더",
+        "oh Stop 방심하면 큰일 나"
+      ]
+    },
+    {
+      "id": "NCT_0384",
+      "songId": "D_033",
+      "lines": [
+        "한 겹 두 겹 쌓인 순간을 담아 커진 맘",
+        "너의 시간 속에 난 변해가 또 새롭게"
+      ]
+    },
+    {
+      "id": "NCT_0385",
+      "songId": "D_033",
+      "lines": [
+        "Pretzel",
+        "잠깐만 잠깐만",
+        "좀 더 부풀게 놔둬"
+      ]
+    },
+    {
+      "id": "NCT_0386",
+      "songId": "D_034",
+      "lines": [
+        "너와 함께 있으면 ooh ah 깜빡하는 게 참 많아져",
+        "자꾸 길을 헤매고 ooh ah",
+        "시간도 어느새 잊어버려"
+      ]
+    },
+    {
+      "id": "NCT_0387",
+      "songId": "D_034",
+      "lines": [
+        "머릿속에 너만 채워 넣느라 여유가 없어",
+        "Feel so sweet 밤공기마저",
+        "포근해지는 것만 같아"
+      ]
+    },
+    {
+      "id": "NCT_0388",
+      "songId": "D_034",
+      "lines": [
+        "You and me 조금 더 걷고 싶어",
+        "나란히 또다시 같은 자리",
+        "발을 맞춰 가 yeah 너도 같나 봐"
+      ]
+    },
+    {
+      "id": "NCT_0389",
+      "songId": "D_035",
+      "lines": [
+        "어느 날 나를 비춘 별빛",
+        "따스한 손에 남은 의미",
+        "어두웠던 맘들 두려운 날 이젠"
+      ]
+    },
+    {
+      "id": "NCT_0390",
+      "songId": "D_035",
+      "lines": [
+        "여전해 너를 보면 항상",
+        "어색한 내 말투 떨리는 목소리",
+        "Girl I can't explain"
+      ]
+    },
+    {
+      "id": "NCT_0391",
+      "songId": "D_035",
+      "lines": [
+        "우린 마치 영원할 사랑을 하는 것 같아",
+        "내 눈빛이 모든 걸 대신해 말해주고 있어",
+        "처음 만났던 그때 그대로 여전해"
+      ]
+    },
+    {
+      "id": "NCT_0392",
+      "songId": "D_035",
+      "lines": [
+        "시간이 불어와 흩날려 진대도",
+        "내 마음은 이 계절의 향기를 남기고 있어",
+        "I look in your eyes and it still feels like"
+      ]
+    },
+    {
+      "id": "NCT_0393",
+      "songId": "D_035",
+      "lines": [
+        "영원히 곁에 함께 해 줄 수 있어?",
+        "남은 매일 밤하늘 별 같이 세어주고 싶어"
+      ]
+    },
+    {
+      "id": "NCT_0394",
+      "songId": "D_035",
+      "lines": [
+        "시간이 흘러 지나 무뎌진대도",
+        "함께라면 가장 빛나고 순수한 그 시절로",
+        "내 눈동자에 비친 모습은"
+      ]
+    },
+    {
+      "id": "NCT_0395",
+      "songId": "D_036",
+      "lines": [
+        "사실은 오늘 너와의",
+        "만남을 정리하고 싶어",
+        "널 만날 거야 이런 날 이해해"
+      ]
+    },
+    {
+      "id": "NCT_0396",
+      "songId": "D_036",
+      "lines": [
+        "어렵게 맘 정한 거라",
+        "네게 말할 거지만",
+        "사실 오늘 아침에 그냥 나 생각한 거야"
+      ]
+    },
+    {
+      "id": "NCT_0397",
+      "songId": "D_036",
+      "lines": [
+        "햇살에 일어나 보니",
+        "너무나 눈부셔",
+        "모든 게 다 변한 거야 널 향한 마음도"
+      ]
+    },
+    {
+      "id": "NCT_0398",
+      "songId": "D_036",
+      "lines": [
+        "너 몰래 몰래 몰래",
+        "다른 여자들과 비교 비교했지"
+      ]
+    },
+    {
+      "id": "NCT_0399",
+      "songId": "D_036",
+      "lines": [
+        "자꾸만 깨어지는 환상 속에",
+        "혼자서 울고 있는",
+        "초라하게 갇혀버린 나를 보았어"
+      ]
+    },
+    {
+      "id": "NCT_0400",
+      "songId": "D_036",
+      "lines": [
+        "널 떠날 거야 uh",
+        "하지만 아직까지 사랑하는 걸",
+        "그래 그렇지만 내 맘속에 너를 잊어갈 거야"
+      ]
+    },
+    {
+      "id": "NCT_0401",
+      "songId": "D_036",
+      "lines": [
+        "머리 위로 비친 내 하늘 바라다보며",
+        "널 향한 마음을 이제는 굳혔지만",
+        "웬일인지 네게 더 다가갈수록 우린 같은 하늘 아래 서 있었지"
+      ]
+    },
+    {
+      "id": "NCT_0402",
+      "songId": "D_036",
+      "lines": [
+        "단지 널 사랑해 이렇게 말했지",
+        "이제껏 준비했던 많은 말을 뒤로한 채",
+        "언제나 니 옆에 있을게"
+      ]
+    },
+    {
+      "id": "NCT_0403",
+      "songId": "D_036",
+      "lines": [
+        "내게 하늘이 열려있어",
+        "그래그래 너는 내 앞에 서 있고",
+        "그래 다른 연인들은 키스를 해"
+      ]
+    },
+    {
+      "id": "NCT_0404",
+      "songId": "D_036",
+      "lines": [
+        "이제 그만해 나도 남잔데",
+        "내 마음 너도 알고 있는 걸 알아",
+        "그래 이제 나도 지쳐서 하늘만 바라볼 수밖에"
+      ]
+    },
+    {
+      "id": "NCT_0405",
+      "songId": "D_036",
+      "lines": [
+        "언제나 니 옆에 있을게",
+        "다신 너 혼자 아냐",
+        "너의 곁엔 내가 있잖아"
+      ]
+    },
+    {
+      "id": "NCT_0406",
+      "songId": "D_037",
+      "lines": [
+        "언제부터 일까 내 작은 생각들",
+        "영원히 네 곁에 머물 수 있을까",
+        "헤어짐이란 상상 못한 남의 얘기들"
+      ]
+    },
+    {
+      "id": "NCT_0407",
+      "songId": "D_037",
+      "lines": [
+        "시간이 가는 게 싫을 만큼 따스했던",
+        "반짝인 웃음 그리고 눈물",
+        "누군가를 믿기 힘들 때 항상 같은 자리에서 날 위해 서 있어 준 너"
+      ]
+    },
+    {
+      "id": "NCT_0408",
+      "songId": "D_037",
+      "lines": [
+        "이제 난 그만 졸업하려고 해",
+        "불안해하던 그 많은 날을",
+        "기억해 이 벅찬 감정"
+      ]
+    },
+    {
+      "id": "NCT_0409",
+      "songId": "D_037",
+      "lines": [
+        "손 흔들어 안녕",
+        "마지막 인사하고",
+        "돌아서면 날 기다린 세상으로 가"
+      ]
+    },
+    {
+      "id": "NCT_0410",
+      "songId": "D_037",
+      "lines": [
+        "미지의 별 동경했던 여행을 시작할 때",
+        "My Graduation 그 첫걸음",
+        "많이 행복하게 될 거야"
+      ]
+    },
+    {
+      "id": "NCT_0411",
+      "songId": "D_037",
+      "lines": [
+        "지금 이 기분을 네게 전해야 할 텐데",
+        "마음이 조급해 yeah",
+        "마치 눈보라 속 길을 밝히는 불"
+      ]
+    },
+    {
+      "id": "NCT_0412",
+      "songId": "D_037",
+      "lines": [
+        "모두 변해도 나의 세상 끝에 남은 너",
+        "얼어붙어도 저 은하수 녹일 거야",
+        "우린 하얀 외계인 둘러봐 지금 우리 둘 뿐야"
+      ]
+    },
+    {
+      "id": "NCT_0413",
+      "songId": "D_037",
+      "lines": [
+        "왜 언제나 부족한 것만 같던 어쩔 줄 모르던",
+        "오래전 내 안의 그 작은 어른 낯선 걸음 그리고 더 멀리",
+        "막연했었던 질문들 답을 쫓아가"
+      ]
+    },
+    {
+      "id": "NCT_0414",
+      "songId": "D_037",
+      "lines": [
+        "길었던 밤을 떠나보내려 해",
+        "너의 사랑을 너무 잘 아니까",
+        "더는 두렵지가 않아"
+      ]
+    },
+    {
+      "id": "NCT_0415",
+      "songId": "D_037",
+      "lines": [
+        "이제 나는 단단히 서 너를 감싸 안아 줄 거야",
+        "천천히 더 커져가 담을 것들 가득한 세상",
+        "영원이란 걸 꿈꾸지는 않아 지금을 빛나게 하면 돼"
+      ]
+    },
+    {
+      "id": "NCT_0416",
+      "songId": "D_037",
+      "lines": [
+        "모두 떠나보낸 그다음 남은 건",
+        "따스한 손의 온기 그리고 우리"
+      ]
+    },
+    {
+      "id": "NCT_0417",
+      "songId": "D_038",
+      "lines": [
+        "넌 나의 Tangerine Love",
+        "찬 바람 속 내 곁에 온",
+        "You're my favorite"
+      ]
+    },
+    {
+      "id": "NCT_0418",
+      "songId": "D_038",
+      "lines": [
+        "퉁명스러운 표정 누르면",
+        "생겨 보조개 웃어줘",
+        "Like the full sun"
+      ]
+    },
+    {
+      "id": "NCT_0419",
+      "songId": "D_038",
+      "lines": [
+        "너와의 메시지를 한 조각씩 되새기지",
+        "정신 차려보면 한밤이야 Really?"
+      ]
+    },
+    {
+      "id": "NCT_0420",
+      "songId": "D_039",
+      "lines": [
+        "Take My Breath 심각해 네 앞에 서면",
+        "숨을 쉬는 것도 내 맘대로 잘 안돼",
+        "들이쉬는 숨에 머린 뒤엉킨 채"
+      ]
+    },
+    {
+      "id": "NCT_0421",
+      "songId": "D_039",
+      "lines": [
+        "널 좋아 한단 그 말을 빼면",
+        "어떤 말도 못 해",
+        "잔뜩 움츠렸던 내 용기까지 온기가 실린 채"
+      ]
+    },
+    {
+      "id": "NCT_0422",
+      "songId": "D_039",
+      "lines": [
+        "봐 맘이 밖으로 자꾸 새어나",
+        "하얀 입김이 하늘 위로 yeah",
+        "널 그려내지 온종일"
+      ]
+    },
+    {
+      "id": "NCT_0423",
+      "songId": "D_040",
+      "lines": [
+        "있잖아 눈이 내려",
+        "혹시 나와 보지 않을래",
+        "Hear me knocking on your 문"
+      ]
+    },
+    {
+      "id": "NCT_0424",
+      "songId": "D_040",
+      "lines": [
+        "네 손위에 펼쳐지는 내 지난밤이 전해진다면",
+        "계절의 끝이 우리 시작이 될 거야 ooh",
+        "열어볼래 너의 맘으로 가는 문"
+      ]
+    },
+    {
+      "id": "NCT_0425",
+      "songId": "D_041",
+      "lines": [
+        "빨라진 발걸음",
+        "하얀 길 위에 가득하게",
+        "들떠있는 맘과 설렘으로 다 새겨졌어"
+      ]
+    },
+    {
+      "id": "NCT_0426",
+      "songId": "D_041",
+      "lines": [
+        "한 걸음의 Crunch Crunch 널 떠올리는 기분",
+        "두 걸음의 Crunch Crunch",
+        "만나러 가는 길 위로 티가 나"
+      ]
+    },
+    {
+      "id": "NCT_0427",
+      "songId": "D_041",
+      "lines": [
+        "자연스레 너를 볼 생각에 눈이 떠진 거야",
+        "나를 달라지게 만들어",
+        "내 세상의 중심이 너인 것 같아"
+      ]
+    },
+    {
+      "id": "NCT_0428",
+      "songId": "D_042",
+      "lines": [
+        "yeah 뱉는 순간 Heartbeat",
+        "bum bum bum",
+        "Cool kid 다운 Kick on the drum drum drum"
+      ]
+    },
+    {
+      "id": "NCT_0429",
+      "songId": "D_042",
+      "lines": [
+        "uh 뭘 하든 달라지길 원하면",
+        "가만 기다리지 말고",
+        "힘껏 소리 내질러"
+      ]
+    },
+    {
+      "id": "NCT_0430",
+      "songId": "D_042",
+      "lines": [
+        "yeah 미쳐버릴 합 만들어",
+        "Make a Beatbox box 터트려",
+        "모일수록 완벽한 궁합"
+      ]
+    },
+    {
+      "id": "NCT_0431",
+      "songId": "D_042",
+      "lines": [
+        "장난 없는 장단 Boom boom boom",
+        "맛보면 중독될 걸 Yum yum yum",
+        "너의 머릿속에 Ring ring ring 울려"
+      ]
+    },
+    {
+      "id": "NCT_0432",
+      "songId": "D_042",
+      "lines": [
+        "지금처럼 서로의 음을 맞춰",
+        "우리가 함께 만들 음악",
+        "꿈꿔왔던 순간이 여기 있어"
+      ]
+    },
+    {
+      "id": "NCT_0433",
+      "songId": "D_043",
+      "lines": [
+        "미쳐 날뛸 이 밤",
+        "Rule 따윈 다 잊고",
+        "너를 습격하러 가 어서 손 머리 위로"
+      ]
+    },
+    {
+      "id": "NCT_0434",
+      "songId": "D_043",
+      "lines": [
+        "우린 불을 질러",
+        "거침없이 태워 세상이 놀라도록",
+        "We pull the Fire Alarm Go"
+      ]
+    },
+    {
+      "id": "NCT_0435",
+      "songId": "D_044",
+      "lines": [
+        "네 앞에선 Glitch Mode",
+        "온몸이 고장 났어 Reload",
+        "난 어질 어질 어질 두통"
+      ]
+    },
+    {
+      "id": "NCT_0436",
+      "songId": "D_044",
+      "lines": [
+        "엔진 Sound 위험해",
+        "겪은 적 없는 Pit a pat",
+        "네가 다가와 Whoop The whoop"
+      ]
+    },
+    {
+      "id": "NCT_0437",
+      "songId": "D_044",
+      "lines": [
+        "네가 몰고 오는 달디단 소나기에",
+        "작은 싹이 돋아나 숲을 키워내"
+      ]
+    },
+    {
+      "id": "NCT_0438",
+      "songId": "D_045",
+      "lines": [
+        "이제 우리가 다시 다시 써",
+        "불붙으면 Non Stop",
+        "보이는 대로 I'm just having fun"
+      ]
+    },
+    {
+      "id": "NCT_0439",
+      "songId": "D_045",
+      "lines": [
+        "Full power up 뛰어 들어와",
+        "무서울 게 없잖아 더 미쳐 놀아 봐",
+        "즐기면서 해도 난 너무 쉽게 올라가"
+      ]
+    },
+    {
+      "id": "NCT_0440",
+      "songId": "D_045",
+      "lines": [
+        "Clap clap clap clap clap clap 온 세상이",
+        "Clap clap clap clap 울리도록 외쳐 Get loud",
+        "이 중심에 서 전부 펼쳐봐 순식간에 Game over"
+      ]
+    },
+    {
+      "id": "NCT_0441",
+      "songId": "D_046",
+      "lines": [
+        "모든 처음에는 네가 있지",
+        "마지막까지 너이길 바랐지",
+        "다시 너를 만난 순간조차 난"
+      ]
+    },
+    {
+      "id": "NCT_0442",
+      "songId": "D_046",
+      "lines": [
+        "우린 너무나 어렸고 그땐 사랑을 몰랐어",
+        "순수했던 우릴 남겨두고서"
+      ]
+    },
+    {
+      "id": "NCT_0443",
+      "songId": "D_046",
+      "lines": [
+        "Goodbye 그만 너를 떠나려 해",
+        "더 이상 변해버린 우리를 난 볼 수 없어"
+      ]
+    },
+    {
+      "id": "NCT_0444",
+      "songId": "D_047",
+      "lines": [
+        "Girl 널 닮은 단어가 참 많아",
+        "내 하루 속에 몇 번씩 스치듯 널 만나"
+      ]
+    },
+    {
+      "id": "NCT_0445",
+      "songId": "D_047",
+      "lines": [
+        "넌 내게 멋진 여왕이 돼",
+        "어둠에 빠진 나를 구해",
+        "가끔씩은 슬픈 영웅이 돼"
+      ]
+    },
+    {
+      "id": "NCT_0446",
+      "songId": "D_047",
+      "lines": [
+        "너로 가득 차 있는 나의 세상 속 oh oh",
+        "난 지금 노래 가사로 너를 얘기하고 oh oh",
+        "머릿속에 춤추는 멋진 말"
+      ]
+    },
+    {
+      "id": "NCT_0447",
+      "songId": "D_048",
+      "lines": [
+        "늦은 밤이야 You know",
+        "잠들지 못한 거니 내 옆으로 와 누워",
+        "포근한 이불 속에 숨어 oh girl"
+      ]
+    },
+    {
+      "id": "NCT_0448",
+      "songId": "D_049",
+      "lines": [
+        "유성우처럼 쏟아진 불빛을 담아 선물해 줄게",
+        "널 맞이할 내일이 금보다 빛나"
+      ]
+    },
+    {
+      "id": "NCT_0449",
+      "songId": "D_049",
+      "lines": [
+        "오늘 하루는 겨우 전야제 지금부터 시작된",
+        "축제에 원한다면 열어줄게 Everyday"
+      ]
+    },
+    {
+      "id": "NCT_0450",
+      "songId": "D_050",
+      "lines": [
+        "변해가는 계절들을 막아 줄 거란",
+        "그런 말로 너를 붙잡을 순 없지만",
+        "많은 계절을 마주칠 너에게 이 마음 하날 비춰주려 해"
+      ]
+    },
+    {
+      "id": "NCT_0451",
+      "songId": "D_050",
+      "lines": [
+        "떠나는 걸음이 맘이 흐려지지 않게",
+        "So please don't cry 약속할 테니"
+      ]
+    },
+    {
+      "id": "NCT_0452",
+      "songId": "D_050",
+      "lines": [
+        "유난히 짙고 긴 밤 견디던 어느 날",
+        "눈물을 참지 못해 문득 고개를 들면",
+        "반짝이는 별을 따라 다시 돌아올 길을 찾을 거야"
+      ]
+    },
+    {
+      "id": "NCT_0453",
+      "songId": "D_050",
+      "lines": [
+        "네가 지금 가야 하는 길이",
+        "나와 엇갈릴 수도 있어",
+        "항상 같은 방향을 걸을 수 없단 걸"
+      ]
+    },
+    {
+      "id": "NCT_0454",
+      "songId": "D_050",
+      "lines": [
+        "함께 가는 방법을 찾을 수 없다면",
+        "너를 멀리서 늘 비춰줄 거야"
+      ]
+    },
+    {
+      "id": "NCT_0455",
+      "songId": "D_050",
+      "lines": [
+        "난 그대로야 여전해 Like a photo",
+        "시간은 근데 그렇지 않더라고",
+        "이거 듣고 기억들을 간지럽혀"
+      ]
+    },
+    {
+      "id": "NCT_0456",
+      "songId": "D_050",
+      "lines": [
+        "멈춰 선 내 맘이 다시 달려가지 않게",
+        "So please don't cry 약속할 테니"
+      ]
+    },
+    {
+      "id": "NCT_0457",
+      "songId": "D_050",
+      "lines": [
+        "불안해하지 마 난 너를 보고 있어",
+        "같이 있던 밤 기억하고 있어",
+        "낯선 길을 걸을 땐 고개를 들어 저 별을 바라봐"
+      ]
+    },
+    {
+      "id": "NCT_0458",
+      "songId": "D_051",
+      "lines": [
+        "내일이 여전히 아득한데",
+        "회색빛 하늘은 잠이 들지",
+        "한숨을 떨구는 네 모습이 비친 듯해"
+      ]
+    },
+    {
+      "id": "NCT_0459",
+      "songId": "D_051",
+      "lines": [
+        "별이 가득히 뜨는 밤",
+        "이 밤을 향해 Driving all night",
+        "I'm on the way"
+      ]
+    },
+    {
+      "id": "NCT_0460",
+      "songId": "D_051",
+      "lines": [
+        "너와 함께 길을 밝혀가",
+        "여기 손을 잡은 너와 나 날 놓지 마 놓지 않아",
+        "긴 밤의 끝을 환히 비춰가"
+      ]
+    },
+    {
+      "id": "NCT_0461",
+      "songId": "D_052",
+      "lines": [
+        "시작이라는 걸 넌 믿을 수 있겠니?",
+        "이제야 사랑을 알 것 같아",
+        "Ready or not 가는 거야 나를 믿어"
+      ]
+    },
+    {
+      "id": "NCT_0462",
+      "songId": "D_052",
+      "lines": [
+        "전쟁 전쟁 같던 시간들은",
+        "모두 뒤로 보내 가슴이 소리치네",
+        "달려가 날아 봐"
+      ]
+    },
+    {
+      "id": "NCT_0463",
+      "songId": "D_052",
+      "lines": [
+        "내 미래에 전해 줘",
+        "온 세상과 저 광야 위로",
+        "후회 없이 사랑했다고 말하게"
+      ]
+    },
+    {
+      "id": "NCT_0464",
+      "songId": "D_052",
+      "lines": [
+        "기다렸어 어서 와",
+        "어디든 We're coming together",
+        "아무 걱정 하지 마 잘 될 거야 Hello Future"
+      ]
+    },
+    {
+      "id": "NCT_0465",
+      "songId": "D_052",
+      "lines": [
+        "미래의 너를 조우하게 됐어",
+        "경계 위로 손을 맞대면",
+        "우린 너무 닮아 있어"
+      ]
+    },
+    {
+      "id": "NCT_0466",
+      "songId": "D_052",
+      "lines": [
+        "뭘 더 찾게 될지 결국 웃게 될지",
+        "지금부턴 운명이라고 해"
+      ]
+    },
+    {
+      "id": "NCT_0467",
+      "songId": "D_052",
+      "lines": [
+        "Fire fire 자욱한 연기 속에",
+        "살아남은 키 작은 꽃처럼",
+        "같은 시간 속에 너를 사랑하고 있어"
+      ]
+    },
+    {
+      "id": "NCT_0468",
+      "songId": "D_052",
+      "lines": [
+        "날개를 펼치고 또 꺾이고 다쳐도",
+        "누구보다 강한 너잖아",
+        "미래의 미래에도 널 사랑할 나란 걸"
+      ]
+    },
+    {
+      "id": "NCT_0469",
+      "songId": "D_052",
+      "lines": [
+        "Too many cynical 거꾸로 갔던 Entropy",
+        "그 어디쯤 너 기다리고 있을지"
+      ]
+    },
+    {
+      "id": "NCT_0470",
+      "songId": "D_053",
+      "lines": [
+        "Hot sauce 깊이 Dip that eh",
+        "날 따라 넌 Twist that eh",
+        "Hot sauce 타오를 때 Ooh"
+      ]
+    },
+    {
+      "id": "NCT_0471",
+      "songId": "D_053",
+      "lines": [
+        "넌 뭐가 궁금해 나는 너만의 Chef",
+        "이건 너를 위한 Plate",
+        "Yeah 내가 맛 보여 줄게"
+      ]
+    },
+    {
+      "id": "NCT_0472",
+      "songId": "D_053",
+      "lines": [
+        "시간은 충분해 지금 우리",
+        "눈치도 보지 마 그저 Taste it",
+        "내 비법은 색다른 Spicy 살짝만 스쳐도 정신없지"
+      ]
+    },
+    {
+      "id": "NCT_0473",
+      "songId": "D_053",
+      "lines": [
+        "설탕이 발린 맛엔 이내 질리기 쉬워",
+        "뜨거운 나의 Feelin' 지금 느꼈지 넌"
+      ]
+    },
+    {
+      "id": "NCT_0474",
+      "songId": "D_053",
+      "lines": [
+        "너와 내 사이 선명히 보인 커져만 가는 열기",
+        "난 오감을 깨워 네 맘을 깨워",
+        "터질 것만 같은 Ma skill"
+      ]
+    },
+    {
+      "id": "NCT_0475",
+      "songId": "D_053",
+      "lines": [
+        "너의 혀끝 위로 아른거릴",
+        "완벽해진 맛을 즐겨",
+        "You want it babe"
+      ]
+    },
+    {
+      "id": "NCT_0476",
+      "songId": "D_054",
+      "lines": [
+        "혼자이던 시간이 밤이 이제 곧 끝나",
+        "붉어지는 태양이 내게 말을 걸어와",
+        "얼마나 긴 시간 흘렀어 하품하며 기지개를 켜"
+      ]
+    },
+    {
+      "id": "NCT_0477",
+      "songId": "D_054",
+      "lines": [
+        "우리 시간들은 별들을 지나치며",
+        "아주 천천히 가지",
+        "세찬 바람맞으면 살아있다는 걸 느끼지"
+      ]
+    },
+    {
+      "id": "NCT_0478",
+      "songId": "D_054",
+      "lines": [
+        "Hey 너와 바다를 건너는 상상해",
+        "우린 위험한 여행을 떠나",
+        "그래 마주 보고 Oh 좀 더 무모한 걸음을 걷고"
+      ]
+    },
+    {
+      "id": "NCT_0479",
+      "songId": "D_054",
+      "lines": [
+        "내 삶을 위해 난 싸울 거야",
+        "난 이 삶과의 사랑에 빠진 거니까"
+      ]
+    },
+    {
+      "id": "NCT_0480",
+      "songId": "D_055",
+      "lines": [
+        "Don't stop the music 왜 멈춰 있어",
+        "춤추듯 돌아가 Life is a party so",
+        "딱히 뭘 안 해도 Tick tock Tick tock"
+      ]
+    },
+    {
+      "id": "NCT_0481",
+      "songId": "D_055",
+      "lines": [
+        "야 요즘 왜 그리 풀이 죽어 있어?",
+        "야 어깨 좀 펴라 옆엔 내가 있어",
+        "인생이란 게 뜻대로 안 되지 Uh?"
+      ]
+    },
+    {
+      "id": "NCT_0482",
+      "songId": "D_055",
+      "lines": [
+        "Hey DJ Play that song 다음 노래",
+        "It's like a music box 걱정은 그만해",
+        "오늘은 즐겨봐 잠시라도"
+      ]
+    },
+    {
+      "id": "NCT_0483",
+      "songId": "D_055",
+      "lines": [
+        "자 다들 하잖아 괜한 짓 엄한짓두",
+        "누가 보면은 금방이라도 세상이 망한 줄"
+      ]
+    },
+    {
+      "id": "NCT_0484",
+      "songId": "D_055",
+      "lines": [
+        "균형을 잡아가는 중 헛발질 좀 한 것뿐",
+        "원기옥을 모았다 쏴 Tik tik tik boom"
+      ]
+    },
+    {
+      "id": "NCT_0485",
+      "songId": "D_055",
+      "lines": [
+        "잠깐 흔들려도 돼 멀리 돌아가도 돼",
+        "즐길 수 있으면 돼 결국 행복하면 돼"
+      ]
+    },
+    {
+      "id": "NCT_0486",
+      "songId": "D_055",
+      "lines": [
+        "고민 따윈 잠시 던져 놔",
+        "To the sound of the music",
+        "마음속의 소릴 들어봐 원하는 건 Do it 그냥 Do it"
+      ]
+    },
+    {
+      "id": "NCT_0487",
+      "songId": "D_056",
+      "lines": [
+        "Look around 둘러봐도 온통 짙은 푸른빛",
+        "까만 밤 마치 깊은 물에 잠수한 듯이",
+        "먹먹함 속에 너의 목소리만 뚜렷해 어쩌지"
+      ]
+    },
+    {
+      "id": "NCT_0488",
+      "songId": "D_056",
+      "lines": [
+        "나에게 넌 달아나는 저 수평선 같지",
+        "눈앞에 너를 두고서도 나는 또다시",
+        "그리워 너는 파도처럼 나를 삼키지 어쩌지"
+      ]
+    },
+    {
+      "id": "NCT_0489",
+      "songId": "D_056",
+      "lines": [
+        "Oh you and I 넌 아득한 나의 바다",
+        "난 너의 품에 빠져",
+        "You and I 너에게 가 닿고 싶어"
+      ]
+    },
+    {
+      "id": "NCT_0490",
+      "songId": "D_056",
+      "lines": [
+        "궁금해 네 맘 한가운데 나는 어딘지",
+        "표류해 모르는 채 한번 가보는 거지",
+        "막막해 가끔 이 마음의 끝은 어딜지 너인지"
+      ]
+    },
+    {
+      "id": "NCT_0491",
+      "songId": "D_056",
+      "lines": [
+        "심각해 널 스치는 바람마저 질투해",
+        "네 뺨에 내려앉은 달빛도 Annoying me",
+        "그보다 더 가까이 내가 곁에 있을래 가까이"
+      ]
+    },
+    {
+      "id": "NCT_0492",
+      "songId": "D_056",
+      "lines": [
+        "Sail 떠도는 바다 위의",
+        "Whale 늘 바랬어 머물기를",
+        "매일 외로운 낮과 긴 밤을 나 찾아 헤맸던 건 너였음을"
+      ]
+    },
+    {
+      "id": "NCT_0493",
+      "songId": "D_056",
+      "lines": [
+        "이제는 나 알 것 같애",
+        "네가 날 숨 쉬게 한단 걸 Yea yea",
+        "너에게 너의 안에 너를 향해 가는 항해"
+      ]
+    },
+    {
+      "id": "NCT_0494",
+      "songId": "D_057",
+      "lines": [
+        "눈을 감아봐 선명하게 번져 My Youth",
+        "나를 데려가 기억 한켠 너에게로",
+        "그 눈부신 한때 그날의 우리"
+      ]
+    },
+    {
+      "id": "NCT_0495",
+      "songId": "D_057",
+      "lines": [
+        "너는 나의 봄이고 여름",
+        "축제는 끝났어도 내게 남아있어",
+        "그날에 봤던 불꽃처럼"
+      ]
+    },
+    {
+      "id": "NCT_0496",
+      "songId": "D_057",
+      "lines": [
+        "다친 마음도 낫게 해",
+        "생각만으로 또 두근대",
+        "기억나 You and me 서투르고 찬란했지"
+      ]
+    },
+    {
+      "id": "NCT_0497",
+      "songId": "D_057",
+      "lines": [
+        "이 돌고 도는 계절 속에 물든",
+        "너를 기억해 우릴 기억해",
+        "오래도록"
+      ]
+    },
+    {
+      "id": "NCT_0498",
+      "songId": "D_058",
+      "lines": [
+        "네가 어디서 무얼 하든 어딜 가든 Oh",
+        "내 머릿속엔 너가 있어"
+      ]
+    },
+    {
+      "id": "NCT_0499",
+      "songId": "D_058",
+      "lines": [
+        "네 생각하다가 또 놓쳤어",
+        "내 모든 순간을 책임지는 Scene"
+      ]
+    },
+    {
+      "id": "NCT_0500",
+      "songId": "D_058",
+      "lines": [
+        "All Night Long 두 눈을 감아도",
+        "넓은 하늘에 너를 그릴래",
+        "별들을 이어 이름을 붙였지 난"
+      ]
+    },
+    {
+      "id": "NCT_0501",
+      "songId": "D_058",
+      "lines": [
+        "Take it 밤하늘의 Moonlight",
+        "Take it 그 옆에의 Starlight",
+        "Yeah I'll give it to u every night"
+      ]
+    },
+    {
+      "id": "NCT_0502",
+      "songId": "D_058",
+      "lines": [
+        "Yeah 보이는 대로 믿고 싶어서",
+        "난 눈을 감았어 잠이 오질 않아서",
+        "난 꿈을 내가 그렸어 yeah"
+      ]
+    },
+    {
+      "id": "NCT_0503",
+      "songId": "D_058",
+      "lines": [
+        "아무도 없는 곳에 우리 둘뿐였음해",
+        "네 생각이 아침까지 베개가 돼 My babe"
+      ]
+    },
+    {
+      "id": "NCT_0504",
+      "songId": "D_058",
+      "lines": [
+        "Where you at 내 시간을 다 가져줘",
+        "너의 마음 앞에 툭 던지고 왔어"
+      ]
+    },
+    {
+      "id": "NCT_0505",
+      "songId": "D_058",
+      "lines": [
+        "밤은 꿈 속에 우릴 이어주는 Bridge",
+        "하늘 위에 달 나를 떠올려줘"
+      ]
+    },
+    {
+      "id": "NCT_0506",
+      "songId": "D_058",
+      "lines": [
+        "검은 미로 속 불빛은 바로 너였어",
+        "내 다른 이름 하날 너의 옆에 적었어",
+        "별다른 이유 없이 너에게 끌렸듯"
+      ]
+    },
+    {
+      "id": "NCT_0507",
+      "songId": "D_059",
+      "lines": [
+        "아주 오랜 얘기처럼 당연한 것들이 있어",
+        "누구든 똑같이 답할 수 있는 그런 질문"
+      ]
+    },
+    {
+      "id": "NCT_0508",
+      "songId": "D_059",
+      "lines": [
+        "말해서 뭐해 줄리엣은? 로미오",
+        "당연히 미녀 하면? 야수고",
+        "날 보면 먼저 사람들은 떠올려 너의 이름"
+      ]
+    },
+    {
+      "id": "NCT_0509",
+      "songId": "D_059",
+      "lines": [
+        "너와는 어디라도 헤맨대도 명장면",
+        "오히려 예고 없이 펼쳐질 많은 일들이 두근거려"
+      ]
+    },
+    {
+      "id": "NCT_0510",
+      "songId": "D_059",
+      "lines": [
+        "너로 인해 너의 너로부터",
+        "널 위해 이루어진 모든 감정",
+        "짧은 순간 넌 내 시가 되고 나를 눈물 나게 해"
+      ]
+    },
+    {
+      "id": "NCT_0511",
+      "songId": "D_059",
+      "lines": [
+        "난 널 사랑이라 불러",
+        "아주 작은 순간조차 벅찬 의민 걸",
+        "내 모든 이야기는 봐도 봐도 너인 거야"
+      ]
+    },
+    {
+      "id": "NCT_0512",
+      "songId": "D_060",
+      "lines": [
+        "눈을 뜨는 순간 펼쳐지는 공간",
+        "익숙한 듯 뭔가 새로워",
+        "다시 나의 몸이 움직여"
+      ]
+    },
+    {
+      "id": "NCT_0513",
+      "songId": "D_060",
+      "lines": [
+        "두 발이 성급해 뜨겁게",
+        "뛰는 맘을 앞서갈 때",
+        "펼쳐진 다른 hidden track"
+      ]
+    },
+    {
+      "id": "NCT_0514",
+      "songId": "D_060",
+      "lines": [
+        "한바탕 뛰어놀아볼까 On the stage",
+        "Dream 이게 우리 feel yeah",
+        "여긴 나의 무대 짜릿해 ay 좀 더 놀아도 돼"
+      ]
+    },
+    {
+      "id": "NCT_0515",
+      "songId": "D_061",
+      "lines": [
+        "거리 위 텅 빈 듯한 이 느낌",
+        "열기로 가득 채워 Reloading",
+        "경계를 Break break out 어디든지 겨눠 봐"
+      ]
+    },
+    {
+      "id": "NCT_0516",
+      "songId": "D_061",
+      "lines": [
+        "도로 위로 가득한",
+        "붉은 불빛들은 날",
+        "멈춰 있으라지만"
+      ]
+    },
+    {
+      "id": "NCT_0517",
+      "songId": "D_062",
+      "lines": [
+        "아마 요즘 우리가 만난 날들 가운데",
+        "가장 바쁘게 지낸 특별한 일주일 같지"
+      ]
+    },
+    {
+      "id": "NCT_0518",
+      "songId": "D_062",
+      "lines": [
+        "처음 날 보던 눈빛과 짓던 너의 미소가",
+        "아예 머릿속에서 떠날 생각이 없는 듯해"
+      ]
+    },
+    {
+      "id": "NCT_0519",
+      "songId": "D_062",
+      "lines": [
+        "지금 난 난 난 딱 한 시간만",
+        "사실 내 내 내 맘은 이런데",
+        "아님 밤 밤 밤을 새도 좋아"
+      ]
+    },
+    {
+      "id": "NCT_0520",
+      "songId": "D_062",
+      "lines": [
+        "괜히 막 막 막 신경 쓰지 마",
+        "그냥 네 네 네 맘 가는 대로",
+        "나도 널 널 널 따라가려고 Yea"
+      ]
+    },
+    {
+      "id": "NCT_0521",
+      "songId": "D_062",
+      "lines": [
+        "지금 난 난 난 딱 단 하루만",
+        "사실 내 내 내 맘은 이런데",
+        "아님 매 매 매일 함께 할래"
+      ]
+    },
+    {
+      "id": "NCT_0522",
+      "songId": "D_063",
+      "lines": [
+        "숨소리조차도 음악 같은 Stage",
+        "나의 땀방울은 네겐 Heavy rain"
+      ]
+    },
+    {
+      "id": "NCT_0523",
+      "songId": "D_063",
+      "lines": [
+        "언제나 Hot and shine",
+        "무대 위에서 Ride",
+        "네 눈이 맘보다 먼저 반응해"
+      ]
+    },
+    {
+      "id": "NCT_0524",
+      "songId": "D_063",
+      "lines": [
+        "지금 우린 과도한 열기로 넘쳐",
+        "편히 앉아 놀아줄 시간은 없어",
+        "과정을 즐겨 나와 같이 더 달려"
+      ]
+    },
+    {
+      "id": "NCT_0525",
+      "songId": "D_063",
+      "lines": [
+        "난 너의 꿈이자 꿈에 닿는 통로가 돼",
+        "너의 꿈을 손에 쥐여줄 수 있어 Oh"
+      ]
+    },
+    {
+      "id": "NCT_0526",
+      "songId": "D_063",
+      "lines": [
+        "순수한 표정으로 춤을 추던 아인 이제 웃으면서",
+        "이 트랙에 불을 질러 Oh"
+      ]
+    },
+    {
+      "id": "NCT_0527",
+      "songId": "D_063",
+      "lines": [
+        "나를 던지고 너를 깨우고",
+        "Show me what you got",
+        "결과는 Crazy"
+      ]
+    },
+    {
+      "id": "NCT_0528",
+      "songId": "D_063",
+      "lines": [
+        "기억해 어디서도 나의 나의 Beat",
+        "녹을 걸 네 맘은 Ice cream"
+      ]
+    },
+    {
+      "id": "NCT_0529",
+      "songId": "D_063",
+      "lines": [
+        "지금 우린 그 꿈을 이뤄낸 Player",
+        "내 안의 난 날 향한 찬사를 외쳐"
+      ]
+    },
+    {
+      "id": "NCT_0530",
+      "songId": "D_063",
+      "lines": [
+        "이토록 확신에 찬 눈빛 너도 알아",
+        "전부 감당할 수 있어 우린",
+        "내 꿈은 현실이 됐고 이제 난 자유롭게 Fly"
+      ]
+    },
+    {
+      "id": "NCT_0531",
+      "songId": "D_064",
+      "lines": [
+        "내 귓가에 사이렌은 마치 소나타 같아",
+        "신호하면 모여 하나둘씩 편을 나누곤 Play"
+      ]
+    },
+    {
+      "id": "NCT_0532",
+      "songId": "D_064",
+      "lines": [
+        "끼리끼리 놀아 즐겨 매일",
+        "스릴 있는 Race",
+        "보다시피 누가 봐도 우린 꼬여 있어 배배"
+      ]
+    },
+    {
+      "id": "NCT_0533",
+      "songId": "D_064",
+      "lines": [
+        "Ah oui 시선이 스친 네게",
+        "Ah oui 장난을 치고 싶은데",
+        "Ah oui 참지 않고 지를 때 은근 짜릿해"
+      ]
+    },
+    {
+      "id": "NCT_0534",
+      "songId": "D_064",
+      "lines": [
+        "쉿 옳지 살짝 멈칫한 눈이",
+        "넌 넘어가 버려 이미",
+        "날 향해 움직여 I like it like that"
+      ]
+    },
+    {
+      "id": "NCT_0535",
+      "songId": "D_064",
+      "lines": [
+        "쉿 옳지 더 흐트러진 그 목소리",
+        "흠뻑 빠져 뛰어들지",
+        "멈출 생각 없어 I like it like that"
+      ]
+    },
+    {
+      "id": "NCT_0536",
+      "songId": "D_065",
+      "lines": [
+        "시작부터 다 예상 밖의 놀라운 Style",
+        "작은 Step들로 뿜어내 Big vibe"
+      ]
+    },
+    {
+      "id": "NCT_0537",
+      "songId": "D_065",
+      "lines": [
+        "Too slow too fast 속도 Control",
+        "보폭 넓혀 Tempo 올려",
+        "어디서도 기억해 너의 빛 계속해 똑같이 Wild and free"
+      ]
+    },
+    {
+      "id": "NCT_0538",
+      "songId": "D_065",
+      "lines": [
+        "좀 더 멀리 날아 보려고 해",
+        "서툰 날 빛나게 해 준 날의 기억들로 날 아름답게 해",
+        "이번 트랙을 끝내 자 다음 스테이지"
+      ]
+    },
+    {
+      "id": "NCT_0539",
+      "songId": "D_065",
+      "lines": [
+        "두렵지 않을 수 있는 이유",
+        "나를 바라보는 네 두 눈 그것만이 날 자유롭게 해",
+        "이번 트랙을 끝내 자 다음 스테이지"
+      ]
+    },
+    {
+      "id": "NCT_0540",
+      "songId": "D_065",
+      "lines": [
+        "끝은 없어 지켜봐 줘",
+        "더 높이 천천히 올라가",
+        "그 땀 위에서 너에게 외쳐"
+      ]
+    },
+    {
+      "id": "NCT_0541",
+      "songId": "D_066",
+      "lines": [
+        "방심했던 마음은 이제 깨서 보니깐",
+        "보이는 이 노래를",
+        "나중에 돌아볼 때도 흐릿하지 않게"
+      ]
+    },
+    {
+      "id": "NCT_0542",
+      "songId": "D_066",
+      "lines": [
+        "아무 생각 없이 또 휩쓸리듯이 살아가는 건",
+        "너 자신에겐 먼 훗날 또 다른 깊은 후회일걸"
+      ]
+    },
+    {
+      "id": "NCT_0543",
+      "songId": "D_066",
+      "lines": [
+        "그게 네 선택이면 결과도 네가 책임져야지",
+        "그럴 자신은 없어서 뒤에 숨어서 사는가"
+      ]
+    },
+    {
+      "id": "NCT_0544",
+      "songId": "D_066",
+      "lines": [
+        "We're so young we're so freaky",
+        "우리들은 틀에 갇힌 채 진짜를 잃지"
+      ]
+    },
+    {
+      "id": "NCT_0545",
+      "songId": "D_067",
+      "lines": [
+        "오늘 함께 해 It’ll be alright",
+        "하늘 쨍하게 파란 날이잖아"
+      ]
+    },
+    {
+      "id": "NCT_0546",
+      "songId": "D_067",
+      "lines": [
+        "그래 흠뻑 기분은 들뜬 듯해 ah",
+        "좋은 일이 일어날 것 같지 않니"
+      ]
+    },
+    {
+      "id": "NCT_0547",
+      "songId": "D_067",
+      "lines": [
+        "햇빛 아래로 So what We hot We young",
+        "걱정하지 마 So what We hot We young"
+      ]
+    },
+    {
+      "id": "NCT_0548",
+      "songId": "D_067",
+      "lines": [
+        "그런 네가 샤르륵 웃어줄 땐",
+        "잔잔한 호숫가 잔디에 싱그런 이슬 머금은 듯",
+        "그런 느낌이야"
+      ]
+    },
+    {
+      "id": "NCT_0549",
+      "songId": "D_067",
+      "lines": [
+        "상큼한 레모네이드 같은 그 웃음소리가 라파파파파파",
+        "태양은 빛나고 바람이 불어서 좋아 나나나나나나"
+      ]
+    },
+    {
+      "id": "NCT_0550",
+      "songId": "D_068",
+      "lines": [
+        "정류장에서 좀만 더 멀어도 좋을 텐데",
+        "보폭이 괜히 작아지곤 해"
+      ]
+    },
+    {
+      "id": "NCT_0551",
+      "songId": "D_068",
+      "lines": [
+        "다 왔다 안녕 잘 들어가 oh yeah yeah",
+        "너마저 보고 갈 테니까 어서 들어가"
+      ]
+    },
+    {
+      "id": "NCT_0552",
+      "songId": "D_068",
+      "lines": [
+        "예쁜 뒷모습이 사라지고 나서",
+        "돌아서는 그 순간 벌써 네가 그리워"
+      ]
+    },
+    {
+      "id": "NCT_0553",
+      "songId": "D_068",
+      "lines": [
+        "yeah 더는 할 말이 없지만 그래도 Wait",
+        "내일 다시 우리 만날 때까지",
+        "널 따뜻하게 해줄 Hug 마저 할래 babe"
+      ]
+    },
+    {
+      "id": "NCT_0554",
+      "songId": "D_068",
+      "lines": [
+        "한 발자국 Walk you home 그 걸음은 무거워",
+        "두 발자국 Walk you home 그 걸음은 아까워"
+      ]
+    },
+    {
+      "id": "NCT_0555",
+      "songId": "D_069",
+      "lines": [
+        "현실이 꿈이고 꿈이 현실 같아",
+        "눈을 뜨고 꿈을 꾸는 것만 같아",
+        "사람들은 이걸 사랑이라 말해 내겐 낯선 떨림"
+      ]
+    },
+    {
+      "id": "NCT_0556",
+      "songId": "D_069",
+      "lines": [
+        "난 지금 어딜까 다 알 순 없지만",
+        "난 나만의 나를 쓰고 있어",
+        "서툰 이 글 위엔 제목도 없지만 난 나만의 답을 찾고 있어"
+      ]
+    },
+    {
+      "id": "NCT_0557",
+      "songId": "D_070",
+      "lines": [
+        "oh maybe maybe 이건 사랑일지도 몰라",
+        "이미 내 눈에는 너만 보여 난",
+        "아직 아닐 거라 겁을 먹어도 oh 내게도 온 것 같아"
+      ]
+    },
+    {
+      "id": "NCT_0558",
+      "songId": "D_070",
+      "lines": [
+        "앞뒤로 살펴봐도 좌우로 살펴봐도",
+        "너란 사람은 대체 출구가 없어 출구가 없어"
+      ]
+    },
+    {
+      "id": "NCT_0559",
+      "songId": "D_070",
+      "lines": [
+        "다 되돌려 앞뒤 좌우를 살펴 입구를 찾아도",
+        "돌아가는 길을 찾을 수가 없어 난 네게 갇혀"
+      ]
+    },
+    {
+      "id": "NCT_0560",
+      "songId": "D_070",
+      "lines": [
+        "내가 어디 있어도 꿈속에서도 oh 나에겐 너뿐이야",
+        "남은 인생을 걸고 말할게 두 번은 없어 넌 나의 마지막"
+      ]
+    },
+    {
+      "id": "NCT_0561",
+      "songId": "D_071",
+      "lines": [
+        "유난히 고요하던 밤 하늘을 바라보다가",
+        "유성처럼 떨어지는 별을 봤지"
+      ]
+    },
+    {
+      "id": "NCT_0562",
+      "songId": "D_071",
+      "lines": [
+        "예쁜 여자 친구와 빨간 차도 갖고 싶었지만",
+        "너무나 원했던 것은 그 누구도 모를 거야"
+      ]
+    },
+    {
+      "id": "NCT_0563",
+      "songId": "D_071",
+      "lines": [
+        "덩크슛 한 번 할 수 있다면",
+        "내 평생 단 한 번만이라도",
+        "얼마나 짜릿한 그 기분을 느낄까"
+      ]
+    },
+    {
+      "id": "NCT_0564",
+      "songId": "D_071",
+      "lines": [
+        "주문을 외워보자 야발라바히야 야발라바히야",
+        "주문을 외워보자 oh yeah",
+        "야발라바히야모하이마모하이루라"
+      ]
+    },
+    {
+      "id": "NCT_0565",
+      "songId": "D_072",
+      "lines": [
+        "내 까만 스니커즈를 지금 멈추게",
+        "범인은 어서 나와 좋은 말할 때",
+        "끈적한 발이 떨어지지 않는 게"
+      ]
+    },
+    {
+      "id": "NCT_0566",
+      "songId": "D_072",
+      "lines": [
+        "넌지시 마주치는 시선이 어색해",
+        "천천히 다가가자 딴 곳을 보는 걸",
+        "역시 널 찾아내긴 어렵지 않았어"
+      ]
+    },
+    {
+      "id": "NCT_0567",
+      "songId": "D_072",
+      "lines": [
+        "풍선 불어 봐 누가 누가 더 커질까",
+        "자신 있어 부드런 Chewing Gum",
+        "조심스레 네게 네게 더 다가가 터질 듯 부푼 내 맘은 Chewing Gum"
+      ]
+    },
+    {
+      "id": "NCT_0568",
+      "songId": "D_072",
+      "lines": [
+        "검 딱지처럼 붙어줘 중독 있어 너라는 거",
+        "끈적해 끌리는 것 같애 너무 다양해",
+        "내 마음에 터트려줄래"
+      ]
+    },
+    {
+      "id": "NCT_0569",
+      "songId": "W_001",
+      "lines": [
+        "끝없이 깨지고 부딪히다가",
+        "작은 틈을 발견해",
+        "그곳엔 미처 알지 못했던 세상 저 너머의 세계"
+      ]
+    },
+    {
+      "id": "NCT_0570",
+      "songId": "W_001",
+      "lines": [
+        "아직은 꺼내지 않은 Card",
+        "Brand new",
+        "시작해 지금 It’s me time"
+      ]
+    },
+    {
+      "id": "NCT_0571",
+      "songId": "W_002",
+      "lines": [
+        "Not in my, not in my, not in my zone",
+        "빈틈없이 내린 Blind",
+        "빛을 잃은 채로 Hide"
+      ]
+    },
+    {
+      "id": "NCT_0572",
+      "songId": "W_002",
+      "lines": [
+        "Not in my, not in my, not in my mind",
+        "차게 식어버린 맘",
+        "안아주고 싶어 다 Oh"
+      ]
+    },
+    {
+      "id": "NCT_0573",
+      "songId": "W_002",
+      "lines": [
+        "말툰 찌르지 않게 그려내 Circle",
+        "모서린 다 지워내 우리",
+        "날 선 세상 One way 연결해"
+      ]
+    },
+    {
+      "id": "NCT_0574",
+      "songId": "W_002",
+      "lines": [
+        "We sing for love",
+        "Listen up 세상 모든 다정함",
+        "넘치도록 담은 이 노래"
+      ]
+    },
+    {
+      "id": "NCT_0575",
+      "songId": "W_002",
+      "lines": [
+        "We sing for love",
+        "어느새 우리 사이 가득 차",
+        "소리 높여봐 Touch the sky"
+      ]
+    },
+    {
+      "id": "NCT_0576",
+      "songId": "W_002",
+      "lines": [
+        "너와 나의 노래가",
+        "세상 가득 퍼져가"
+      ]
+    },
+    {
+      "id": "NCT_0577",
+      "songId": "W_003",
+      "lines": [
+        "무더운 섬에 내린 듯 열이 나",
+        "아찔한 이끌림, 눈앞은 샛노랑"
+      ]
+    },
+    {
+      "id": "NCT_0578",
+      "songId": "W_003",
+      "lines": [
+        "우리 Recipe, 머릿속의 큰 그림",
+        "Uh 별난 조합 같지만",
+        "그게 묘미라지"
+      ]
+    },
+    {
+      "id": "NCT_0579",
+      "songId": "W_003",
+      "lines": [
+        "살짝만 맛봐도 느낄 걸",
+        "우린 딱 맞는 짝이야"
+      ]
+    },
+    {
+      "id": "NCT_0580",
+      "songId": "W_003",
+      "lines": [
+        "찰밥처럼 찰싹 달라붙어서",
+        "포근한 네 품에 파고들면 좋겠어"
+      ]
+    },
+    {
+      "id": "NCT_0581",
+      "songId": "W_004",
+      "lines": [
+        "선명하게 들려 밤을 깨울",
+        "Feel the beat flow",
+        "Feel the beat flow"
+      ]
+    },
+    {
+      "id": "NCT_0582",
+      "songId": "W_004",
+      "lines": [
+        "지루했던 네 눈빛 흔들어 난 설렘 따라 멀리",
+        "번져가는 이 떨림",
+        "잠들지 못한 네게 들려온 Sound"
+      ]
+    },
+    {
+      "id": "NCT_0583",
+      "songId": "W_005",
+      "lines": [
+        "늘 무심하게 보던 하늘빛",
+        "오늘따라 왜 뭔가 다른지",
+        "잘 만진 머릴 헤집는 Feeling"
+      ]
+    },
+    {
+      "id": "NCT_0584",
+      "songId": "W_005",
+      "lines": [
+        "종일 맑을 거라더니",
+        "틀려버린 예보",
+        "네가 내게 떨어진다"
+      ]
+    },
+    {
+      "id": "NCT_0585",
+      "songId": "W_005",
+      "lines": [
+        "온 세상이 전부 다 너야",
+        "내 마음 위 작은 빗방울이 계속 커져가지",
+        "너란 여우비 Oh 멎지 않았으면 해"
+      ]
+    },
+    {
+      "id": "NCT_0586",
+      "songId": "W_006",
+      "lines": [
+        "잠들어버린 도시",
+        "I’m waiting all day",
+        "작전 개시 어서 담벼락 끝에 어깰 펴 언제나"
+      ]
+    },
+    {
+      "id": "NCT_0587",
+      "songId": "W_006",
+      "lines": [
+        "Walk Down the street",
+        "자유로운 나의 City",
+        "저질러봐 Somethin’ for me"
+      ]
+    },
+    {
+      "id": "NCT_0588",
+      "songId": "W_007",
+      "lines": [
+        "Don’t say you love me",
+        "오늘은 내가 먼저",
+        "말할게, 나는 사실"
+      ]
+    },
+    {
+      "id": "NCT_0589",
+      "songId": "W_008",
+      "lines": [
+        "We stand up 흑백만 멋있다는 세상에",
+        "Shine brighter 천 개의 색깔을 외칠래"
+      ]
+    },
+    {
+      "id": "NCT_0590",
+      "songId": "W_008",
+      "lines": [
+        "무적의 크레용, 천재적 감",
+        "네 맘도 흠뻑, 적셔"
+      ]
+    },
+    {
+      "id": "NCT_0591",
+      "songId": "W_008",
+      "lines": [
+        "비밀스런 어딘가 너는 별을 숨겼어",
+        "장난스레 나를 당겨 같이 찾자 해"
+      ]
+    },
+    {
+      "id": "NCT_0592",
+      "songId": "W_008",
+      "lines": [
+        "그래 It’s our time 빛나자 부드럽게",
+        "투명한 빛 위로 무지개가 뜨면",
+        "It’s my prism hour"
+      ]
+    },
+    {
+      "id": "NCT_0593",
+      "songId": "W_008",
+      "lines": [
+        "안아줘 뜨겁게 시간은 너무 빨라",
+        "파스텔처럼 번져온 너의 Color"
+      ]
+    },
+    {
+      "id": "NCT_0594",
+      "songId": "W_008",
+      "lines": [
+        "금빛 색을 네 눈에, 귀는 빨갛게",
+        "파란 밤이 놀라게, 빛이 넘치게",
+        "Light it up 우리 색으로"
+      ]
+    },
+    {
+      "id": "NCT_0595",
+      "songId": "W_008",
+      "lines": [
+        "Bring out the color 내 맘대로",
+        "Bring out the color",
+        "That’s how we do"
+      ]
+    },
+    {
+      "id": "NCT_0596",
+      "songId": "W_008",
+      "lines": [
+        "까만 밤이 아름답게 물 들고",
+        "기적은 우리 가까이 있잖아"
+      ]
+    },
+    {
+      "id": "NCT_0597",
+      "songId": "W_009",
+      "lines": [
+        "기억나니? 네 미소에 비친",
+        "별보다 반짝인 눈부시던 낮이?"
+      ]
+    },
+    {
+      "id": "NCT_0598",
+      "songId": "W_009",
+      "lines": [
+        "난 여전히 네가 없는 매일이",
+        "밤만 같아 계속 널 꿈꾸니까"
+      ]
+    },
+    {
+      "id": "NCT_0599",
+      "songId": "W_009",
+      "lines": [
+        "(왜) 숨었던 그림자가 너를 가려",
+        "(왜) 그어진 선 넘어로 쓸려가 넌",
+        "여기 있어 난 네가 떠난 곳에 파도처럼 다시 날 안아"
+      ]
+    },
+    {
+      "id": "NCT_0600",
+      "songId": "W_009",
+      "lines": [
+        "달에 물어 넌 어딘지",
+        "전해 줄래 (난 여기 있다고)",
+        "아침처럼 돌아올 걸 알아 다시 내게"
+      ]
+    },
+    {
+      "id": "NCT_0601",
+      "songId": "W_009",
+      "lines": [
+        "너도 나와 같은지 내 꿈은 꿨는지",
+        "어떤 항해를 했는지 궁금한 게 많아"
+      ]
+    },
+    {
+      "id": "NCT_0602",
+      "songId": "W_010",
+      "lines": [
+        "레몬이 너무 셔",
+        "한 쪽 눈을 찡그려",
+        "네가 좀 오해하면 어때"
+      ]
+    },
+    {
+      "id": "NCT_0603",
+      "songId": "W_010",
+      "lines": [
+        "햇살이 너무 세",
+        "두 쪽 뺨 다 붉어져",
+        "맘껏 좀 설레는 건 어때"
+      ]
+    },
+    {
+      "id": "NCT_0604",
+      "songId": "W_010",
+      "lines": [
+        "파돈 부서져 하얀 Veil처럼",
+        "네 머리에 씌워줄래",
+        "상상력이 번져"
+      ]
+    },
+    {
+      "id": "NCT_0605",
+      "songId": "W_010",
+      "lines": [
+        "Surf surf 두 손 잡고",
+        "바다 위에서",
+        "춤을 춰 나의 Dancer"
+      ]
+    },
+    {
+      "id": "NCT_0606",
+      "songId": "W_011",
+      "lines": [
+        "맘이 급해",
+        "한 걸음씩은 너무 답답해",
+        "말해줘, 더 빨리 갈 Cheat code to your heart"
+      ]
+    },
+    {
+      "id": "NCT_0607",
+      "songId": "W_012",
+      "lines": [
+        "I’m a robot man",
+        "여기 접속해",
+        "손대지마 Alt tab"
+      ]
+    },
+    {
+      "id": "NCT_0608",
+      "songId": "W_013",
+      "lines": [
+        "가장 서롤 아끼고 있어",
+        "나보다 나를 더 잘 아는 너",
+        "다 주고 싶어 너에게 내 모든 걸"
+      ]
+    },
+    {
+      "id": "NCT_0609",
+      "songId": "W_013",
+      "lines": [
+        "변치 않을 이 순간 Forever",
+        "사랑이란 말 대신 눈을 맞춰",
+        "I wish 같은 맘이 새겨진 Word 주고 또 받지"
+      ]
+    },
+    {
+      "id": "NCT_0610",
+      "songId": "W_014",
+      "lines": [
+        "무료한 날 늘어지는 오후 마치 모짜렐라",
+        "이것 좀 봐 달라 말하듯 마침 진동이 와"
+      ]
+    },
+    {
+      "id": "NCT_0611",
+      "songId": "W_014",
+      "lines": [
+        "대체 어디서 이런 걸 찾는지",
+        "보낸 것마다 고양이가",
+        "하나같이 귀여워 다 Woah"
+      ]
+    },
+    {
+      "id": "NCT_0612",
+      "songId": "W_014",
+      "lines": [
+        "괜히 또 심심할 때 가끔 뜬금없이",
+        "네가 보내주는 고양이 릴스가 좋아"
+      ]
+    },
+    {
+      "id": "NCT_0613",
+      "songId": "W_014",
+      "lines": [
+        "고르고 또 골라서 나름의 답장을 해",
+        "같이 미소 지을 수 있게",
+        "고양이 릴스를 보낼게"
+      ]
+    },
+    {
+      "id": "NCT_0614",
+      "songId": "W_015",
+      "lines": [
+        "오늘만 여는 캔디 스토어",
+        "한 사람만 꼭 기다려 온",
+        "구름 구름 솜사탕 만들어 우린 부드럽게 어울려"
+      ]
+    },
+    {
+      "id": "NCT_0615",
+      "songId": "W_015",
+      "lines": [
+        "레모네이드 톡톡 입속에 pop",
+        "블록사이 고인 빗물이 pop",
+        "햇빛 아래 데인 콜라가 pop"
+      ]
+    },
+    {
+      "id": "NCT_0616",
+      "songId": "W_015",
+      "lines": [
+        "너 다운 색이 절대 변하지 않게",
+        "Onetime 그래 난 바라볼게"
+      ]
+    },
+    {
+      "id": "NCT_0617",
+      "songId": "W_015",
+      "lines": [
+        "예쁜 세상 널 초대해 네 기쁨이 넘치게 시작해",
+        "멋진 기분 애니 속의 주인공은 너와 나야"
+      ]
+    },
+    {
+      "id": "NCT_0618",
+      "songId": "W_016",
+      "lines": [
+        "고장 났어 또 둘이 같이 있는 지금도",
+        "I’m losing control",
+        "한심해 아이스크림처럼 얼어버린 나"
+      ]
+    },
+    {
+      "id": "NCT_0619",
+      "songId": "W_016",
+      "lines": [
+        "우리 사이는 네 맘이",
+        "원하는 대로 가는 거잖아"
+      ]
+    },
+    {
+      "id": "NCT_0620",
+      "songId": "W_016",
+      "lines": [
+        "Don’t wanna be a fool 녹아버린",
+        "Love inside my pocket",
+        "손에 너무 꼭 쥐고 있었나 봐"
+      ]
+    },
+    {
+      "id": "NCT_0621",
+      "songId": "W_016",
+      "lines": [
+        "이럴 시간 없어",
+        "내 기회가 흘러가잖아",
+        "좀 더 용기 내자 Step it up"
+      ]
+    },
+    {
+      "id": "NCT_0622",
+      "songId": "W_016",
+      "lines": [
+        "내 맘은 진짜야 소중한 걸 줄래",
+        "떨어뜨릴까 봐 또 꼭 쥔 초콜릿"
+      ]
+    },
+    {
+      "id": "NCT_0623",
+      "songId": "W_017",
+      "lines": [
+        "언제나 함께 해 Be with you girl",
+        "지금 이 순간 원하던 걸 Take over"
+      ]
+    },
+    {
+      "id": "NCT_0624",
+      "songId": "W_017",
+      "lines": [
+        "I know 여기 불빛이",
+        "You know 어딜 비출지",
+        "This yo world so take the lead"
+      ]
+    },
+    {
+      "id": "NCT_0625",
+      "songId": "W_017",
+      "lines": [
+        "Yeah 셀 수 없는 색깔과",
+        "숨길 수 없는 네 감각",
+        "Paint me 채워줘 Because I love your design"
+      ]
+    },
+    {
+      "id": "NCT_0626",
+      "songId": "W_018",
+      "lines": [
+        "너를 위해 천 마리의 학을 접어",
+        "유리병에 넣어 수줍게 네게 건네",
+        "Maybe 이런 내 마음이 아직 뭐가 뭔진 잘은 모르지만 말야"
+      ]
+    },
+    {
+      "id": "NCT_0627",
+      "songId": "W_019",
+      "lines": [
+        "심장이 너무나 빨라",
+        "걸음이 자꾸만 엉켜",
+        "박자를 놓친 춤처럼"
+      ]
+    },
+    {
+      "id": "NCT_0628",
+      "songId": "W_019",
+      "lines": [
+        "Oh baby dance dance silly dance 뚝딱거려",
+        "I wanna dance dance silly dance 고장난 춤처럼"
+      ]
+    },
+    {
+      "id": "NCT_0629",
+      "songId": "W_020",
+      "lines": [
+        "지금까지 너 없던 시간은 어둠이었죠",
+        "너를 만난 후 나의 생활은 꿈만 같아요"
+      ]
+    },
+    {
+      "id": "NCT_0630",
+      "songId": "W_020",
+      "lines": [
+        "난 너를 안고 날아 푸른 달을 향해 날아",
+        "잠든 너의 입 맞출 거야"
+      ]
+    },
+    {
+      "id": "NCT_0631",
+      "songId": "W_020",
+      "lines": [
+        "너를 처음 본 순간 그 순간 A miracle",
+        "난 느꼈죠 기적은 바로 너란 걸"
+      ]
+    },
+    {
+      "id": "NCT_0632",
+      "songId": "W_021",
+      "lines": [
+        "소원을 말했어",
+        "넌 거기 있었고",
+        "그 날의 너와 날 기적이라 부르자"
+      ]
+    },
+    {
+      "id": "NCT_0633",
+      "songId": "W_021",
+      "lines": [
+        "My favorite thing",
+        "함께할 계절의",
+        "반짝임을 본 기분의 색깔은 뭘까?"
+      ]
+    },
+    {
+      "id": "NCT_0634",
+      "songId": "W_021",
+      "lines": [
+        "Feeling good right now",
+        "사랑이 자라나는 걸 봐봐",
+        "놓치지 말아 지금 우리는 시작된 거야"
+      ]
+    },
+    {
+      "id": "NCT_0635",
+      "songId": "W_021",
+      "lines": [
+        "넌 아름다워 푸르디푸른 눈빛",
+        "그 다정 다정 말투 이대로 변하지 마",
+        "뜨거운 바람 속 세포는 너를 느껴 버렸어"
+      ]
+    },
+    {
+      "id": "NCT_0636",
+      "songId": "W_021",
+      "lines": [
+        "혼자 훌쩍 떠나거나",
+        "내 첫 차를 산다거나",
+        "세상 어떤 선물 너를 만난 만큼 설렐까"
+      ]
+    },
+    {
+      "id": "NCT_0637",
+      "songId": "W_022",
+      "lines": [
+        "작은 가방에 잔뜩 달아둔 Dolls",
+        "예쁜 비즈와 Sticker 가득한 Phone",
+        "너를 닮아서 모두 귀여운 것뿐"
+      ]
+    },
+    {
+      "id": "NCT_0638",
+      "songId": "W_022",
+      "lines": [
+        "난 키링보다 귀여운데",
+        "무심코 웃어줄 땐",
+        "네가 나보다 귀여운 것 같애"
+      ]
+    },
+    {
+      "id": "NCT_0639",
+      "songId": "W_023",
+      "lines": [
+        "Wait a moment",
+        "흥얼거리는 Melody",
+        "가벼워진 채 Going down going down"
+      ]
+    },
+    {
+      "id": "NCT_0640",
+      "songId": "W_023",
+      "lines": [
+        "Let's ride",
+        "하늘을 넘어 Fly up high",
+        "함께라면 갈 수 있어 Anywhere"
+      ]
+    },
+    {
+      "id": "NCT_0641",
+      "songId": "W_024",
+      "lines": [
+        "눈부시도록 파란 오늘",
+        "새로운 이야기를 시작해",
+        "My love is young and it's strong"
+      ]
+    },
+    {
+      "id": "NCT_0642",
+      "songId": "W_024",
+      "lines": [
+        "늘 바라왔던 작은 소원 네가 행복했으면 좋겠어",
+        "네 웃음과, 눈물과, 모든 것들이 소중해",
+        "이 순간의 심장 소리와 떨림을 난 영원히 기억할래"
+      ]
     }
   ],
   "dictionary": [
@@ -5814,6 +8736,965 @@ export const catalog = {
     {
       "english": "Bright",
       "pronunciation": "브라이트",
+      "alternatives": []
+    },
+    {
+      "english": "sour",
+      "pronunciation": "사워",
+      "alternatives": [
+        "사우어"
+      ]
+    },
+    {
+      "english": "Yogurt",
+      "pronunciation": "요거트",
+      "alternatives": []
+    },
+    {
+      "english": "Wild",
+      "pronunciation": "와일드",
+      "alternatives": []
+    },
+    {
+      "english": "west",
+      "pronunciation": "웨스트",
+      "alternatives": []
+    },
+    {
+      "english": "Success",
+      "pronunciation": "석세스",
+      "alternatives": []
+    },
+    {
+      "english": "Why",
+      "pronunciation": "와이",
+      "alternatives": []
+    },
+    {
+      "english": "Poison",
+      "pronunciation": "포이즌",
+      "alternatives": []
+    },
+    {
+      "english": "Hot",
+      "pronunciation": "핫",
+      "alternatives": []
+    },
+    {
+      "english": "desert",
+      "pronunciation": "데저트",
+      "alternatives": []
+    },
+    {
+      "english": "cold",
+      "pronunciation": "콜드",
+      "alternatives": []
+    },
+    {
+      "english": "blizzard",
+      "pronunciation": "블리자드",
+      "alternatives": []
+    },
+    {
+      "english": "Breaking",
+      "pronunciation": "브레이킹",
+      "alternatives": []
+    },
+    {
+      "english": "news",
+      "pronunciation": "뉴스",
+      "alternatives": []
+    },
+    {
+      "english": "Venom",
+      "pronunciation": "베놈",
+      "alternatives": []
+    },
+    {
+      "english": "medicine",
+      "pronunciation": "메디슨",
+      "alternatives": []
+    },
+    {
+      "english": "code",
+      "pronunciation": "코드",
+      "alternatives": []
+    },
+    {
+      "english": "red",
+      "pronunciation": "레드",
+      "alternatives": []
+    },
+    {
+      "english": "round",
+      "pronunciation": "라운드",
+      "alternatives": []
+    },
+    {
+      "english": "merry",
+      "pronunciation": "메리",
+      "alternatives": []
+    },
+    {
+      "english": "Pretzel",
+      "pronunciation": "프레츨",
+      "alternatives": [
+        "프레즐"
+      ]
+    },
+    {
+      "english": "Girl",
+      "pronunciation": "걸",
+      "alternatives": []
+    },
+    {
+      "english": "explain",
+      "pronunciation": "익스플레인",
+      "alternatives": []
+    },
+    {
+      "english": "look",
+      "pronunciation": "룩",
+      "alternatives": []
+    },
+    {
+      "english": "still",
+      "pronunciation": "스틸",
+      "alternatives": []
+    },
+    {
+      "english": "feels",
+      "pronunciation": "필즈",
+      "alternatives": []
+    },
+    {
+      "english": "Graduation",
+      "pronunciation": "그래듀에이션",
+      "alternatives": [
+        "그레듀에이션"
+      ]
+    },
+    {
+      "english": "Tangerine",
+      "pronunciation": "탠저린",
+      "alternatives": []
+    },
+    {
+      "english": "Breath",
+      "pronunciation": "브리드",
+      "alternatives": [
+        "브릿",
+        "브릳"
+      ]
+    },
+    {
+      "english": "knocking",
+      "pronunciation": "노킹",
+      "alternatives": [
+        "낙킹",
+        "놕킹"
+      ]
+    },
+    {
+      "english": "Crunch",
+      "pronunciation": "크런치",
+      "alternatives": []
+    },
+    {
+      "english": "Heartbeat",
+      "pronunciation": "하트비트",
+      "alternatives": []
+    },
+    {
+      "english": "bum",
+      "pronunciation": "범",
+      "alternatives": []
+    },
+    {
+      "english": "drum",
+      "pronunciation": "드럼",
+      "alternatives": []
+    },
+    {
+      "english": "Beatbox",
+      "pronunciation": "비트박스",
+      "alternatives": []
+    },
+    {
+      "english": "box",
+      "pronunciation": "박스",
+      "alternatives": []
+    },
+    {
+      "english": "Boom",
+      "pronunciation": "붐",
+      "alternatives": []
+    },
+    {
+      "english": "Yum",
+      "pronunciation": "얌",
+      "alternatives": []
+    },
+    {
+      "english": "Ring",
+      "pronunciation": "링",
+      "alternatives": []
+    },
+    {
+      "english": "Rule",
+      "pronunciation": "룰",
+      "alternatives": []
+    },
+    {
+      "english": "pull",
+      "pronunciation": "풀",
+      "alternatives": []
+    },
+    {
+      "english": "Fire",
+      "pronunciation": "파이어",
+      "alternatives": []
+    },
+    {
+      "english": "Alarm",
+      "pronunciation": "알람",
+      "alternatives": []
+    },
+    {
+      "english": "Glitch",
+      "pronunciation": "글리치",
+      "alternatives": []
+    },
+    {
+      "english": "Mode",
+      "pronunciation": "모드",
+      "alternatives": []
+    },
+    {
+      "english": "Reload",
+      "pronunciation": "리로드",
+      "alternatives": []
+    },
+    {
+      "english": "Sound",
+      "pronunciation": "사운드",
+      "alternatives": []
+    },
+    {
+      "english": "Pit",
+      "pronunciation": "핏",
+      "alternatives": []
+    },
+    {
+      "english": "pat",
+      "pronunciation": "팻",
+      "alternatives": []
+    },
+    {
+      "english": "Whoop",
+      "pronunciation": "훕",
+      "alternatives": []
+    },
+    {
+      "english": "Non",
+      "pronunciation": "논",
+      "alternatives": []
+    },
+    {
+      "english": "having",
+      "pronunciation": "헤빙",
+      "alternatives": [
+        "해빙"
+      ]
+    },
+    {
+      "english": "fun",
+      "pronunciation": "펀",
+      "alternatives": []
+    },
+    {
+      "english": "power",
+      "pronunciation": "파워",
+      "alternatives": []
+    },
+    {
+      "english": "Clap",
+      "pronunciation": "클랩",
+      "alternatives": []
+    },
+    {
+      "english": "loud",
+      "pronunciation": "라우드",
+      "alternatives": []
+    },
+    {
+      "english": "Goodbye",
+      "pronunciation": "굿바이",
+      "alternatives": []
+    },
+    {
+      "english": "Everyday",
+      "pronunciation": "에브리데이",
+      "alternatives": []
+    },
+    {
+      "english": "cry",
+      "pronunciation": "크라이",
+      "alternatives": [
+        "크롸이"
+      ]
+    },
+    {
+      "english": "photo",
+      "pronunciation": "포토",
+      "alternatives": []
+    },
+    {
+      "english": "Driving",
+      "pronunciation": "드라이빙",
+      "alternatives": []
+    },
+    {
+      "english": "We're",
+      "pronunciation": "위얼",
+      "alternatives": [
+        "위어"
+      ]
+    },
+    {
+      "english": "or",
+      "pronunciation": "오어",
+      "alternatives": []
+    },
+    {
+      "english": "not",
+      "pronunciation": "낫",
+      "alternatives": []
+    },
+    {
+      "english": "coming",
+      "pronunciation": "커밍",
+      "alternatives": []
+    },
+    {
+      "english": "together",
+      "pronunciation": "투게더",
+      "alternatives": [
+        "투게덜"
+      ]
+    },
+    {
+      "english": "Hello",
+      "pronunciation": "헬로우",
+      "alternatives": []
+    },
+    {
+      "english": "Future",
+      "pronunciation": "퓨쳐",
+      "alternatives": [
+        "퓨처"
+      ]
+    },
+    {
+      "english": "many",
+      "pronunciation": "매니",
+      "alternatives": [
+        "메니"
+      ]
+    },
+    {
+      "english": "cynical",
+      "pronunciation": "시니컬",
+      "alternatives": []
+    },
+    {
+      "english": "Entropy",
+      "pronunciation": "엔트로피",
+      "alternatives": []
+    },
+    {
+      "english": "sauce",
+      "pronunciation": "소스",
+      "alternatives": []
+    },
+    {
+      "english": "Dip",
+      "pronunciation": "딥",
+      "alternatives": []
+    },
+    {
+      "english": "eh",
+      "pronunciation": "에",
+      "alternatives": []
+    },
+    {
+      "english": "Twist",
+      "pronunciation": "트위스트",
+      "alternatives": []
+    },
+    {
+      "english": "Chef",
+      "pronunciation": "쉐프",
+      "alternatives": []
+    },
+    {
+      "english": "Plate",
+      "pronunciation": "플레이트",
+      "alternatives": []
+    },
+    {
+      "english": "Spicy",
+      "pronunciation": "스파이시",
+      "alternatives": []
+    },
+    {
+      "english": "Ma",
+      "pronunciation": "마",
+      "alternatives": []
+    },
+    {
+      "english": "skill",
+      "pronunciation": "스킬",
+      "alternatives": []
+    },
+    {
+      "english": "music",
+      "pronunciation": "뮤직",
+      "alternatives": []
+    },
+    {
+      "english": "Life",
+      "pronunciation": "라이프",
+      "alternatives": []
+    },
+    {
+      "english": "party",
+      "pronunciation": "파티",
+      "alternatives": []
+    },
+    {
+      "english": "Tick",
+      "pronunciation": "틱",
+      "alternatives": []
+    },
+    {
+      "english": "tock",
+      "pronunciation": "톡",
+      "alternatives": []
+    },
+    {
+      "english": "DJ",
+      "pronunciation": "디제이",
+      "alternatives": []
+    },
+    {
+      "english": "around",
+      "pronunciation": "어라운드",
+      "alternatives": []
+    },
+    {
+      "english": "Annoying",
+      "pronunciation": "어노잉",
+      "alternatives": []
+    },
+    {
+      "english": "Sail",
+      "pronunciation": "세일",
+      "alternatives": []
+    },
+    {
+      "english": "Whale",
+      "pronunciation": "웨일",
+      "alternatives": []
+    },
+    {
+      "english": "Youth",
+      "pronunciation": "유스",
+      "alternatives": []
+    },
+    {
+      "english": "every",
+      "pronunciation": "에브리",
+      "alternatives": []
+    },
+    {
+      "english": "Moonlight",
+      "pronunciation": "문라이트",
+      "alternatives": []
+    },
+    {
+      "english": "Starlight",
+      "pronunciation": "스타라이트",
+      "alternatives": []
+    },
+    {
+      "english": "at",
+      "pronunciation": "앳",
+      "alternatives": [
+        "엣"
+      ]
+    },
+    {
+      "english": "Bridge",
+      "pronunciation": "브릿지",
+      "alternatives": [
+        "브리지"
+      ]
+    },
+    {
+      "english": "hidden",
+      "pronunciation": "히든",
+      "alternatives": []
+    },
+    {
+      "english": "track",
+      "pronunciation": "트랙",
+      "alternatives": []
+    },
+    {
+      "english": "stage",
+      "pronunciation": "스테이지",
+      "alternatives": []
+    },
+    {
+      "english": "Dream",
+      "pronunciation": "드림",
+      "alternatives": []
+    },
+    {
+      "english": "Reloading",
+      "pronunciation": "리로딩",
+      "alternatives": []
+    },
+    {
+      "english": "Yea",
+      "pronunciation": "예",
+      "alternatives": []
+    },
+    {
+      "english": "Heavy",
+      "pronunciation": "헤비",
+      "alternatives": []
+    },
+    {
+      "english": "shine",
+      "pronunciation": "샤인",
+      "alternatives": []
+    },
+    {
+      "english": "Ice",
+      "pronunciation": "아이스",
+      "alternatives": []
+    },
+    {
+      "english": "cream",
+      "pronunciation": "크림",
+      "alternatives": []
+    },
+    {
+      "english": "oui",
+      "pronunciation": "위",
+      "alternatives": []
+    },
+    {
+      "english": "Step",
+      "pronunciation": "스텝",
+      "alternatives": [
+        "스탭"
+      ]
+    },
+    {
+      "english": "Big",
+      "pronunciation": "빅",
+      "alternatives": []
+    },
+    {
+      "english": "slow",
+      "pronunciation": "슬로우",
+      "alternatives": []
+    },
+    {
+      "english": "Control",
+      "pronunciation": "컨트롤",
+      "alternatives": [
+        "콘트롤"
+      ]
+    },
+    {
+      "english": "Tempo",
+      "pronunciation": "템포",
+      "alternatives": []
+    },
+    {
+      "english": "free",
+      "pronunciation": "프리",
+      "alternatives": []
+    },
+    {
+      "english": "freaky",
+      "pronunciation": "프리키",
+      "alternatives": []
+    },
+    {
+      "english": "alright",
+      "pronunciation": "올라잇",
+      "alternatives": [
+        "얼라잇",
+        "올라이트"
+      ]
+    },
+    {
+      "english": "Hug",
+      "pronunciation": "허그",
+      "alternatives": []
+    },
+    {
+      "english": "Wait",
+      "pronunciation": "웨이트",
+      "alternatives": [
+        "웨잇"
+      ]
+    },
+    {
+      "english": "maybe",
+      "pronunciation": "메이비",
+      "alternatives": []
+    },
+    {
+      "english": "Chewing",
+      "pronunciation": "츄잉",
+      "alternatives": []
+    },
+    {
+      "english": "Gum",
+      "pronunciation": "껌",
+      "alternatives": [
+        "검"
+      ]
+    },
+    {
+      "english": "Brand",
+      "pronunciation": "브랜드",
+      "alternatives": []
+    },
+    {
+      "english": "new",
+      "pronunciation": "뉴",
+      "alternatives": []
+    },
+    {
+      "english": "Card",
+      "pronunciation": "카드",
+      "alternatives": []
+    },
+    {
+      "english": "zone",
+      "pronunciation": "존",
+      "alternatives": []
+    },
+    {
+      "english": "Hide",
+      "pronunciation": "하이드",
+      "alternatives": []
+    },
+    {
+      "english": "mind",
+      "pronunciation": "마인드",
+      "alternatives": []
+    },
+    {
+      "english": "sing",
+      "pronunciation": "씽",
+      "alternatives": [
+        "싱"
+      ]
+    },
+    {
+      "english": "Listen",
+      "pronunciation": "리슨",
+      "alternatives": []
+    },
+    {
+      "english": "Recipe",
+      "pronunciation": "레시피",
+      "alternatives": []
+    },
+    {
+      "english": "street",
+      "pronunciation": "스트릿",
+      "alternatives": [
+        "스트리트"
+      ]
+    },
+    {
+      "english": "Somethin’",
+      "pronunciation": "썸띵",
+      "alternatives": [
+        "섬띵"
+      ]
+    },
+    {
+      "english": "brighter",
+      "pronunciation": "브라이터",
+      "alternatives": [
+        "브라이더"
+      ]
+    },
+    {
+      "english": "our",
+      "pronunciation": "아워",
+      "alternatives": []
+    },
+    {
+      "english": "prism",
+      "pronunciation": "프리즘",
+      "alternatives": []
+    },
+    {
+      "english": "hour",
+      "pronunciation": "아워",
+      "alternatives": []
+    },
+    {
+      "english": "Light",
+      "pronunciation": "라이트",
+      "alternatives": [
+        "라잇"
+      ]
+    },
+    {
+      "english": "Color",
+      "pronunciation": "컬러",
+      "alternatives": []
+    },
+    {
+      "english": "Bring",
+      "pronunciation": "브링",
+      "alternatives": []
+    },
+    {
+      "english": "Veil",
+      "pronunciation": "베일",
+      "alternatives": []
+    },
+    {
+      "english": "Surf",
+      "pronunciation": "서프",
+      "alternatives": []
+    },
+    {
+      "english": "Dancer",
+      "pronunciation": "댄서",
+      "alternatives": []
+    },
+    {
+      "english": "Cheat",
+      "pronunciation": "치트",
+      "alternatives": []
+    },
+    {
+      "english": "heart",
+      "pronunciation": "하트",
+      "alternatives": []
+    },
+    {
+      "english": "robot",
+      "pronunciation": "로봇",
+      "alternatives": []
+    },
+    {
+      "english": "Alt",
+      "pronunciation": "알트",
+      "alternatives": []
+    },
+    {
+      "english": "tab",
+      "pronunciation": "탭",
+      "alternatives": []
+    },
+    {
+      "english": "Word",
+      "pronunciation": "워드",
+      "alternatives": [
+        "월드"
+      ]
+    },
+    {
+      "english": "Onetime",
+      "pronunciation": "원타임",
+      "alternatives": []
+    },
+    {
+      "english": "popping",
+      "pronunciation": "팝핑",
+      "alternatives": []
+    },
+    {
+      "english": "losing",
+      "pronunciation": "로징",
+      "alternatives": []
+    },
+    {
+      "english": "wanna",
+      "pronunciation": "워너",
+      "alternatives": []
+    },
+    {
+      "english": "fool",
+      "pronunciation": "풀",
+      "alternatives": []
+    },
+    {
+      "english": "inside",
+      "pronunciation": "인사이드",
+      "alternatives": []
+    },
+    {
+      "english": "pocket",
+      "pronunciation": "포켓",
+      "alternatives": []
+    },
+    {
+      "english": "over",
+      "pronunciation": "오버",
+      "alternatives": [
+        "오벌"
+      ]
+    },
+    {
+      "english": "yo",
+      "pronunciation": "요",
+      "alternatives": []
+    },
+    {
+      "english": "world",
+      "pronunciation": "월드",
+      "alternatives": []
+    },
+    {
+      "english": "lead",
+      "pronunciation": "리드",
+      "alternatives": []
+    },
+    {
+      "english": "Because",
+      "pronunciation": "비커즈",
+      "alternatives": []
+    },
+    {
+      "english": "design",
+      "pronunciation": "디자인",
+      "alternatives": []
+    },
+    {
+      "english": "silly",
+      "pronunciation": "실리",
+      "alternatives": []
+    },
+    {
+      "english": "Steady",
+      "pronunciation": "스테디",
+      "alternatives": []
+    },
+    {
+      "english": "thing",
+      "pronunciation": "띵",
+      "alternatives": []
+    },
+    {
+      "english": "Dolls",
+      "pronunciation": "돌즈",
+      "alternatives": []
+    },
+    {
+      "english": "Going",
+      "pronunciation": "고잉",
+      "alternatives": []
+    },
+    {
+      "english": "Anywhere",
+      "pronunciation": "애니웨어",
+      "alternatives": [
+        "애니웨얼"
+      ]
+    },
+    {
+      "english": "matter",
+      "pronunciation": "매터",
+      "alternatives": []
+    },
+    {
+      "english": "accident",
+      "pronunciation": "액시던트",
+      "alternatives": [
+        "엑시던트"
+      ]
+    },
+    {
+      "english": "full",
+      "pronunciation": "풀",
+      "alternatives": []
+    },
+    {
+      "english": "Really",
+      "pronunciation": "리얼리",
+      "alternatives": []
+    },
+    {
+      "english": "Hear",
+      "pronunciation": "히얼",
+      "alternatives": [
+        "히어"
+      ]
+    },
+    {
+      "english": "Kick",
+      "pronunciation": "킥",
+      "alternatives": []
+    },
+    {
+      "english": "Tik",
+      "pronunciation": "틱",
+      "alternatives": []
+    },
+    {
+      "english": "give",
+      "pronunciation": "기브",
+      "alternatives": []
+    },
+    {
+      "english": "Race",
+      "pronunciation": "레이스",
+      "alternatives": []
+    },
+    {
+      "english": "It’ll",
+      "pronunciation": "잇일",
+      "alternatives": []
+    },
+    {
+      "english": "Circle",
+      "pronunciation": "서클",
+      "alternatives": []
+    },
+    {
+      "english": "sky",
+      "pronunciation": "스카이",
+      "alternatives": []
+    },
+    {
+      "english": "stand",
+      "pronunciation": "스탠드",
+      "alternatives": []
+    },
+    {
+      "english": "That’s",
+      "pronunciation": "댓츠",
+      "alternatives": []
+    },
+    {
+      "english": "good",
+      "pronunciation": "굿",
       "alternatives": []
     }
   ]
