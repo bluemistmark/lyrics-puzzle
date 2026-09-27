@@ -5,6 +5,15 @@ const memory=new Map<string,string>();
 Object.defineProperty(globalThis,'localStorage',{value:{getItem:(k:string)=>memory.get(k)??null,setItem:(k:string,v:string)=>memory.set(k,v),removeItem:(k:string)=>memory.delete(k)},configurable:true});
 Object.defineProperty(globalThis,'window',{value:{localStorage:globalThis.localStorage},configurable:true});
 const {useGame}=await import('./store.ts');
+
+test('첫 문제를 아무 입력 전에 저장하고 재수화해도 유지',async()=>{
+ const firstId=useGame.getState().round.id;
+ const saved=memory.get('chosung-lyrics-live-v1');
+ assert.ok(saved);
+ assert.equal(JSON.parse(saved!).state.round.id,firstId);
+ await useGame.persist.rehydrate();
+ assert.equal(useGame.getState().round.id,firstId);
+});
 test('제목 정답 후 가사 계속 풀기, 중복 집계 방지, 저장 복원, 포기',async()=>{
  useGame.getState().reset();const q=questions.find(q=>q.id===useGame.getState().round.id)!;
  assert.ok(useGame.getState().solve(q.title));assert.equal(useGame.getState().stats.streak,1);

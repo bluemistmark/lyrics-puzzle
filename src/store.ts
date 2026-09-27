@@ -18,3 +18,13 @@ export const useGame=create<Store>()(persist((set,get)=>({
  select:(selected)=>{if(selected.length)set({selected,notice:'선택한 범위는 다음 문제부터 적용돼요.'});},
  reset:()=>{const q=pickQuestion(units,[]);set({stats:emptyStats(),round:newRound(q.id),selected:units,seen:[q.id],notice:'기록을 초기화했어요.'});}
 }),{name:'chosung-lyrics-live-v1',version:1,partialize:({notice,...s})=>s,merge:(persisted,current)=>{const p=persisted as Partial<Store>|undefined;if(!p||!p.round||!questions.some(q=>q.id===p.round?.id))return current;const selected=Array.isArray(p.selected)?p.selected.filter(u=>units.includes(u)):units;return {...current,...p,selected:selected.length?selected:units,notice:''};}}));
+
+// Persist the first randomly selected question even before the player makes a move.
+// Otherwise a refresh on the untouched opening screen would draw another question.
+if (typeof window !== 'undefined') {
+ try {
+  if (!window.localStorage.getItem('chosung-lyrics-live-v1')) {
+   useGame.setState({seen:[...useGame.getState().seen]});
+  }
+ } catch { /* Private browsing may disable storage. */ }
+}

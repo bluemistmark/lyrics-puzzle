@@ -3,4 +3,8 @@ dist/
 .sites-runtime/
 *.zip
 .openai/
+.vercel/
 
+
+.vercel
+.env*
