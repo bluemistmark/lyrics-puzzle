@@ -5,14 +5,12 @@ import {
   AudioLines,
   Check,
   ChevronDown,
-  Flame,
   Headphones,
   HelpCircle,
   Lightbulb,
   RotateCcw,
   Settings2,
   Sparkles,
-  Trophy,
   X,
 } from "lucide-react";
 import { questions, songs, initial, progress, units } from "./game";
@@ -30,6 +28,7 @@ function App() {
   const [word, setWord] = useState("");
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState("");
+  const [activeTab, setActiveTab] = useState<"play" | "record">("play");
   const [modal, setModal] = useState<
     "title" | "settings" | "help" | "giveup" | "reset" | null
   >(null);
@@ -111,7 +110,7 @@ function App() {
             </button>
             <button
               className="icon-btn"
-              aria-label="설정 및 기록"
+              aria-label="설정"
               onClick={() => setModal("settings")}
             >
               <Settings2 size={21} />
@@ -119,20 +118,14 @@ function App() {
           </div>
         </header>
         <main>
-          {/* <div className="eyebrow">
-            <span className="little-line" /> YOUR DAILY MUSIC BREAK
+          <div className="game-tabs" role="tablist" aria-label="화면 선택">
+            <button id="play-tab" role="tab" aria-selected={activeTab === "play"} aria-controls="play-panel" onClick={() => setActiveTab("play")}>플레이</button>
+            <button id="record-tab" role="tab" aria-selected={activeTab === "record"} aria-controls="record-panel" onClick={() => setActiveTab("record")}>기록</button>
           </div>
-          <div className="heading">
-            <h1>
-              아는 노래도,
-              <br />
-              <span>초성으로 보면 새롭게.</span>
-            </h1>
-            <span className="heading-symbol">♫</span>
-          </div> */}
+          <div id="play-panel" role="tabpanel" aria-labelledby="play-tab" hidden={activeTab !== "play"}>
           <div className="game-toolbar">
+            <h1>지금 도전 중</h1>
             <button className="filter" onClick={() => setModal("settings")}>
-              <Headphones size={16} />
               {g.selected.length === units.length
                 ? "NCT 전체"
                 : g.selected.length === 1
@@ -140,39 +133,12 @@ function App() {
                   : `${g.selected.length}개 유닛`}
               <ChevronDown size={15} />
             </button>
-            <span className="streak">
-              <Flame size={17} /> <b>{g.stats.streak}</b> 연속 정답
-            </span>
           </div>
           <section className="puzzle-card" aria-label="초성 가사 문제">
             <div className="card-top">
               <span className="question-label">
-                GUESS THE LYRICS <span>{q.lines.length}줄 도전</span>
+                초성 가사 <span>{q.lines.length}줄 문제</span>
               </span>
-              <AudioLines size={21} className="muted" />
-            </div>
-            <div className="progress-label">
-              <span>
-                {full
-                  ? "가사 완성!"
-                  : r.givenUp
-                    ? "정답 공개"
-                    : "가사를 채워 보세요"}
-              </span>
-              <span>
-                <b>{r.givenUp ? "—" : percent}</b>
-                {!r.givenUp && "%"}
-              </span>
-            </div>
-            <div
-              className="progress-track"
-              role="progressbar"
-              aria-label="가사 복원율"
-              aria-valuenow={percent}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            >
-              <div style={{ width: `${percent}%` }} />
             </div>
             <div className="lyrics" aria-label="문제 가사">
               {q.lines.map((line, l) => (
@@ -222,6 +188,20 @@ function App() {
                 </p>
               ))}
             </div>
+            <div
+              className="progress-track"
+              role="progressbar"
+              aria-label="가사 복원율"
+              aria-valuenow={percent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              <div style={{ width: `${percent}%` }} />
+            </div>
+            <div className="progress-label">
+              <span>{r.givenUp ? "정답 공개" : full ? "가사 완성!" : "가사 복원"}</span>
+              <b>{r.givenUp ? "—" : `${percent}%`}</b>
+            </div>
             <div className="card-bottom">
               <span className="small-status">
                 {r.solved ? (
@@ -260,7 +240,7 @@ function App() {
             </div>
           )}
           <form className="word-form" onSubmit={submit}>
-            {/* <label htmlFor="word">어떤 단어가 떠오르나요?</label> */}
+            <label htmlFor="word">떠오르는 단어</label>
             <div className="input-wrap">
               <input
                 ref={input}
@@ -285,9 +265,7 @@ function App() {
               </button>
             </div>
           </form>
-          {/* <div className="feedback" role="status">
-            {g.notice || "단어를 맞히면 같은 부분이 모두 열려요."}
-          </div> */}
+          <div className="feedback" role="status">{g.notice}</div>
           <div className="word-history">
             {r.words.length ? (
               r.words
@@ -306,9 +284,6 @@ function App() {
             )}
           </div>
           <div className="hints">
-            <span>
-              <Lightbulb size={16} /> 조금 막혔다면
-            </span>
             <div>
               <button
                 disabled={
@@ -348,7 +323,7 @@ function App() {
                     setModal("title");
                   }}
                 >
-                  <AudioLines size={19} /> 제목 알 것 같아요
+                  <AudioLines size={19} /> 제목 맞히기
                 </button>
                 <button className="skip" onClick={() => setModal("giveup")}>
                   포기하기
@@ -356,21 +331,19 @@ function App() {
               </>
             )}
           </div>
-          <div className="mini-stats">
-            <span>
-              <Trophy size={15} /> 총 <b>{g.stats.solved}</b>문제 정답
-            </span>
-            <span className="divider" />
-            <span>
-              가사 완성 <b>{g.stats.completed}</b>문제
-            </span>
           </div>
-          {/* <footer>
-            <span>한 단어씩, 기억 속 노래를 꺼내요.</span>
-            <small>
-              {songs.length}곡 · {questions.length}개 구간으로 만나는 NCT
-            </small>
-          </footer> */}
+          <section id="record-panel" role="tabpanel" aria-labelledby="record-tab" hidden={activeTab !== "record"} className="record-panel">
+            <h1>나의 기록</h1>
+            <div className="record-grid">
+              <div className="record-item"><span>제목 정답</span><strong>{g.stats.solved}문제</strong></div>
+              <div className="record-item"><span>가사 완성</span><strong>{g.stats.completed}문제</strong></div>
+              <div className="record-item"><span>현재 연속 정답</span><strong>{g.stats.streak}문제</strong></div>
+              <div className="record-item"><span>최고 연속 정답</span><strong>{g.stats.best}문제</strong></div>
+              <div className="record-item"><span>직접 완성</span><strong>{g.stats.direct}문제</strong></div>
+            </div>
+            <p className="record-note">기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도 삭제됩니다.</p>
+            <button className="reset-btn" onClick={() => setModal("reset")}><RotateCcw size={14} /> 기록 초기화</button>
+          </section>
         </main>
       </div>
       <dialog
@@ -479,32 +452,6 @@ function App() {
                   ))}
                 </div>
               </fieldset>
-              <h3>나의 플레이 기록</h3>
-              <div className="stats-grid">
-                <div>
-                  <b>{g.stats.solved}</b>
-                  <span>제목 정답</span>
-                </div>
-                <div>
-                  <b>{g.stats.best}</b>
-                  <span>최고 연속</span>
-                </div>
-                <div>
-                  <b>{g.stats.completed}</b>
-                  <span>가사 완성</span>
-                </div>
-                <div>
-                  <b>{g.stats.direct}</b>
-                  <span>직접 완성</span>
-                </div>
-              </div>
-              <p className="sample-note">
-                기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도
-                삭제됩니다.
-              </p>
-              <button className="reset-btn" onClick={() => setModal("reset")}>
-                <RotateCcw size={14} /> 기록 초기화
-              </button>
               <button className="primary" onClick={() => setModal(null)}>
                 이어서 플레이
               </button>

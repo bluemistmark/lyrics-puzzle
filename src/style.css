@@ -45,3 +45,54 @@
 [data-theme=dark] .error{color:#f3af90}
 [data-theme=dark] dialog::backdrop{background:#00000099}
 @keyframes reveal-dark{from{background:#698842}to{background:#3b5129}}
+
+/* Compact play and record layout */
+main{max-width:440px;margin:0 auto 48px}
+.game-tabs{display:flex;gap:28px;border-bottom:1px solid #e2e7d9;margin:0 -4px;padding:0 4px}
+.game-tabs button{background:none;color:#7b8374;border-bottom:2px solid transparent;padding:20px 0 13px;font-size:14px;font-weight:600}
+.game-tabs button[aria-selected=true]{color:#20241f;border-color:#286442}
+main [hidden]{display:none!important}
+.game-toolbar{margin:26px 0 12px}
+.game-toolbar h1,.record-panel h1{font-size:19px;line-height:1.4;letter-spacing:-.6px;margin:0}
+.filter{border:0;background:#eef1e7;border-radius:9px;padding:8px 11px;font-size:12px}
+.puzzle-card{background:#eaf2de;border:0;border-radius:16px;box-shadow:none;padding:18px 17px 16px}
+.card-top{margin-bottom:0}
+.question-label{font-size:15px;letter-spacing:-.3px;color:#243c25}
+.question-label>span{margin-left:8px;border:0;border-radius:20px;background:#d7e8bf;color:#456033;padding:5px 9px;font-size:11px}
+.lyrics{min-height:0;padding:23px 0 25px;gap:14px}
+.lyrics p{font-size:18px;line-height:1.8;letter-spacing:.6px;color:#354c36;word-spacing:4px}
+.progress-track{height:7px;margin:0;background:#d8e0cc}
+.progress-track>div{background:#86ab4e}
+.progress-label{margin-top:8px;font-size:12px;color:#66795a}
+.progress-label b{font-size:13px;color:#286442}
+.card-bottom{border:0;padding-top:13px;color:#66795a}
+.word-form{margin-top:20px}
+.word-form label{margin-bottom:8px}
+.input-wrap{border-radius:11px;padding:4px}
+.input-wrap button{min-height:42px;width:44px;border-radius:8px}
+.feedback{min-height:0;margin:7px 3px 0}
+.feedback:empty{display:none}
+.word-history{min-height:0;padding:9px 2px 3px}
+.hints{margin:13px 0 17px}
+.hints>div{gap:8px}
+.hints button{background:#eef1e7;border:0;border-radius:9px;padding:10px 12px;font-size:12px}
+.bottom-actions .primary{min-height:47px;border-radius:10px}
+.record-panel{padding-top:26px}
+.record-grid{display:grid;gap:10px;margin-top:14px}
+.record-item{display:flex;justify-content:space-between;align-items:center;background:#eef1e7;border-radius:12px;padding:16px}
+.record-item span{font-size:13px;color:#627050}
+.record-item strong{font-size:16px;color:#243c25}
+.record-note{font-size:12px;color:#7b8374;line-height:1.7;margin:18px 2px}
+.record-panel .reset-btn{margin:20px auto}
+[data-theme=dark] .game-tabs{border-color:#3d4b39}
+[data-theme=dark] .game-tabs button{color:#adbba3}
+[data-theme=dark] .game-tabs button[aria-selected=true]{color:#e7eee1;border-color:#bce583}
+[data-theme=dark] .filter,[data-theme=dark] .record-item{background:#2b3827;color:#e7eee1}
+[data-theme=dark] .puzzle-card{background:#2e4325;border:0;box-shadow:none}
+[data-theme=dark] .question-label,[data-theme=dark] .record-item strong{color:#e1ffb0}
+[data-theme=dark] .question-label>span{background:#3b5129;color:#d0eba9;border:0}
+[data-theme=dark] .lyrics p{color:#d8e3cf}
+[data-theme=dark] .progress-label,[data-theme=dark] .card-bottom{color:#adbba3}
+[data-theme=dark] .record-item span,[data-theme=dark] .record-note{color:#adbba3}
+@media(max-width:600px){main{margin:0 auto 40px}.game-tabs{margin:0 -22px;padding:0 22px}.game-toolbar{margin:24px 0 11px}.puzzle-card{border-radius:16px;padding:18px 16px 15px}.card-top{margin:0}.lyrics{min-height:0;padding:22px 0 24px;gap:13px}.lyrics p{font-size:17px;line-height:1.8;letter-spacing:.5px}.word-form{margin-top:19px}.hints{margin:12px 0 17px}}
+@media(max-width:360px){.game-tabs{margin:0 -16px;padding:0 16px}.lyrics p{font-size:16px}}
