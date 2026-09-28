@@ -10,7 +10,7 @@ const json = (status: number, body: object) =>
   });
 
 export async function POST(request: Request) {
-  const url = process.env.SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const hook = process.env.VERCEL_DEPLOY_HOOK_URL;
   if (!url || !serviceKey || !hook)
