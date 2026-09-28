@@ -17,6 +17,7 @@ import { questions, songs, initial, progress, units } from "./game";
 import { useGame } from "./store";
 import "./style.css";
 import { useTheme, type Theme } from "./theme";
+import { Analytics } from "@vercel/analytics/react";
 function App() {
   const { theme, setTheme } = useTheme();
   const g = useGame();
@@ -539,6 +540,7 @@ function App() {
           )}
         </div>
       </dialog>
+      <Analytics />
     </>
   );
 }
