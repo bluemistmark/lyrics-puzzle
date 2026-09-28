@@ -10,7 +10,7 @@ import {
   questions,
   units,
 } from "./game.ts";
-type Stats = {
+export type Stats = {
   solved: number;
   completed: number;
   direct: number;
@@ -18,7 +18,7 @@ type Stats = {
   streak: number;
   best: number;
 };
-type Round = {
+export type Round = {
   id: string;
   revealed: string[];
   words: { word: string; hit: boolean }[];
