@@ -29,7 +29,7 @@ React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/20260928000000_init.sql](supabase/migrations/20260928000000_init.sql)을 실행합니다.
 2. **관리자 계정**: Authentication > Users > Add user로 이메일·비밀번호 계정을 만들고, SQL Editor에서 `insert into public.admins (email) values ('이메일');`을 실행합니다. Authentication 설정에서 새 가입(Allow new users to sign up)은 꺼 두는 것을 권장합니다. 가입하더라도 `admins`에 없으면 데이터에 접근할 수 없습니다.
 3. **환경 변수**: [.env.example](.env.example)을 `.env.local`로 복사해 값을 채우고, Vercel > Project Settings > Environment Variables에도 같은 이름으로 등록합니다(Production, Preview).
-   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`: 어드민 화면용. 공개돼도 되는 값입니다.
+   - `SUPABASE_URL`, `SUPABASE_ANON_KEY`: 어드민 화면용. 공개돼도 되는 값입니다.
    - `SUPABASE_SERVICE_ROLE_KEY`: 빌드와 게시 API 전용 비밀 키입니다. **`VITE_` 접두사를 붙이면 브라우저 번들에 노출되니 절대 붙이지 마세요.** 노출된 적이 있으면 Supabase에서 즉시 재발급하세요.
    - `VERCEL_DEPLOY_HOOK_URL`: Vercel > Project Settings > Git > Deploy Hooks에서 `main` 브랜치용으로 만든 URL. 이것도 비밀 값입니다.
 4. **기존 시트 데이터 옮기기**(한 번만): `npm run data:seed -- --dry-run`으로 검증한 뒤 `npm run data:seed`를 실행합니다. `data/*.csv`(시트 스냅샷)를 읽어 사용 여부가 N인 문제까지 모두 옮깁니다. 테이블에 데이터가 있으면 멈추며, 덮어쓰려면 `--overwrite`를 붙입니다(같은 ID는 덮어쓰고, 지우지는 않음).

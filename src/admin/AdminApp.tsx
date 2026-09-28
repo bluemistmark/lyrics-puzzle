@@ -15,7 +15,7 @@ export function AdminApp() {
       <main className="admin-center">
         <h1>설정이 필요해요</h1>
         <p>
-          <code>VITE_SUPABASE_URL</code>과 <code>VITE_SUPABASE_ANON_KEY</code>{" "}
+          <code>SUPABASE_URL</code>과 <code>SUPABASE_ANON_KEY</code>{" "}
           환경 변수를 설정한 뒤 다시 빌드하세요. (<code>.env.example</code>{" "}
           참고)
         </p>
