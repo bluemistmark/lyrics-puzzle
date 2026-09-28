@@ -1464,3 +1464,22 @@ main [hidden] {
 [data-theme="dark"] .tab-dot {
   background: #ff9a73;
 }
+
+/* Rights notice under every tab */
+.site-footer {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 18px 2px 36px;
+  border-top: 1px solid #e2e7d9;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #8a9282;
+  word-break: keep-all;
+}
+.site-footer p {
+  margin: 0 0 4px;
+}
+[data-theme="dark"] .site-footer {
+  border-color: #3d4b39;
+  color: #8f9c86;
+}
