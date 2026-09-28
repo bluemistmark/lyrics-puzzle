@@ -3,9 +3,7 @@
 export function Footer() {
   return (
     <footer className="site-footer">
-      <p>
-        가사의 저작권은 각 곡의 작사가와 권리자에게 있습니다.
-      </p>
+      <p>가사의 저작권은 각 곡의 작사가와 권리자에게 있습니다.</p>
     </footer>
   );
 }
