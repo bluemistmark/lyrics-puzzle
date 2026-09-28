@@ -1,15 +1,19 @@
 import { useMemo, useState } from "react";
-import type { Issue, QuestionRow, SongRow } from "../data/build-catalog.ts";
+import {
+  compareSongs,
+  sortArtists,
+  type Issue,
+  type QuestionRow,
+  type SongRow,
+} from "../data/build-catalog.ts";
 import { scanLine, sortDictionary } from "../data/english.ts";
 import { FormDialog } from "./FormDialog";
 import { nextQuestionId } from "./ids";
 import { useAdmin } from "./store";
 
-const bySortOrder = (a: SongRow, b: SongRow) =>
-  a.sort_order - b.sort_order || (a.id < b.id ? -1 : 1);
-
 export function QuestionsTab({ issues }: { issues: Issue[] }) {
   const questions = useAdmin((s) => s.questions);
+  const artistRows = useAdmin((s) => s.artists);
   const songs = useAdmin((s) => s.songs);
   const saveQuestion = useAdmin((s) => s.saveQuestion);
   const removeQuestion = useAdmin((s) => s.removeQuestion);
@@ -19,9 +23,12 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
   const [onlyIssues, setOnlyIssues] = useState(false);
   const [editing, setEditing] = useState<QuestionRow | "new" | null>(null);
 
-  const sortedSongs = useMemo(() => [...songs].sort(bySortOrder), [songs]);
+  const sortedSongs = useMemo(
+    () => [...songs].sort(compareSongs(artistRows)),
+    [songs, artistRows],
+  );
   const songById = useMemo(() => new Map(songs.map((s) => [s.id, s])), [songs]);
-  const artists = [...new Set(sortedSongs.map((s) => s.artist))];
+  const artistNames = sortArtists(artistRows).map((a) => a.name);
   const issuesById = useMemo(() => {
     const map = new Map<string, string[]>();
     for (const issue of issues)
@@ -77,7 +84,7 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
           }}
         >
           <option value="">전체 가수</option>
-          {artists.map((a) => (
+          {artistNames.map((a) => (
             <option key={a}>{a}</option>
           ))}
         </select>
@@ -196,6 +203,7 @@ function QuestionForm({
   onClose: () => void;
 }) {
   const questions = useAdmin((s) => s.questions);
+  const artists = useAdmin((s) => s.artists);
   const songs = useAdmin((s) => s.songs);
   const dictionary = useAdmin((s) => s.dictionary);
   const saveQuestion = useAdmin((s) => s.saveQuestion);
@@ -217,10 +225,10 @@ function QuestionForm({
   );
   const grouped = useMemo(() => {
     const map = new Map<string, SongRow[]>();
-    for (const s of [...songs].sort(bySortOrder))
+    for (const s of [...songs].sort(compareSongs(artists)))
       map.set(s.artist, [...(map.get(s.artist) ?? []), s]);
     return [...map];
-  }, [songs]);
+  }, [songs, artists]);
 
   return (
     <FormDialog

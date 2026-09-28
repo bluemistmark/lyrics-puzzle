@@ -24,16 +24,33 @@ async function fetchAll<T>(
   }
 }
 
+export const ARTIST_COLUMNS = "name,prefix,sort_order";
 export const SONG_COLUMNS = "id,artist,title,aliases,sort_order";
 export const QUESTION_COLUMNS = "id,song_id,lines,active";
 export const DICTIONARY_COLUMNS = "english,pronunciation,alternatives";
 
-/** Loads every row of the three data tables. */
+/** Loads every row of the data tables. */
 export async function fetchRows(client: SupabaseClient): Promise<Rows> {
-  const [songs, questions, dictionary] = await Promise.all([
+  const [artists, songs, questions, dictionary] = await Promise.all([
+    fetchAll<Rows["artists"][number]>(
+      client,
+      "artists",
+      ARTIST_COLUMNS,
+      "name",
+    ),
     fetchAll<Rows["songs"][number]>(client, "songs", SONG_COLUMNS, "id"),
-    fetchAll<Rows["questions"][number]>(client, "questions", QUESTION_COLUMNS, "id"),
-    fetchAll<Rows["dictionary"][number]>(client, "dictionary", DICTIONARY_COLUMNS, "english"),
+    fetchAll<Rows["questions"][number]>(
+      client,
+      "questions",
+      QUESTION_COLUMNS,
+      "id",
+    ),
+    fetchAll<Rows["dictionary"][number]>(
+      client,
+      "dictionary",
+      DICTIONARY_COLUMNS,
+      "english",
+    ),
   ]);
-  return { songs, questions, dictionary };
+  return { artists, songs, questions, dictionary };
 }

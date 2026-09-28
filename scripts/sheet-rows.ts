@@ -100,8 +100,23 @@ export async function sheetRows(): Promise<Rows> {
       ];
   }
 
+  // Artists in first-appearance order; prefix = most common "X" in their "X_001" song ids.
+  const prefixCounts = new Map<string, Map<string, number>>();
+  for (const s of songs.values()) {
+    const counts = prefixCounts.get(s.artist) ?? new Map<string, number>();
+    const prefix = s.id.split("_")[0];
+    counts.set(prefix, (counts.get(prefix) ?? 0) + 1);
+    prefixCounts.set(s.artist, counts);
+  }
+  const artists = [...prefixCounts].map(([name, counts], sort_order) => ({
+    name,
+    prefix: [...counts].sort((a, b) => b[1] - a[1])[0][0],
+    sort_order,
+  }));
+
   if (errors.length) throw Error(errors.join("\n"));
   return {
+    artists,
     songs: [...songs.values()],
     questions,
     dictionary: [...dictionary.values()],

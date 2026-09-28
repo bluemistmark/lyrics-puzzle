@@ -27,9 +27,9 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
 
 - **`src/catalog.ts`는 생성 파일**이다. 직접 수정하지 않는다. 저장소 사본은 로컬 개발·테스트용 스냅샷이고, 배포 빌드는 매번 DB에서 새로 만든다.
 - **`src/data/english.ts`** — 영어 사전 매칭의 유일한 구현(`englishKey`, `entryAt`, `scanLine`). 게임 `tokenize`, 빌드 검증, 어드민 미리보기가 모두 이것을 쓰므로 "게시 검증 통과 = 게임에서 throw하지 않음"이 보장된다. 긴 항목 우선, 앞뒤가 라틴 문자면 불일치. `entryAt`은 길이별 인덱스(WeakMap 캐시)를 쓰므로 `sortDictionary` 결과 배열을 변경하지 말 것.
-- **`src/data/build-catalog.ts`** — `buildCatalog(rows)` → `{ catalog, issues }`. 필수값, ID 중복, 없는 곡, 같은 가수/곡명의 다른 ID, 발음 충돌, 사용 중 문제의 사전 미등록 영어를 `issues`로 모은다. 사용 중인 문제만, 그리고 그런 문제가 있는 곡만 `sort_order` 순으로 게시한다(유닛 표시 순서가 여기서 정해짐). 같은 발음의 중복 사전 항목은 대체발음을 합친다.
-- **`src/data/rows.ts`** — 세 테이블 전체를 1000행 단위로 읽는다. 스크립트(service role)와 어드민(anon + 로그인 세션)이 공유한다.
-- **DB 스키마·권한**: `supabase/migrations/*.sql`. RLS로 `admins` 테이블에 이메일이 있는 로그인 사용자만 읽고 쓴다. anon은 접근 불가. 빌드·게시 API는 service role 키로 RLS를 우회한다. 스키마를 바꾸면 새 마이그레이션 파일을 추가하고 `build-catalog.ts`의 Row 타입과 `rows.ts`의 컬럼 목록을 함께 고친다.
+- **`src/data/build-catalog.ts`** — `buildCatalog(rows)` → `{ catalog, issues }`. 필수값, ID 중복, 없는 곡, 가수 목록에 없는 가수, 잘못된·중복 접두어, 같은 가수/곡명의 다른 ID, 발음 충돌, 사용 중 문제의 사전 미등록 영어를 `issues`로 모은다. 사용 중인 문제만, 그리고 그런 문제가 있는 곡만 게시하고, 곡 순서는 `compareSongs`(가수 `sort_order` → 곡 `sort_order` → id)로 정한다. 게임의 `units`는 곡 순서에서 나오므로 **가수 순서 = 유닛 표시 순서**다. 어드민 목록도 같은 비교 함수를 쓴다. 같은 발음의 중복 사전 항목은 대체발음을 합친다.
+- **`src/data/rows.ts`** — 데이터 테이블(artists, songs, questions, dictionary) 전체를 1000행 단위로 읽는다. 스크립트(service role)와 어드민(anon + 로그인 세션)이 공유한다.
+- **DB 스키마·권한**: `supabase/migrations/*.sql`(이름 순서대로 적용). `artists.name`이 PK이고 `songs.artist`가 이를 참조한다(`on update cascade`, `on delete restrict`). 그래서 가수 이름 변경은 PK update이고, 어드민 store의 `saveArtist`가 로컬 songs도 같이 바꾼다. RLS로 `admins` 테이블에 이메일이 있는 로그인 사용자만 읽고 쓴다. anon은 접근 불가. 빌드·게시 API는 service role 키로 RLS를 우회한다. 스키마를 바꾸면 새 마이그레이션 파일을 추가하고 `build-catalog.ts`의 Row 타입과 `rows.ts`의 컬럼 목록을 함께 고친다.
 - **`game.ts`** — 순수 게임 로직. 모듈 로드 시점에 모든 문제를 `tokenize`한다. `tokenize(line, sorted?)`의 두 번째 인자는 사전이므로 `lines.map(tokenize)`처럼 넘기면 안 된다.
 - **공개 키 형식**: `"${줄}:${토큰}:${글자인덱스}"` (한글), `"${줄}:${토큰}:en"` (영어 토큰 전체). `matches`, `allKeys`, `progress`, 스토어의 `revealed`, 힌트 로직이 모두 이 형식에 의존한다. 공백·문장부호 토큰은 키가 없어 완성률에서 제외된다.
 - `matches` 규칙: 영어는 원문/표시발음/대체발음과 전체 일치해야 공개. 한글은 입력과 토큰 사이 연속 2글자 이상 공통 부분을 공개하고, 1글자 입력은 토큰 전체가 그 글자이거나 해당 토큰이 이미 일부 공개된 경우에만 인정.
@@ -43,7 +43,7 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
   - 테마는 `theme.ts`(`lyrics-theme` 키, `data-theme` 속성)에서 관리하며, `useTheme`은 `App`에서만 호출하고 설정 모달에는 props로 넘긴다(여러 곳에서 호출하면 상태가 따로 논다).
   - 한글 IME 조합 중 Enter 제출 방지는 `utils/ime.ts`의 `blockComposingEnter`를 쓴다.
 - **어드민** (`admin.html` → `src/admin/`) — 별도 Vite 엔트리(`vite.config.ts`)라 supabase-js는 어드민 번들에만 들어간다. 게임 코드(`src/components`, `game.ts` 등)에서 `src/admin/`이나 supabase-js를 import하지 말 것.
-  - `admin/store.ts`(zustand)가 세 테이블 전체를 메모리에 들고, 각 액션은 Supabase에 먼저 쓰고 성공하면 로컬 상태를 갱신한다. 에러는 `describeError`로 한국어 메시지로 바꿔 throw한다.
+  - `admin/store.ts`(zustand)가 데이터 테이블 전체를 메모리에 들고, 각 액션은 Supabase에 먼저 쓰고 성공하면 로컬 상태를 갱신한다. 에러는 `describeError`로 한국어 메시지로 바꿔 throw한다.
   - `AdminApp`이 `buildCatalog`를 `useMemo`로 돌려 `issues`를 문제 탭·게시 탭에 넘긴다(빌드와 같은 검증).
   - 편집 폼은 `FormDialog`(마운트 시 열림, `onSubmit`에서 throw하면 에러 표시). 곡ID·문제ID·사전 영어(PK)는 생성 후 수정 불가로 두었다. 문제ID는 플레이어 localStorage 진행 기록이 참조한다.
   - 환경 변수가 없으면 `supabase`가 `null`이고 설정 안내 화면만 보인다.

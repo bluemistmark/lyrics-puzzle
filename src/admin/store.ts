@@ -1,11 +1,14 @@
 import { create } from "zustand";
-import type {
-  DictionaryRow,
-  QuestionRow,
-  Rows,
-  SongRow,
+import {
+  sortArtists,
+  type ArtistRow,
+  type DictionaryRow,
+  type QuestionRow,
+  type Rows,
+  type SongRow,
 } from "../data/build-catalog.ts";
 import {
+  ARTIST_COLUMNS,
   DICTIONARY_COLUMNS,
   fetchRows,
   QUESTION_COLUMNS,
@@ -17,6 +20,11 @@ type AdminStore = Rows & {
   status: "idle" | "loading" | "ready" | "error";
   error: string;
   load: () => Promise<void>;
+  /** `originalName` is null for a new artist; renaming cascades to its songs in the DB. */
+  saveArtist: (row: ArtistRow, originalName: string | null) => Promise<void>;
+  removeArtist: (name: string) => Promise<void>;
+  /** Swaps sort order with the neighbouring artist. */
+  moveArtist: (name: string, direction: -1 | 1) => Promise<void>;
   saveSong: (row: SongRow, isNew: boolean) => Promise<void>;
   removeSong: (id: string) => Promise<void>;
   saveQuestion: (row: QuestionRow, isNew: boolean) => Promise<void>;
@@ -30,22 +38,21 @@ const db = () => {
   return supabase;
 };
 
-/** Inserts or updates one row and returns it as stored. Errors are thrown as Korean messages. */
+/**
+ * Inserts `row` (match = null) or updates the row whose `match[0]` column equals
+ * `match[1]`, and returns it as stored. Errors are thrown as Korean messages.
+ */
 async function write<T>(
   table: string,
   columns: string,
-  key: keyof T & string,
   row: T,
-  isNew: boolean,
+  match: [column: string, value: string] | null,
 ): Promise<T> {
   // No generated DB types, so the untyped query builder gets plain records.
   const values = row as Record<string, unknown>;
-  const query = isNew
-    ? db().from(table).insert(values)
-    : db()
-        .from(table)
-        .update(values)
-        .eq(key as string, values[key]);
+  const query = match
+    ? db().from(table).update(values).eq(match[0], match[1])
+    : db().from(table).insert(values);
   const { data, error } = await query.select(columns).single();
   if (error) throw Error(describeError(error));
   return data as T;
@@ -61,6 +68,7 @@ const upsertLocal = <T>(list: T[], row: T, same: (item: T) => boolean) =>
 
 /** Admin copy of all DB rows. Every action writes to Supabase first, then updates local state. */
 export const useAdmin = create<AdminStore>()((set, get) => ({
+  artists: [],
   songs: [],
   questions: [],
   dictionary: [],
@@ -74,8 +82,55 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
       set({ status: "error", error: (error as Error).message });
     }
   },
+  saveArtist: async (row, originalName) => {
+    const match: [string, string] | null =
+      originalName === null ? null : ["name", originalName];
+    const saved = await write("artists", ARTIST_COLUMNS, row, match);
+    const { artists, songs } = get();
+    const renamed = originalName !== null && originalName !== saved.name;
+    set({
+      artists: upsertLocal(
+        artists,
+        saved,
+        (a) => a.name === (originalName ?? saved.name),
+      ),
+      // Mirrors the `on update cascade` foreign key.
+      songs: renamed
+        ? songs.map((s) =>
+            s.artist === originalName ? { ...s, artist: saved.name } : s,
+          )
+        : songs,
+    });
+  },
+  removeArtist: async (name) => {
+    await remove("artists", "name", name);
+    set({ artists: get().artists.filter((a) => a.name !== name) });
+  },
+  moveArtist: async (name, direction) => {
+    const ordered = sortArtists(get().artists);
+    const i = ordered.findIndex((a) => a.name === name);
+    const j = i + direction;
+    if (i < 0 || j < 0 || j >= ordered.length) return;
+    [ordered[i], ordered[j]] = [ordered[j], ordered[i]];
+    // Renumber everyone 0..n-1 (gaps from deletions would otherwise let a swap
+    // jump past other artists) and save only the rows whose number changed.
+    const current = new Map(get().artists.map((a) => [a.name, a.sort_order]));
+    const changed = ordered
+      .map((a, index) => ({ ...a, sort_order: index }))
+      .filter((a) => current.get(a.name) !== a.sort_order);
+    const saved = await Promise.all(
+      changed.map((a) => write("artists", ARTIST_COLUMNS, a, ["name", a.name])),
+    );
+    const byName = new Map(saved.map((a) => [a.name, a]));
+    set({ artists: get().artists.map((a) => byName.get(a.name) ?? a) });
+  },
   saveSong: async (row, isNew) => {
-    const saved = await write("songs", SONG_COLUMNS, "id", row, isNew);
+    const saved = await write(
+      "songs",
+      SONG_COLUMNS,
+      row,
+      isNew ? null : ["id", row.id],
+    );
     set({ songs: upsertLocal(get().songs, saved, (s) => s.id === saved.id) });
   },
   removeSong: async (id) => {
@@ -87,7 +142,12 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
     });
   },
   saveQuestion: async (row, isNew) => {
-    const saved = await write("questions", QUESTION_COLUMNS, "id", row, isNew);
+    const saved = await write(
+      "questions",
+      QUESTION_COLUMNS,
+      row,
+      isNew ? null : ["id", row.id],
+    );
     set({
       questions: upsertLocal(get().questions, saved, (q) => q.id === saved.id),
     });
@@ -100,9 +160,8 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
     const saved = await write(
       "dictionary",
       DICTIONARY_COLUMNS,
-      "english",
       row,
-      isNew,
+      isNew ? null : ["english", row.english],
     );
     set({
       dictionary: upsertLocal(

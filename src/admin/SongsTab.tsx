@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
-import type { SongRow } from "../data/build-catalog.ts";
+import {
+  compareSongs,
+  sortArtists,
+  type SongRow,
+} from "../data/build-catalog.ts";
 import { FormDialog } from "./FormDialog";
 import { joinList, nextSongId, splitList } from "./ids";
 import { useAdmin } from "./store";
@@ -8,9 +12,11 @@ const includes = (value: string, query: string) =>
   value.toLowerCase().includes(query.trim().toLowerCase());
 
 export function SongsTab() {
+  const artists = useAdmin((s) => s.artists);
   const songs = useAdmin((s) => s.songs);
   const questions = useAdmin((s) => s.questions);
   const removeSong = useAdmin((s) => s.removeSong);
+  const [artist, setArtist] = useState("");
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<SongRow | "new" | null>(null);
 
@@ -27,13 +33,15 @@ export function SongsTab() {
   const visible = useMemo(
     () =>
       [...songs]
-        .sort((a, b) => a.sort_order - b.sort_order || (a.id < b.id ? -1 : 1))
-        .filter((s) =>
-          [s.id, s.artist, s.title, ...s.aliases].some((v) =>
-            includes(v, query),
-          ),
+        .sort(compareSongs(artists))
+        .filter(
+          (s) =>
+            (!artist || s.artist === artist) &&
+            [s.id, s.artist, s.title, ...s.aliases].some((v) =>
+              includes(v, query),
+            ),
         ),
-    [songs, query],
+    [songs, artists, artist, query],
   );
 
   const remove = async (song: SongRow) => {
@@ -52,6 +60,12 @@ export function SongsTab() {
   return (
     <section>
       <div className="toolbar">
+        <select value={artist} onChange={(e) => setArtist(e.target.value)}>
+          <option value="">전체 가수</option>
+          {sortArtists(artists).map((a) => (
+            <option key={a.name}>{a.name}</option>
+          ))}
+        </select>
         <input
           type="search"
           placeholder="ID, 가수, 곡명, 별칭 검색"
@@ -60,7 +74,14 @@ export function SongsTab() {
         />
         <span className="admin-spacer" />
         <span className="muted">{visible.length}곡</span>
-        <button className="primary" onClick={() => setEditing("new")}>
+        <button
+          className="primary"
+          onClick={() => setEditing("new")}
+          disabled={!artists.length}
+          title={
+            artists.length ? undefined : "가수 탭에서 가수를 먼저 추가하세요."
+          }
+        >
           곡 추가
         </button>
       </div>
@@ -103,6 +124,7 @@ export function SongsTab() {
       {editing && (
         <SongForm
           song={editing === "new" ? null : editing}
+          defaultArtist={artist}
           onClose={() => setEditing(null)}
         />
       )}
@@ -112,21 +134,24 @@ export function SongsTab() {
 
 function SongForm({
   song,
+  defaultArtist,
   onClose,
 }: {
   song: SongRow | null;
+  defaultArtist: string;
   onClose: () => void;
 }) {
+  const artists = useAdmin((s) => s.artists);
   const songs = useAdmin((s) => s.songs);
   const saveSong = useAdmin((s) => s.saveSong);
   const isNew = !song;
-  const [artist, setArtist] = useState(song?.artist ?? "");
+  const [artist, setArtist] = useState(song?.artist ?? defaultArtist);
   const [title, setTitle] = useState(song?.title ?? "");
   const [aliases, setAliases] = useState(joinList(song?.aliases ?? []));
   const [id, setId] = useState<string>();
-  // Until the id is typed by hand, suggest the next one for the chosen artist.
-  const shownId = song?.id ?? id ?? nextSongId(songs, artist);
-  const artists = [...new Set(songs.map((s) => s.artist))];
+  // Until the id is typed by hand, suggest the next one from the artist's prefix.
+  const prefix = artists.find((a) => a.name === artist)?.prefix ?? "";
+  const shownId = song?.id ?? id ?? nextSongId(songs, prefix);
 
   return (
     <FormDialog
@@ -150,18 +175,20 @@ function SongForm({
       }}
     >
       <label>
-        가수명
-        <input
-          list="artists"
+        가수
+        <select
           value={artist}
           onChange={(e) => setArtist(e.target.value)}
           required
-        />
-        <datalist id="artists">
-          {artists.map((a) => (
-            <option key={a} value={a} />
+        >
+          <option value="">가수 선택</option>
+          {sortArtists(artists).map((a) => (
+            <option key={a.name} value={a.name}>
+              {a.name} ({a.prefix})
+            </option>
           ))}
-        </datalist>
+        </select>
+        <small>새 가수는 가수 탭에서 먼저 추가하세요.</small>
       </label>
       <label>
         곡명
@@ -183,7 +210,7 @@ function SongForm({
         />
         <small>
           {isNew
-            ? "저장 후에는 바꿀 수 없어요. 새 가수라면 직접 입력하세요 (예: W_001)."
+            ? "가수 접두어로 다음 번호를 제안해요. 저장 후에는 바꿀 수 없어요."
             : "곡ID는 바꿀 수 없어요."}
         </small>
       </label>

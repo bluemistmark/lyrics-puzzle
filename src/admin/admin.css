@@ -225,6 +225,12 @@ tr.inactive td {
 .row-actions button + button {
   margin-left: 4px;
 }
+.order-cell {
+  text-align: left;
+}
+.order-cell button {
+  padding: 2px 8px;
+}
 
 .form-dialog {
   width: min(560px, calc(100vw - 32px));

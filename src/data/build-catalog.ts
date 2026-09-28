@@ -6,6 +6,12 @@ import {
 } from "./english.ts";
 
 // Row shapes of the Supabase tables (see supabase/migrations).
+export type ArtistRow = {
+  name: string;
+  /** Prefix for suggested song ids (e.g. "D" → "D_073"). Letters and digits only. */
+  prefix: string;
+  sort_order: number;
+};
 export type SongRow = {
   id: string;
   artist: string;
@@ -21,6 +27,7 @@ export type QuestionRow = {
 };
 export type DictionaryRow = DictionaryEntry;
 export type Rows = {
+  artists: ArtistRow[];
   songs: SongRow[];
   questions: QuestionRow[];
   dictionary: DictionaryRow[];
@@ -39,6 +46,7 @@ export type Catalog = {
 };
 export type Issue = {
   message: string;
+  artist?: string;
   songId?: string;
   questionId?: string;
   english?: string;
@@ -48,17 +56,51 @@ const byId = (a: { id: string }, b: { id: string }) =>
   a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
 const clean = (values: string[]) =>
   [...new Set(values.map((v) => v.trim()))].filter(Boolean);
+export const isPrefix = (prefix: string) => /^[A-Za-z0-9]+$/.test(prefix);
+
+export const sortArtists = (artists: readonly ArtistRow[]) =>
+  [...artists].sort(
+    (a, b) => a.sort_order - b.sort_order || (a.name < b.name ? -1 : 1),
+  );
+/** Song order used everywhere: artist order first (this is the game's unit order), then song order. */
+export function compareSongs(artists: readonly ArtistRow[]) {
+  const rank = new Map(sortArtists(artists).map((a, i) => [a.name, i]));
+  const of = (s: SongRow) =>
+    rank.get(s.artist.trim()) ?? Number.MAX_SAFE_INTEGER;
+  return (a: SongRow, b: SongRow) =>
+    of(a) - of(b) || a.sort_order - b.sort_order || byId(a, b);
+}
 
 /**
  * Validates DB rows and converts them into the bundled game catalog.
  * Only active questions are published, and only songs that still have one.
  * Any issue means the data must not be published.
  */
-export function buildCatalog({ songs, questions, dictionary }: Rows): {
+export function buildCatalog({ artists, songs, questions, dictionary }: Rows): {
   catalog: Catalog;
   issues: Issue[];
 } {
   const issues: Issue[] = [];
+
+  const artistNames = new Set<string>();
+  const prefixes = new Map<string, string>();
+  for (const a of artists) {
+    const name = a.name.trim();
+    if (!name) issues.push({ message: "가수명 누락", artist: a.name });
+    if (!isPrefix(a.prefix))
+      issues.push({
+        message: `가수 ${name}: 접두어는 영문·숫자만 쓸 수 있어요`,
+        artist: a.name,
+      });
+    const other = prefixes.get(a.prefix);
+    if (other)
+      issues.push({
+        message: `접두어 중복: ${a.prefix} (${other}, ${name})`,
+        artist: a.name,
+      });
+    prefixes.set(a.prefix, name);
+    artistNames.add(name);
+  }
 
   const entries = new Map<string, DictionaryEntry>();
   for (const row of dictionary) {
@@ -91,6 +133,11 @@ export function buildCatalog({ songs, questions, dictionary }: Rows): {
     if (!song.id.trim()) issues.push({ message: "곡ID 누락", songId: song.id });
     if (!song.artist.trim())
       issues.push({ message: `곡 ${label}: 가수명 누락`, songId: song.id });
+    else if (!artistNames.has(song.artist.trim()))
+      issues.push({
+        message: `곡 ${label}: 가수 ${song.artist}이(가) 가수 목록에 없음`,
+        songId: song.id,
+      });
     if (!song.title.trim())
       issues.push({ message: `곡 ${label}: 곡명 누락`, songId: song.id });
     if (songIds.has(song.id))
@@ -111,7 +158,10 @@ export function buildCatalog({ songs, questions, dictionary }: Rows): {
   for (const q of [...questions].sort(byId)) {
     const lines = q.lines.map((line) => line.trim());
     const at = (message: string) =>
-      issues.push({ message: `문제 ${q.id || "(ID 없음)"}: ${message}`, questionId: q.id });
+      issues.push({
+        message: `문제 ${q.id || "(ID 없음)"}: ${message}`,
+        questionId: q.id,
+      });
     if (!q.id.trim()) at("문제ID 누락");
     if (questionIds.has(q.id)) at("문제ID 중복");
     questionIds.add(q.id);
@@ -120,7 +170,11 @@ export function buildCatalog({ songs, questions, dictionary }: Rows): {
     if (!q.active) continue;
     const missing = lines.flatMap((line) => scanLine(line, sorted).missing);
     for (const word of new Set(missing)) at(`영어 발음 누락: ${word}`);
-    published.push({ id: q.id, songId: q.song_id, lines: lines.filter(Boolean) });
+    published.push({
+      id: q.id,
+      songId: q.song_id,
+      lines: lines.filter(Boolean),
+    });
   }
   if (!published.length) issues.push({ message: "출제 가능한 문제 없음" });
 
@@ -128,7 +182,7 @@ export function buildCatalog({ songs, questions, dictionary }: Rows): {
   return {
     catalog: {
       songs: [...songs]
-        .sort((a, b) => a.sort_order - b.sort_order || byId(a, b))
+        .sort(compareSongs(artists))
         .filter((s) => activeSongs.has(s.id))
         .map((s) => ({
           id: s.id,

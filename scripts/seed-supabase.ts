@@ -13,7 +13,7 @@ const rows = await sheetRows();
 const { catalog, issues } = buildCatalog(rows);
 failOnIssues(issues);
 console.log(
-  `시트: 곡 ${rows.songs.length} · 문제 ${rows.questions.length}(사용 ${catalog.questions.length}) · 영어 사전 ${rows.dictionary.length}`,
+  `시트: 가수 ${rows.artists.length} · 곡 ${rows.songs.length} · 문제 ${rows.questions.length}(사용 ${catalog.questions.length}) · 영어 사전 ${rows.dictionary.length}`,
 );
 console.log(`게시될 데이터: ${summary(catalog)}`);
 if (dryRun) process.exit(0);
@@ -39,6 +39,7 @@ async function upsert(table: string, data: object[], onConflict: string) {
   }
   console.log(`${table}: ${data.length}행 저장`);
 }
+await upsert("artists", rows.artists, "name");
 await upsert("songs", rows.songs, "id");
 await upsert("dictionary", rows.dictionary, "english");
 await upsert("questions", rows.questions, "id");

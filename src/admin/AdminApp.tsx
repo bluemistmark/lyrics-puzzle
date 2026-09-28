@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { buildCatalog } from "../data/build-catalog.ts";
+import { ArtistsTab } from "./ArtistsTab";
 import { DictionaryTab } from "./DictionaryTab";
 import { Login } from "./Login";
 import { PublishTab } from "./PublishTab";
@@ -69,7 +70,7 @@ function AuthGate({ client }: { client: SupabaseClient }) {
   return <AdminShell email={session.user.email ?? ""} onSignOut={signOut} />;
 }
 
-type Tab = "songs" | "questions" | "dictionary" | "publish";
+type Tab = "artists" | "songs" | "questions" | "dictionary" | "publish";
 
 function AdminShell({
   email,
@@ -78,6 +79,7 @@ function AdminShell({
   email: string;
   onSignOut: () => void;
 }) {
+  const artists = useAdmin((s) => s.artists);
   const songs = useAdmin((s) => s.songs);
   const questions = useAdmin((s) => s.questions);
   const dictionary = useAdmin((s) => s.dictionary);
@@ -90,12 +92,13 @@ function AdminShell({
   }, [load]);
   // Same validation the build runs, so what is shown here is what publish will accept.
   const { catalog, issues } = useMemo(
-    () => buildCatalog({ songs, questions, dictionary }),
-    [songs, questions, dictionary],
+    () => buildCatalog({ artists, songs, questions, dictionary }),
+    [artists, songs, questions, dictionary],
   );
   const tabs: [Tab, string, number][] = [
     ["questions", "문제", questions.length],
     ["songs", "곡", songs.length],
+    ["artists", "가수", artists.length],
     ["dictionary", "영어 사전", dictionary.length],
     ["publish", "게시", issues.length],
   ];
@@ -139,7 +142,9 @@ function AdminShell({
           </p>
         )}
         {status === "ready" &&
-          (tab === "songs" ? (
+          (tab === "artists" ? (
+            <ArtistsTab />
+          ) : tab === "songs" ? (
             <SongsTab />
           ) : tab === "questions" ? (
             <QuestionsTab issues={issues} />
