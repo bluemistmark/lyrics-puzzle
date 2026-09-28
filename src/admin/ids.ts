@@ -4,13 +4,19 @@ import {
   type SongRow,
 } from "../data/build-catalog.ts";
 
-/** Next `NCT_0000`-style question id. */
-export function nextQuestionId(questions: QuestionRow[]) {
+/** `count` consecutive `NCT_0000`-style question ids after the largest existing one. */
+export function nextQuestionIds(questions: QuestionRow[], count: number) {
   const numbers = questions.map((q) =>
     Number(/^NCT_(\d+)$/.exec(q.id)?.[1] ?? 0),
   );
-  return `NCT_${String(Math.max(0, ...numbers) + 1).padStart(4, "0")}`;
+  const max = Math.max(0, ...numbers);
+  return Array.from(
+    { length: count },
+    (_, i) => `NCT_${String(max + 1 + i).padStart(4, "0")}`,
+  );
 }
+export const nextQuestionId = (questions: QuestionRow[]) =>
+  nextQuestionIds(questions, 1)[0];
 
 /**
  * Next `${prefix}_000` id after every existing song id with that prefix, whoever

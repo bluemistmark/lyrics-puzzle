@@ -28,6 +28,8 @@ type AdminStore = Rows & {
   saveSong: (row: SongRow, isNew: boolean) => Promise<void>;
   removeSong: (id: string) => Promise<void>;
   saveQuestion: (row: QuestionRow, isNew: boolean) => Promise<void>;
+  /** Inserts all rows in one request: either every row is saved or none is. */
+  addQuestions: (rows: QuestionRow[]) => Promise<void>;
   removeQuestion: (id: string) => Promise<void>;
   saveEntry: (row: DictionaryRow, isNew: boolean) => Promise<void>;
   removeEntry: (english: string) => Promise<void>;
@@ -151,6 +153,14 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
     set({
       questions: upsertLocal(get().questions, saved, (q) => q.id === saved.id),
     });
+  },
+  addQuestions: async (rows) => {
+    const { data, error } = await db()
+      .from("questions")
+      .insert(rows)
+      .select(QUESTION_COLUMNS);
+    if (error) throw Error(describeError(error));
+    set({ questions: [...get().questions, ...(data as QuestionRow[])] });
   },
   removeQuestion: async (id) => {
     await remove("questions", "id", id);

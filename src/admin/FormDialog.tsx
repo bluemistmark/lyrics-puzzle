@@ -6,10 +6,22 @@ type Props = {
   onSubmit: () => Promise<void>;
   onClose: () => void;
   children: ReactNode;
+  submitLabel?: string;
+  /** Disables the submit button (e.g. nothing valid to save yet). */
+  submitDisabled?: boolean;
+  wide?: boolean;
 };
 
 /** Modal edit form. Mount it to open, unmount it to close. */
-export function FormDialog({ title, onSubmit, onClose, children }: Props) {
+export function FormDialog({
+  title,
+  onSubmit,
+  onClose,
+  children,
+  submitLabel = "저장",
+  submitDisabled = false,
+  wide = false,
+}: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -19,7 +31,7 @@ export function FormDialog({ title, onSubmit, onClose, children }: Props) {
   return (
     <dialog
       ref={dialog}
-      className="form-dialog"
+      className={wide ? "form-dialog wide" : "form-dialog"}
       onCancel={(e) => {
         e.preventDefault();
         onClose();
@@ -48,8 +60,8 @@ export function FormDialog({ title, onSubmit, onClose, children }: Props) {
           <button type="button" onClick={onClose}>
             취소
           </button>
-          <button className="primary" disabled={saving}>
-            {saving ? "저장 중…" : "저장"}
+          <button className="primary" disabled={saving || submitDisabled}>
+            {saving ? "저장 중…" : submitLabel}
           </button>
         </div>
       </form>

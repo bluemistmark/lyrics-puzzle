@@ -241,6 +241,25 @@ tr.inactive td {
   background: var(--surface);
   color: var(--text);
 }
+.form-dialog.wide {
+  width: min(820px, calc(100vw - 32px));
+}
+.form-dialog textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: inherit;
+  font: inherit;
+  line-height: 1.6;
+  resize: vertical;
+}
+.bulk-preview {
+  max-height: 320px;
+  overflow: auto;
+  margin-bottom: 8px;
+}
 .form-dialog::backdrop {
   background: rgb(0 0 0 / 0.4);
 }

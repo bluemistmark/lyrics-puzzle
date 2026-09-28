@@ -46,6 +46,7 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
   - `admin/store.ts`(zustand)가 데이터 테이블 전체를 메모리에 들고, 각 액션은 Supabase에 먼저 쓰고 성공하면 로컬 상태를 갱신한다. 에러는 `describeError`로 한국어 메시지로 바꿔 throw한다.
   - `AdminApp`이 `buildCatalog`를 `useMemo`로 돌려 `issues`를 문제 탭·게시 탭에 넘긴다(빌드와 같은 검증).
   - 편집 폼은 `FormDialog`(마운트 시 열림, `onSubmit`에서 throw하면 에러 표시). 곡ID·문제ID·사전 영어(PK)는 생성 후 수정 불가로 두었다. 문제ID는 플레이어 localStorage 진행 기록이 참조한다.
+  - 문제 대량 등록: `admin/bulk.ts`의 `parseBulkQuestions`(탭이 있으면 엑셀 행 모드, 아니면 빈 줄 구분)로 나누고 `BulkQuestionForm`이 미리보기(연속 ID, 줄 수 오류, 기존·입력 내 중복, 사전 누락)를 보여 준다. `addQuestions`는 한 번의 insert라 전부 저장되거나 전부 실패한다.
   - 환경 변수가 없으면 `supabase`가 `null`이고 설정 안내 화면만 보인다.
 
 ## 주의 사항

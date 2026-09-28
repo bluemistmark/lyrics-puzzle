@@ -4,11 +4,13 @@ import {
   sortArtists,
   type Issue,
   type QuestionRow,
-  type SongRow,
 } from "../data/build-catalog.ts";
 import { scanLine, sortDictionary } from "../data/english.ts";
+import { BulkQuestionForm } from "./BulkQuestionForm";
 import { FormDialog } from "./FormDialog";
 import { nextQuestionId } from "./ids";
+import { QuickAddWord } from "./QuickAddWord";
+import { SongSelect } from "./SongSelect";
 import { useAdmin } from "./store";
 
 export function QuestionsTab({ issues }: { issues: Issue[] }) {
@@ -22,6 +24,7 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
   const [query, setQuery] = useState("");
   const [onlyIssues, setOnlyIssues] = useState(false);
   const [editing, setEditing] = useState<QuestionRow | "new" | null>(null);
+  const [bulk, setBulk] = useState(false);
 
   const sortedSongs = useMemo(
     () => [...songs].sort(compareSongs(artistRows)),
@@ -114,6 +117,9 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
         </label>
         <span className="admin-spacer" />
         <span className="muted">{visible.length}문제</span>
+        <button onClick={() => setBulk(true)} disabled={!songs.length}>
+          여러 문제 추가
+        </button>
         <button
           className="primary"
           onClick={() => setEditing("new")}
@@ -189,6 +195,12 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
           onClose={() => setEditing(null)}
         />
       )}
+      {bulk && (
+        <BulkQuestionForm
+          defaultSongId={songId}
+          onClose={() => setBulk(false)}
+        />
+      )}
     </section>
   );
 }
@@ -203,8 +215,6 @@ function QuestionForm({
   onClose: () => void;
 }) {
   const questions = useAdmin((s) => s.questions);
-  const artists = useAdmin((s) => s.artists);
-  const songs = useAdmin((s) => s.songs);
   const dictionary = useAdmin((s) => s.dictionary);
   const saveQuestion = useAdmin((s) => s.saveQuestion);
   const isNew = !question;
@@ -223,13 +233,6 @@ function QuestionForm({
     ],
     [lines, sorted],
   );
-  const grouped = useMemo(() => {
-    const map = new Map<string, SongRow[]>();
-    for (const s of [...songs].sort(compareSongs(artists)))
-      map.set(s.artist, [...(map.get(s.artist) ?? []), s]);
-    return [...map];
-  }, [songs, artists]);
-
   return (
     <FormDialog
       title={isNew ? "문제 추가" : `문제 ${question.id} 수정`}
@@ -251,22 +254,7 @@ function QuestionForm({
     >
       <label>
         곡
-        <select
-          value={songId}
-          onChange={(e) => setSongId(e.target.value)}
-          required
-        >
-          <option value="">곡 선택</option>
-          {grouped.map(([artist, list]) => (
-            <optgroup key={artist} label={artist}>
-              {list.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.title}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+        <SongSelect value={songId} onChange={setSongId} />
       </label>
       <label>
         문제ID
@@ -310,46 +298,5 @@ function QuestionForm({
         </div>
       )}
     </FormDialog>
-  );
-}
-
-function QuickAddWord({ word }: { word: string }) {
-  const saveEntry = useAdmin((s) => s.saveEntry);
-  const [pronunciation, setPronunciation] = useState("");
-  const [error, setError] = useState("");
-  const add = async () => {
-    if (!pronunciation.trim()) return setError("표시발음을 입력하세요.");
-    try {
-      await saveEntry(
-        {
-          english: word,
-          pronunciation: pronunciation.trim(),
-          alternatives: [],
-        },
-        true,
-      );
-    } catch (err) {
-      setError((err as Error).message);
-    }
-  };
-  return (
-    <div className="quick-add">
-      <span className="mono">{word}</span>
-      <input
-        placeholder="표시발음 (예: 예)"
-        value={pronunciation}
-        onChange={(e) => setPronunciation(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-            e.preventDefault();
-            add();
-          }
-        }}
-      />
-      <button type="button" onClick={add}>
-        사전에 추가
-      </button>
-      {error && <span className="form-error">{error}</span>}
-    </div>
   );
 }
