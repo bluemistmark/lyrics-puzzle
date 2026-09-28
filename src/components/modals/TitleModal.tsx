@@ -18,13 +18,13 @@ export function TitleModal({
       <span className="modal-icon">
         <AudioLines />
       </span>
-      <h2>어떤 노래일까요?</h2>
-      <p>제목을 맞혀도 남은 가사는 계속 풀 수 있어요.</p>
+      <h2>노래 제목 입력</h2>
+      <p>제목을 맞힌 뒤에도 가사를 계속 풀 수 있어요.</p>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           if (solve(title, mode)) onClose();
-          else setError("아직 정답이 아니에요. 다시 생각해 볼까요?");
+          else setError("제목이 일치하지 않아요.");
         }}
       >
         <label htmlFor="title">노래 제목</label>

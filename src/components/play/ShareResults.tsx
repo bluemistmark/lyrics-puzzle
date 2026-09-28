@@ -26,9 +26,9 @@ export function ShareResults({ date, round, percent }: Props) {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(shareText);
-      setStatus("결과를 복사했어요!");
+      setStatus("결과를 복사했어요.");
     } catch {
-      setStatus("자동 복사가 안 돼요. 아래 결과를 직접 복사해 주세요.");
+      setStatus("복사할 수 없어요. 아래 내용을 직접 선택해 주세요.");
     }
   };
   const share = async () => {
@@ -44,7 +44,6 @@ export function ShareResults({ date, round, percent }: Props) {
   return (
     <div className="share-results">
       <h2>오늘의 결과</h2>
-      <p>정답은 가리고 기록만 공유해요.</p>
       <pre>{shareText}</pre>
       <div className="share-actions">
         <button type="button" onClick={copy}>
@@ -59,10 +58,11 @@ export function ShareResults({ date, round, percent }: Props) {
           </button>
         )}
       </div>
-      <p className="share-status" role="status">
-        {status ||
-          "기기에 카카오톡이 공유 대상으로 표시되면 공유 창에서 선택할 수 있어요."}
-      </p>
+      {status && (
+        <p className="share-status" role="status">
+          {status}
+        </p>
+      )}
     </div>
   );
 }

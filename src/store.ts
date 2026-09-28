@@ -114,7 +114,7 @@ export const useGame = create<Store>()(
           !added.length &&
           current.words.some((w) => normalize(w.word) === normalize(text))
         ) {
-          const notice = "이미 찾아본 단어예요. 새로 열리는 부분이 없어요.";
+          const notice = "이미 입력한 단어예요.";
           set(
             mode === "daily" ? { daily: { ...s.daily, notice } } : { notice },
           );
@@ -126,10 +126,10 @@ export const useGame = create<Store>()(
           words: [...current.words, { word: text, hit: found.length > 0 }],
         };
         const notice = added.length
-          ? "좋아요! 숨겨진 가사를 찾았어요."
+          ? "일치하는 가사가 공개됐어요."
           : found.length
-            ? "이미 공개된 가사예요."
-            : "이 구간에는 없는 단어예요. 다시 도전해 봐요.";
+            ? "이미 공개된 부분이에요."
+            : "일치하는 단어가 없어요.";
         if (mode === "daily") set({ daily: { ...s.daily, round, notice } });
         else {
           const stats = { ...s.stats };
@@ -143,7 +143,7 @@ export const useGame = create<Store>()(
         if (current.solved || current.givenUp) return false;
         const q = questions.find((q) => q.id === current.id)!;
         if (!titleMatches(q, title)) {
-          const notice = "아직 정답이 아니에요. 가사를 조금 더 채워 보세요.";
+          const notice = "제목이 일치하지 않아요.";
           set(
             mode === "daily" ? { daily: { ...s.daily, notice } } : { notice },
           );
@@ -154,7 +154,7 @@ export const useGame = create<Store>()(
             daily: {
               ...s.daily,
               round: { ...current, solved: true },
-              notice: "오늘의 문제 정답! 결과를 공유해 보세요.",
+              notice: "제목 정답. 결과를 공유할 수 있어요.",
             },
           });
           return true;
@@ -168,7 +168,7 @@ export const useGame = create<Store>()(
             streak,
             best: Math.max(streak, s.stats.best),
           },
-          notice: "제목 정답! 남은 가사도 계속 채울 수 있어요.",
+          notice: "제목 정답. 남은 가사도 풀 수 있어요.",
         });
         return true;
       },
@@ -199,10 +199,10 @@ export const useGame = create<Store>()(
         round.hints++;
         const notice =
           type === "english"
-            ? "영어 부분에 보라색 밑줄을 표시했어요."
+            ? "영어 구간을 표시했어요."
             : type === "artist"
               ? "가수명을 공개했어요."
-              : "숨겨진 단어 하나를 공개했어요.";
+              : "단어 하나를 공개했어요.";
         if (mode === "daily") set({ daily: { ...s.daily, round, notice } });
         else {
           const stats = { ...s.stats };
@@ -219,7 +219,7 @@ export const useGame = create<Store>()(
             daily: {
               ...s.daily,
               round: { ...current, givenUp: true },
-              notice: "내일 새로운 문제에서 다시 만나요.",
+              notice: "오늘의 문제가 종료됐어요.",
             },
           });
           return;
@@ -227,7 +227,7 @@ export const useGame = create<Store>()(
         set({
           round: { ...current, givenUp: true },
           stats: { ...s.stats, skipped: s.stats.skipped + 1, streak: 0 },
-          notice: "괜찮아요. 다음 노래에서 다시 만나요.",
+          notice: "정답을 확인했어요.",
         });
       },
       syncDaily: (date) => {

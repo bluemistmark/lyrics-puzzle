@@ -21,7 +21,7 @@ export function WordForm({
   };
   return (
     <form className="word-form" onSubmit={submit}>
-      <label htmlFor={`${mode}-word`}>떠오르는 단어</label>
+      <label htmlFor={`${mode}-word`}>단어 입력</label>
       <div className="input-wrap">
         <input
           ref={input}
@@ -29,7 +29,7 @@ export function WordForm({
           value={word}
           onChange={(e) => setWord(e.target.value)}
           onKeyDown={blockComposingEnter}
-          placeholder="가사에 있을 것 같은 단어"
+          placeholder="가사에 나올 단어"
           autoComplete="off"
           maxLength={60}
           disabled={disabled}

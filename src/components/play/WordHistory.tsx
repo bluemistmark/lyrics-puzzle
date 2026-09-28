@@ -15,9 +15,7 @@ export function WordHistory({ words }: { words: Round["words"] }) {
             </span>
           ))
       ) : (
-        <span className="empty-history">
-          첫 단어가 노래의 시작이 될지도 몰라요.
-        </span>
+        <span className="empty-history">입력 기록 없음</span>
       )}
     </div>
   );

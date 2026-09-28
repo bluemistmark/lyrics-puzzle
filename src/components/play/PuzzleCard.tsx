@@ -36,7 +36,7 @@ export function PuzzleCard({ question, round, percent, full }: Props) {
       </div>
       <div className="progress-label">
         <span>
-          {round.givenUp ? "정답 공개" : full ? "가사 완성!" : "가사 복원"}
+          {round.givenUp ? "정답 공개" : full ? "가사 완성" : "가사 복원"}
         </span>
         <b>{round.givenUp ? "—" : `${percent}%`}</b>
       </div>
@@ -48,7 +48,12 @@ export function PuzzleCard({ question, round, percent, full }: Props) {
             </>
           ) : (
             <>
-              <span className="status-dot" /> 떠오르는 단어부터 천천히
+              <span className="status-dot" />
+              {round.givenUp
+                ? "문제 종료"
+                : full
+                  ? "제목만 남았어요"
+                  : "진행 중"}
             </>
           )}
         </span>
