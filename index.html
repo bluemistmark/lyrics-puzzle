@@ -16,14 +16,28 @@
     <script>
       try {
         var t = localStorage.getItem("lyrics-theme");
+        var custom = t === "excel" || t === "notebook" || t === "console";
         var d =
           t === "dark" ||
-          (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
-        document.documentElement.dataset.theme = d ? "dark" : "light";
-        document.documentElement.style.colorScheme = d ? "dark" : "light";
-        document.querySelector('meta[name="theme-color"]').content = d
-          ? "#141a16"
-          : "#f7f8f4";
+          (t !== "light" &&
+            !custom &&
+            matchMedia("(prefers-color-scheme: dark)").matches);
+        var active = custom ? t : d ? "dark" : "light";
+        document.documentElement.dataset.theme = active;
+        document.documentElement.style.colorScheme =
+          active === "dark" || active === "console" ? "dark" : "light";
+        document.querySelector('meta[name="theme-color"]').content = {
+          light: "#f7f8f4",
+          dark: "#141a16",
+          excel: "#e8ede9",
+          notebook: "#fff6ef",
+          console: "#17132b",
+        }[active];
+        if (t === "excel") {
+          document.title = "Sheet1 - 문서";
+          document.querySelector('link[rel="icon"]').href =
+            "/favicon-excel.svg";
+        }
       } catch (e) {
         document.documentElement.dataset.theme = matchMedia(
           "(prefers-color-scheme: dark)",

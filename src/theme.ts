@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 
-export type Theme = "system" | "light" | "dark";
+export type Theme =
+  "system" | "light" | "dark" | "excel" | "notebook" | "console";
 const key = "lyrics-theme";
 function readTheme(): Theme {
   try {
     const value = localStorage.getItem(key);
-    if (value === "light" || value === "dark") return value;
+    if (
+      value === "light" ||
+      value === "dark" ||
+      value === "excel" ||
+      value === "notebook" ||
+      value === "console"
+    )
+      return value;
   } catch {
     /* Storage may be disabled; theme still works for this session. */
   }
@@ -17,11 +25,28 @@ export function useTheme() {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const apply = () => {
       const dark = theme === "dark" || (theme === "system" && media.matches);
-      document.documentElement.dataset.theme = dark ? "dark" : "light";
-      document.documentElement.style.colorScheme = dark ? "dark" : "light";
+      const activeTheme =
+        theme === "system" ? (dark ? "dark" : "light") : theme;
+      document.documentElement.dataset.theme = activeTheme;
+      document.documentElement.style.colorScheme =
+        activeTheme === "dark" || activeTheme === "console" ? "dark" : "light";
+      document.querySelector('meta[name="theme-color"]')?.setAttribute(
+        "content",
+        {
+          light: "#f7f8f4",
+          dark: "#141a16",
+          excel: "#e8ede9",
+          notebook: "#fff6ef",
+          console: "#17132b",
+        }[activeTheme],
+      );
+      document.title = theme === "excel" ? "Sheet1 - 문서" : "초성 가사 맞히기";
       document
-        .querySelector('meta[name="theme-color"]')
-        ?.setAttribute("content", dark ? "#141a16" : "#f7f8f4");
+        .querySelector('link[rel="icon"]')
+        ?.setAttribute(
+          "href",
+          theme === "excel" ? "/favicon-excel.svg" : "/favicon.svg",
+        );
     };
     apply();
     media.addEventListener("change", apply);

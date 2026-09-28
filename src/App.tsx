@@ -7,8 +7,9 @@ import { NewsPanel } from "./components/NewsPanel";
 import { GiveUpModal } from "./components/modals/GiveUpModal";
 import { HelpModal } from "./components/modals/HelpModal";
 import { ResetModal } from "./components/modals/ResetModal";
-import { SettingsModal } from "./components/modals/SettingsModal";
+import { ThemeModal } from "./components/modals/ThemeModal";
 import { TitleModal } from "./components/modals/TitleModal";
+import { UnitModal } from "./components/modals/UnitModal";
 import { PlayPanel } from "./components/play/PlayPanel";
 import { RecordPanel } from "./components/RecordPanel";
 import { useModelContextTools } from "./hooks/useModelContextTools";
@@ -29,12 +30,35 @@ export function App() {
   useModelContextTools();
   return (
     <>
+      {theme === "excel" && (
+        <div className="sheet-grid" aria-hidden="true">
+          <div className="sheet-corner" />
+          <div className="sheet-columns">
+            {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((letter) => (
+              <span key={letter}>{letter}</span>
+            ))}
+          </div>
+          <div className="sheet-rows">
+            {Array.from({ length: 60 }, (_, index) => (
+              <span key={index}>{index + 1}</span>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="app-shell">
         <Header
+          discreet={theme === "excel"}
           onHelp={() => setModal("help")}
-          onSettings={() => setModal("settings")}
+          onTheme={() => setModal("theme")}
         />
         <main>
+          {theme === "console" && (
+            <div className="console-screen-label" aria-hidden="true">
+              <span className="console-power">● POWER</span>
+              <span>LYRICS QUEST</span>
+              <span>★ 01</span>
+            </div>
+          )}
           <GameTabs
             active={activeTab}
             onChange={changeTab}
@@ -47,22 +71,33 @@ export function App() {
           />
           <NewsPanel hidden={activeTab !== "news"} />
         </main>
+        {theme === "console" && (
+          <div className="console-controls" aria-hidden="true">
+            <div className="console-dpad">
+              <span className="console-dpad-up" />
+              <span className="console-dpad-left" />
+              <span className="console-dpad-center" />
+              <span className="console-dpad-right" />
+              <span className="console-dpad-down" />
+            </div>
+            <div className="console-start">SELECT&nbsp;&nbsp; START</div>
+            <div className="console-ab">
+              <span>B</span>
+              <span>A</span>
+            </div>
+          </div>
+        )}
         <Footer />
       </div>
       <Modal open={modal !== null} onClose={close}>
         {modal === "title" && <TitleModal onClose={close} />}
-        {modal === "settings" && (
-          <SettingsModal
-            theme={theme}
-            onThemeChange={setTheme}
-            onClose={close}
-          />
+        {modal === "units" && <UnitModal onClose={close} />}
+        {modal === "theme" && (
+          <ThemeModal theme={theme} onThemeChange={setTheme} onClose={close} />
         )}
         {modal === "help" && <HelpModal onClose={close} />}
         {modal === "giveup" && <GiveUpModal onClose={close} />}
-        {modal === "reset" && (
-          <ResetModal onClose={close} onCancel={() => setModal("settings")} />
-        )}
+        {modal === "reset" && <ResetModal onClose={close} onCancel={close} />}
       </Modal>
     </>
   );

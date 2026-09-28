@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css");
 :root {
   font-family: "Noto Sans KR", sans-serif;
   color: #20241f;
@@ -101,6 +102,16 @@ button:active:not(:disabled) {
 }
 .icon-btn:hover {
   background: #e9edde;
+}
+.theme-trigger {
+  width: auto;
+  padding: 0 10px;
+  display: flex;
+  gap: 5px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 main {
   max-width: 520px;
@@ -905,7 +916,7 @@ h3 {
 }
 .theme-options {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 .theme-options label {
@@ -1482,4 +1493,844 @@ main [hidden] {
 [data-theme="dark"] .site-footer {
   border-color: #3d4b39;
   color: #8f9c86;
+}
+
+/* Spreadsheet: quiet office colors, cells and square controls. */
+:root[data-theme="excel"] {
+  color-scheme: light;
+  background: #fff;
+  color: #202b25;
+  font-family: Arial, "Noto Sans KR", sans-serif;
+}
+[data-theme="excel"] body {
+  position: relative;
+  min-height: 100dvh;
+}
+[data-theme="excel"] .sheet-grid {
+  --cell-width: 96px;
+  position: absolute;
+  z-index: 0;
+  top: 100px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: calc(100dvh - 100px);
+  pointer-events: none;
+  overflow: hidden;
+  background-color: #fff;
+  background-image:
+    linear-gradient(to right, #e0e5e0 1px, transparent 1px),
+    linear-gradient(to bottom, #e0e5e0 1px, transparent 1px);
+  background-size: var(--cell-width) 32px;
+  background-position: 44px 28px;
+}
+[data-theme="excel"] .sheet-corner,
+[data-theme="excel"] .sheet-columns,
+[data-theme="excel"] .sheet-rows {
+  position: absolute;
+  background: #e8ede9;
+  color: #526359;
+  font:
+    12px Arial,
+    sans-serif;
+}
+[data-theme="excel"] .sheet-corner {
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 28px;
+  border-right: 1px solid #c9d4cb;
+  border-bottom: 1px solid #c9d4cb;
+}
+[data-theme="excel"] .sheet-columns {
+  top: 0;
+  left: 44px;
+  right: 0;
+  height: 28px;
+  display: flex;
+  overflow: hidden;
+}
+[data-theme="excel"] .sheet-columns span {
+  flex: 0 0 var(--cell-width);
+  display: grid;
+  place-items: center;
+  border-right: 1px solid #c9d4cb;
+  border-bottom: 1px solid #c9d4cb;
+}
+[data-theme="excel"] .sheet-rows {
+  top: 28px;
+  bottom: 0;
+  left: 0;
+  width: 44px;
+  overflow: hidden;
+}
+[data-theme="excel"] .sheet-rows span {
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-right: 1px solid #c9d4cb;
+  border-bottom: 1px solid #c9d4cb;
+}
+[data-theme="excel"] .app-shell {
+  position: relative;
+  z-index: 1;
+  max-width: none;
+}
+[data-theme="excel"] .app-shell::before,
+[data-theme="excel"] .app-shell::after {
+  display: none;
+}
+[data-theme="excel"] main {
+  margin-top: 43px;
+  padding: 14px 16px 18px;
+  max-width: 480px;
+  background: #ffffffed;
+  border: 1px solid #cbd6cd;
+}
+[data-theme="excel"] .topbar {
+  background: #fff;
+  border-bottom: 2px solid #217346;
+}
+[data-theme="excel"] .brand-icon {
+  background: #217346;
+  color: white;
+  border-radius: 4px;
+}
+[data-theme="excel"] .brand-sub,
+[data-theme="excel"] .site-footer,
+[data-theme="excel"] .record-note,
+[data-theme="excel"] .news-item time {
+  color: #66746b;
+}
+[data-theme="excel"] .game-tabs {
+  border-color: #d1d9d2;
+}
+[data-theme="excel"] .game-tabs button[aria-selected="true"] {
+  color: #17683b;
+  border-color: #217346;
+}
+[data-theme="excel"] .puzzle-card,
+[data-theme="excel"] .record-item,
+[data-theme="excel"] .news-item,
+[data-theme="excel"] .filter,
+[data-theme="excel"] .hints button,
+[data-theme="excel"] .input-wrap,
+[data-theme="excel"] dialog {
+  background: #fff;
+  border: 1px solid #cbd6cd;
+  border-radius: 3px;
+  box-shadow: none;
+}
+[data-theme="excel"] .puzzle-card {
+  padding-top: 50px;
+}
+[data-theme="excel"] .puzzle-card::before {
+  content: "     A                         B                         C";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 27px;
+  overflow: hidden;
+  white-space: pre;
+  border-bottom: 1px solid #cbd6cd;
+  background: #e9efea;
+  color: #526359;
+  text-align: center;
+  font:
+    12px/27px Arial,
+    sans-serif;
+}
+[data-theme="excel"] .question-label,
+[data-theme="excel"] .record-item strong,
+[data-theme="excel"] .news-block b {
+  color: #205f3d;
+}
+[data-theme="excel"] .question-label > span,
+[data-theme="excel"] .word-history .hit,
+[data-theme="excel"] .unit-options button.chosen,
+[data-theme="excel"] .theme-options label.selected {
+  color: #17683b;
+  background: #e8f3eb;
+  border: 1px solid #8bb99a;
+  border-radius: 2px;
+}
+[data-theme="excel"] .lyrics {
+  gap: 0;
+}
+[data-theme="excel"] .lyrics p {
+  color: #283d30;
+  padding: 8px 10px;
+  border: 1px solid #dce5dd;
+  border-bottom: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+[data-theme="excel"] .lyrics p:last-child {
+  border-bottom: 1px solid #dce5dd;
+}
+[data-theme="excel"] .revealed {
+  color: #155b34;
+  background: #d9efdf;
+}
+[data-theme="excel"] .english,
+[data-theme="excel"] .english-a {
+  color: #226e55;
+  text-decoration-color: #8ab8a1;
+}
+[data-theme="excel"] .progress-track {
+  background: #e2ebe3;
+  border-radius: 0;
+}
+[data-theme="excel"] .progress-track > div {
+  background: #217346;
+  border-radius: 0;
+}
+[data-theme="excel"] .primary,
+[data-theme="excel"] .input-wrap button {
+  background: #217346;
+  color: white;
+  border-radius: 3px;
+}
+[data-theme="excel"] .primary:hover:not(:disabled) {
+  background: #185b36;
+}
+[data-theme="excel"] .word-history .miss,
+[data-theme="excel"] .stats-grid,
+[data-theme="excel"] .help-example {
+  background: #edf1ed;
+}
+[data-theme="excel"] .theme-options label,
+[data-theme="excel"] .unit-options button,
+[data-theme="excel"] .modal-inner form input {
+  border-radius: 3px;
+}
+[data-theme="excel"] .theme-options input {
+  accent-color: #217346;
+}
+[data-theme="excel"] .site-footer {
+  border-color: #d1d9d2;
+  background: #ffffffed;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+@media (max-width: 600px) {
+  [data-theme="excel"] .sheet-grid {
+    --cell-width: 80px;
+    top: 66px;
+    min-height: calc(100dvh - 66px);
+  }
+  [data-theme="excel"] main {
+    margin-top: 41px;
+    padding: 10px 12px 18px;
+  }
+  [data-theme="excel"] .game-tabs {
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+}
+
+/* Notebook: lined paper, soft ink and small sticker-like accents. */
+:root[data-theme="notebook"] {
+  color-scheme: light;
+  background: #fff6ef;
+  color: #4b3c48;
+  font-family: Jua, "Noto Sans KR", sans-serif;
+}
+[data-theme="notebook"] h1,
+[data-theme="notebook"] h2,
+[data-theme="notebook"] .brand,
+[data-theme="notebook"] .question-label {
+  letter-spacing: 0;
+}
+[data-theme="notebook"] .lyrics p {
+  font-size: 19px;
+  letter-spacing: 0.2px;
+}
+[data-theme="notebook"] button,
+[data-theme="notebook"] input {
+  font-family: inherit;
+}
+[data-theme="notebook"] .topbar,
+[data-theme="notebook"] .game-tabs,
+[data-theme="notebook"] .site-footer {
+  border-color: #ead8de;
+}
+[data-theme="notebook"] .brand-icon {
+  background: #eeabc2;
+  color: #803e61;
+  border-radius: 15px;
+  transform: rotate(-6deg);
+}
+[data-theme="notebook"] .brand-sub,
+[data-theme="notebook"] .game-tabs button,
+[data-theme="notebook"] .site-footer,
+[data-theme="notebook"] .record-note {
+  color: #967787;
+}
+[data-theme="notebook"] .game-tabs button[aria-selected="true"] {
+  color: #9c4c75;
+  border-color: #dd86ad;
+}
+[data-theme="notebook"] .puzzle-card {
+  background: repeating-linear-gradient(
+    to bottom,
+    #fffdfb 0,
+    #fffdfb 30px,
+    #e7edf5 31px,
+    #fffdfb 32px
+  );
+  border: 1px solid #f0dce4;
+  border-radius: 19px;
+  box-shadow: 5px 6px 0 #f3dce6;
+}
+[data-theme="notebook"] .puzzle-card::after {
+  content: "✿";
+  position: absolute;
+  top: 11px;
+  right: 15px;
+  color: #e59dba;
+  font-size: 23px;
+  line-height: 1;
+}
+[data-theme="notebook"] .question-label,
+[data-theme="notebook"] .record-item strong,
+[data-theme="notebook"] .news-block b {
+  color: #a34f78;
+}
+[data-theme="notebook"] .question-label > span,
+[data-theme="notebook"] .word-history .hit,
+[data-theme="notebook"] .unit-options button.chosen,
+[data-theme="notebook"] .theme-options label.selected {
+  color: #9b4c72;
+  background: #fce3ed;
+  border-color: #e9adc4;
+}
+[data-theme="notebook"] .lyrics p {
+  color: #584a60;
+}
+[data-theme="notebook"] .revealed {
+  color: #884465;
+  background: #ffe0ad;
+}
+[data-theme="notebook"] .english,
+[data-theme="notebook"] .english-a {
+  color: #9a6bb5;
+  text-decoration-color: #ceaddd;
+}
+[data-theme="notebook"] .progress-track {
+  background: #f1dce5;
+}
+[data-theme="notebook"] .progress-track > div {
+  background: #e89bb9;
+}
+[data-theme="notebook"] .progress-label,
+[data-theme="notebook"] .card-bottom,
+[data-theme="notebook"] .feedback,
+[data-theme="notebook"] .hints,
+[data-theme="notebook"] .mini-stats,
+[data-theme="notebook"] .modal-inner > p {
+  color: #8f7281;
+}
+[data-theme="notebook"] .progress-label b,
+[data-theme="notebook"] .mini-stats b {
+  color: #a34f78;
+}
+[data-theme="notebook"] .filter,
+[data-theme="notebook"] .hints button,
+[data-theme="notebook"] .record-item,
+[data-theme="notebook"] .news-item,
+[data-theme="notebook"] .stats-grid,
+[data-theme="notebook"] .help-example,
+[data-theme="notebook"] .modal-icon {
+  background: #fce8ef;
+  color: #88516e;
+  border-color: #edc8d8;
+}
+[data-theme="notebook"] .input-wrap,
+[data-theme="notebook"] dialog {
+  background: #fffdfb;
+  border-color: #ebcad8;
+}
+[data-theme="notebook"] .input-wrap:focus-within {
+  border-color: #cf79a1;
+  box-shadow: 0 0 0 3px #e89bb933;
+}
+[data-theme="notebook"] .primary,
+[data-theme="notebook"] .input-wrap button {
+  background: #bd668f;
+  color: white;
+}
+[data-theme="notebook"] .primary:hover:not(:disabled) {
+  background: #a9527b;
+}
+[data-theme="notebook"] .theme-options label,
+[data-theme="notebook"] .unit-options button,
+[data-theme="notebook"] .modal-inner form input {
+  background: #fffaf8;
+  border-color: #eed4df;
+}
+[data-theme="notebook"] .theme-options input {
+  accent-color: #bd668f;
+}
+
+/* Console: dark screen, pixel edges and neon controls. */
+:root[data-theme="console"] {
+  color-scheme: dark;
+  color: #e9e5ff;
+  background-color: #17132b;
+  background-image: radial-gradient(#4d426b55 1px, transparent 1px);
+  background-size: 18px 18px;
+  font-family: "Courier New", "Noto Sans KR", monospace;
+}
+[data-theme="console"] .topbar,
+[data-theme="console"] .game-tabs,
+[data-theme="console"] .site-footer {
+  border-color: #5a4b81;
+}
+[data-theme="console"] .brand-icon {
+  background: #9a72ed;
+  color: #17132b;
+  border-radius: 5px;
+  box-shadow: 3px 3px 0 #5ae6c8;
+}
+[data-theme="console"] .brand-sub,
+[data-theme="console"] .game-tabs button,
+[data-theme="console"] .site-footer,
+[data-theme="console"] .record-note {
+  color: #b8abd8;
+}
+[data-theme="console"] .game-tabs button[aria-selected="true"] {
+  color: #7cf5d8;
+  border-color: #7cf5d8;
+}
+[data-theme="console"] .puzzle-card {
+  background: #24203e;
+  border: 3px solid #a989f2;
+  border-radius: 6px;
+  box-shadow:
+    5px 5px 0 #0e0b1d,
+    9px 9px 0 #5a438a;
+}
+[data-theme="console"] .puzzle-card::before {
+  content: "●  ●  ●";
+  display: block;
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  color: #7cf5d8;
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+[data-theme="console"] .question-label,
+[data-theme="console"] .record-item strong,
+[data-theme="console"] .news-block b {
+  color: #7cf5d8;
+}
+[data-theme="console"] .question-label > span,
+[data-theme="console"] .word-history .hit,
+[data-theme="console"] .unit-options button.chosen,
+[data-theme="console"] .theme-options label.selected {
+  background: #395069;
+  color: #91ffe4;
+  border-color: #69ddc8;
+}
+[data-theme="console"] .lyrics p,
+[data-theme="console"] .news-block ul,
+[data-theme="console"] .news-note {
+  color: #e7ddff;
+}
+[data-theme="console"] .revealed {
+  color: #151228;
+  background: #7cf5d8;
+  animation-name: none;
+}
+[data-theme="console"] .english,
+[data-theme="console"] .english-a {
+  color: #ffc789;
+  text-decoration-color: #f0a964;
+}
+[data-theme="console"] .progress-track {
+  background: #51446f;
+  border-radius: 0;
+}
+[data-theme="console"] .progress-track > div {
+  background: #7cf5d8;
+  border-radius: 0;
+}
+[data-theme="console"] .progress-label,
+[data-theme="console"] .card-bottom,
+[data-theme="console"] .feedback,
+[data-theme="console"] .hints,
+[data-theme="console"] .mini-stats,
+[data-theme="console"] .modal-inner > p,
+[data-theme="console"] .news-item time,
+[data-theme="console"] .news-block li span,
+[data-theme="console"] .news-stats {
+  color: #baacd9;
+}
+[data-theme="console"] .progress-label b,
+[data-theme="console"] .mini-stats b {
+  color: #7cf5d8;
+}
+[data-theme="console"] .filter,
+[data-theme="console"] .hints button,
+[data-theme="console"] .record-item,
+[data-theme="console"] .news-item,
+[data-theme="console"] .stats-grid,
+[data-theme="console"] .help-example,
+[data-theme="console"] .modal-icon,
+[data-theme="console"] .word-history .miss {
+  background: #302a50;
+  color: #ddd2f5;
+  border-color: #655288;
+  border-radius: 5px;
+}
+[data-theme="console"] .input-wrap,
+[data-theme="console"] dialog {
+  background: #24203e;
+  color: #e9e5ff;
+  border-color: #9a72ed;
+  border-radius: 5px;
+}
+[data-theme="console"] input {
+  color: #f4edff;
+}
+[data-theme="console"] input::placeholder {
+  color: #aba0c6;
+}
+[data-theme="console"] .input-wrap:focus-within {
+  border-color: #7cf5d8;
+  box-shadow: 0 0 0 3px #7cf5d833;
+}
+[data-theme="console"] .primary,
+[data-theme="console"] .input-wrap button {
+  background: #9a72ed;
+  color: #17132b;
+  border-radius: 4px;
+  font-weight: 800;
+}
+[data-theme="console"] .primary:hover:not(:disabled) {
+  background: #b391fa;
+}
+[data-theme="console"] .theme-options label,
+[data-theme="console"] .unit-options button,
+[data-theme="console"] .modal-inner form input {
+  background: #302a50;
+  color: #e9e5ff;
+  border-color: #655288;
+  border-radius: 4px;
+}
+[data-theme="console"] .theme-options input {
+  accent-color: #7cf5d8;
+}
+[data-theme="console"] .icon-btn,
+[data-theme="console"] .secondary,
+[data-theme="console"] .reset-btn {
+  color: #cbbcf0;
+}
+[data-theme="console"] .icon-btn:hover {
+  background: #3a305f;
+}
+[data-theme="console"] .record-item span,
+[data-theme="console"] .skip,
+[data-theme="console"] .streak,
+[data-theme="console"] .word-history .empty-history,
+[data-theme="console"] .stats-grid span,
+[data-theme="console"] .instructions p,
+[data-theme="console"] .success-box p {
+  color: #baacd9;
+}
+[data-theme="console"] .streak b,
+[data-theme="console"] .streak svg,
+[data-theme="console"] .success-icon {
+  color: #7cf5d8;
+}
+[data-theme="console"] .success-box {
+  background: #263b46;
+  color: #e5fff7;
+  border-color: #65c8b7;
+}
+[data-theme="console"] .status-dot,
+[data-theme="console"] .tab-dot {
+  background: #7cf5d8;
+}
+[data-theme="console"] dialog::backdrop {
+  background: #090715c4;
+}
+
+/* Handheld shell around the console screen. */
+[data-theme="console"] body {
+  padding: 18px 10px 36px;
+}
+[data-theme="console"] .app-shell {
+  position: relative;
+  max-width: 640px;
+  padding: 16px 28px 18px;
+  background: #aaa1ca;
+  border: 4px solid #d7d0e7;
+  border-right-color: #777096;
+  border-bottom-color: #655d85;
+  border-radius: 30px 30px 58px 30px;
+  box-shadow:
+    0 18px 0 #100d20,
+    0 28px 45px #05040d9c,
+    inset 3px 3px 0 #ebe6f4;
+}
+[data-theme="console"] .app-shell::before,
+[data-theme="console"] .app-shell::after {
+  display: none;
+}
+[data-theme="console"] .topbar {
+  height: 64px;
+  border: 0;
+}
+[data-theme="console"] .brand {
+  color: #30274b;
+  font-family: Galmuri11, "Courier New", monospace;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+[data-theme="console"] .brand-sub {
+  color: #50466b;
+  letter-spacing: 1px;
+}
+[data-theme="console"] .topbar .icon-btn {
+  color: #352d52;
+}
+[data-theme="console"] .topbar .icon-btn:hover {
+  background: #c9c0dd;
+}
+[data-theme="console"] main {
+  max-width: none;
+  margin: 8px 0 0;
+  padding: 18px 22px 25px;
+  background-color: #152d32;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #ffffff06 0,
+    #ffffff06 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  border: 14px solid #353148;
+  border-radius: 20px 20px 44px 20px;
+  box-shadow:
+    inset 0 0 0 3px #0b1d24,
+    inset 0 0 32px #030c1599,
+    0 4px 0 #e1d9f0;
+  color: #e6f7ed;
+  font-family: Galmuri11, "Courier New", "Noto Sans KR", monospace;
+}
+[data-theme="console"] .console-screen-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #8ff6d9;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 0 2px 13px;
+  white-space: nowrap;
+}
+[data-theme="console"] .console-power {
+  color: #ff9eab;
+}
+[data-theme="console"] .game-tabs {
+  border-color: #4c807e;
+  gap: 24px;
+}
+[data-theme="console"] .game-tabs button {
+  color: #9dbdb8;
+  font-family: inherit;
+  font-size: 12px;
+}
+[data-theme="console"] .game-tabs button[aria-selected="true"] {
+  color: #b8ffe5;
+  border-color: #7cf5d8;
+  text-shadow: 0 0 8px #7cf5d8;
+}
+[data-theme="console"] .game-toolbar h1,
+[data-theme="console"] .record-panel h1,
+[data-theme="console"] .news-panel h1 {
+  color: #b8ffe5;
+  font-family: inherit;
+}
+[data-theme="console"] .puzzle-card {
+  background-color: #204047;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #ffffff05 0,
+    #ffffff05 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  border: 3px solid #72bfae;
+  box-shadow: 4px 4px 0 #0a1d25;
+}
+[data-theme="console"] .lyrics p,
+[data-theme="console"] .news-block ul,
+[data-theme="console"] .news-note {
+  color: #dcf1dd;
+}
+[data-theme="console"] .filter,
+[data-theme="console"] .hints button,
+[data-theme="console"] .record-item,
+[data-theme="console"] .news-item,
+[data-theme="console"] .stats-grid,
+[data-theme="console"] .help-example {
+  background: #24464b;
+  color: #d5f4df;
+  border: 1px solid #4a807d;
+}
+[data-theme="console"] .input-wrap {
+  background: #0e262e;
+  border: 2px solid #5a9b93;
+  box-shadow: inset 2px 2px 0 #09181e;
+}
+[data-theme="console"] .primary,
+[data-theme="console"] .input-wrap button {
+  background: #85f1cf;
+  color: #133333;
+  box-shadow: 0 4px 0 #438d80;
+  font-family: inherit;
+}
+[data-theme="console"] .primary:hover:not(:disabled) {
+  background: #b5ffe5;
+}
+[data-theme="console"] .console-controls {
+  min-height: 143px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 2px;
+}
+[data-theme="console"] .console-dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 34px);
+  grid-template-rows: repeat(3, 34px);
+  filter: drop-shadow(3px 4px 0 #5a5278);
+}
+[data-theme="console"] .console-dpad span {
+  display: block;
+  background: #302b46;
+}
+[data-theme="console"] .console-dpad-up {
+  grid-column: 2;
+  grid-row: 1;
+  border-radius: 5px 5px 0 0;
+}
+[data-theme="console"] .console-dpad-left {
+  grid-column: 1;
+  grid-row: 2;
+  border-radius: 5px 0 0 5px;
+}
+[data-theme="console"] .console-dpad .console-dpad-center {
+  grid-column: 2;
+  grid-row: 2;
+  background: radial-gradient(circle, #51496a 0 6px, #302b46 7px);
+}
+[data-theme="console"] .console-dpad-right {
+  grid-column: 3;
+  grid-row: 2;
+  border-radius: 0 5px 5px 0;
+}
+[data-theme="console"] .console-dpad-down {
+  grid-column: 2;
+  grid-row: 3;
+  border-radius: 0 0 5px 5px;
+}
+[data-theme="console"] .console-start {
+  align-self: flex-end;
+  margin-bottom: 18px;
+  color: #514968;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+[data-theme="console"] .console-ab {
+  display: flex;
+  gap: 14px;
+  transform: rotate(-17deg);
+}
+[data-theme="console"] .console-ab span {
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 49px;
+  border-radius: 50%;
+  background: #933f72;
+  color: #fff5fb;
+  border: 3px solid #b65e91;
+  box-shadow: 3px 5px 0 #654366;
+  font:
+    bold 17px Galmuri11,
+    monospace;
+}
+[data-theme="console"] .site-footer {
+  max-width: none;
+  margin: 0 12px;
+  padding: 10px 0 14px;
+  color: #514968;
+  border-color: #877da7;
+}
+[data-theme="console"] dialog {
+  border: 4px solid #a989f2;
+  box-shadow: 7px 7px 0 #0f0b20;
+  font-family: Galmuri11, "Courier New", "Noto Sans KR", monospace;
+}
+@media (max-width: 600px) {
+  [data-theme="console"] body {
+    padding: 7px 6px 28px;
+  }
+  [data-theme="console"] .app-shell {
+    padding: 10px 11px 13px;
+    border-width: 3px;
+    border-radius: 23px 23px 39px 23px;
+  }
+  [data-theme="console"] .topbar {
+    height: 58px;
+  }
+  [data-theme="console"] .brand {
+    font-size: 13px;
+  }
+  [data-theme="console"] main {
+    margin-top: 6px;
+    padding: 11px 12px 18px;
+    border-width: 8px;
+    border-radius: 15px 15px 27px 15px;
+  }
+  [data-theme="console"] .console-screen-label {
+    font-size: 9px;
+    letter-spacing: 0;
+    padding-bottom: 8px;
+  }
+  [data-theme="console"] .game-tabs {
+    margin: 0 -12px;
+    padding: 0 12px;
+    gap: 18px;
+  }
+  [data-theme="console"] .console-controls {
+    min-height: 116px;
+    padding: 12px 4px 2px;
+  }
+  [data-theme="console"] .console-dpad {
+    grid-template-columns: repeat(3, 27px);
+    grid-template-rows: repeat(3, 27px);
+  }
+  [data-theme="console"] .console-ab {
+    gap: 8px;
+  }
+  [data-theme="console"] .console-ab span {
+    width: 39px;
+    height: 39px;
+  }
+  [data-theme="console"] .console-start {
+    font-size: 8px;
+    margin-bottom: 10px;
+    letter-spacing: 0;
+  }
 }

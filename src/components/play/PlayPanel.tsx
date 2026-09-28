@@ -32,8 +32,12 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
     >
       <div className="game-toolbar">
         <h1>지금 도전 중</h1>
-        <button className="filter" onClick={() => onOpenModal("settings")}>
-          {unitLabel(selected)}
+        <button
+          className="filter"
+          aria-label={`유닛 선택, 현재 ${unitLabel(selected)}`}
+          onClick={() => onOpenModal("units")}
+        >
+          유닛 · {unitLabel(selected)}
           <ChevronDown size={15} />
         </button>
       </div>
