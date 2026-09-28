@@ -57,8 +57,17 @@ export async function POST(request: Request) {
   const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const hook = process.env.VERCEL_DEPLOY_HOOK_URL;
-  if (!url || !serviceKey || !hook)
-    return json(500, { error: "서버 환경 변수가 설정되지 않았습니다." });
+  if (!url || !serviceKey || !hook) {
+    // Names only, never values, so the admin can tell which one to add.
+    const missing = [
+      !url && "SUPABASE_URL(또는 VITE_SUPABASE_URL)",
+      !serviceKey && "SUPABASE_SERVICE_ROLE_KEY",
+      !hook && "VERCEL_DEPLOY_HOOK_URL",
+    ].filter(Boolean);
+    return json(500, {
+      error: `서버 환경 변수가 설정되지 않았습니다: ${missing.join(", ")}. Vercel에 등록한 뒤 다시 배포해야 적용돼요.`,
+    });
+  }
 
   const token = request.headers
     .get("authorization")

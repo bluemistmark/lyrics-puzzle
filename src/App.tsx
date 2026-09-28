@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Footer } from "./components/Footer";
 import { GameTabs, type Tab } from "./components/GameTabs";
 import { Header } from "./components/Header";
 import { Modal, type ModalName } from "./components/Modal";
@@ -46,6 +47,7 @@ export function App() {
           />
           <NewsPanel hidden={activeTab !== "news"} />
         </main>
+        <Footer />
       </div>
       <Modal open={modal !== null} onClose={close}>
         {modal === "title" && <TitleModal onClose={close} />}
