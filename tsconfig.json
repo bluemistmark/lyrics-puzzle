@@ -10,6 +10,6 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["src"],
-  "exclude": ["src/*.test.ts"]
+  "include": ["src", "scripts", "api", "vite.config.ts"],
+  "exclude": ["**/*.test.ts"]
 }

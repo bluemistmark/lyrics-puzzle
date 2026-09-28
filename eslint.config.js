@@ -24,7 +24,12 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
-    files: ["scripts/**/*.mjs", "*.js"],
+    files: ["scripts/**/*.ts", "api/**/*.ts", "*.ts"],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    languageOptions: { globals: globals.node },
+  },
+  {
+    files: ["*.js"],
     extends: [js.configs.recommended],
     languageOptions: { globals: globals.node },
   },
