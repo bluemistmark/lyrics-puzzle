@@ -7,9 +7,11 @@ import {
   type Rows,
   type SongRow,
 } from "../data/build-catalog.ts";
+import type { ReleaseRow } from "../data/releases.ts";
 import {
   ARTIST_COLUMNS,
   DICTIONARY_COLUMNS,
+  fetchReleases,
   fetchRows,
   QUESTION_COLUMNS,
   SONG_COLUMNS,
@@ -19,7 +21,13 @@ import { describeError, supabase } from "./supabase";
 type AdminStore = Rows & {
   status: "idle" | "loading" | "ready" | "error";
   error: string;
+  /** Recent releases, newest first. Loading them may fail on its own (e.g. migration not run yet). */
+  releases: ReleaseRow[];
+  releasesError: string;
   load: () => Promise<void>;
+  /** Called after /api/publish recorded a release. */
+  addRelease: (row: ReleaseRow) => void;
+  removeRelease: (id: number) => Promise<void>;
   /** `originalName` is null for a new artist; renaming cascades to its songs in the DB. */
   saveArtist: (row: ArtistRow, originalName: string | null) => Promise<void>;
   removeArtist: (name: string) => Promise<void>;
@@ -76,13 +84,26 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
   dictionary: [],
   status: "idle",
   error: "",
+  releases: [],
+  releasesError: "",
   load: async () => {
     set({ status: "loading", error: "" });
+    const releases = fetchReleases(db(), 20).then(
+      (rows) => set({ releases: rows, releasesError: "" }),
+      (error) => set({ releases: [], releasesError: (error as Error).message }),
+    );
     try {
-      set({ ...(await fetchRows(db())), status: "ready" });
+      set({ ...(await fetchRows(db())) });
+      await releases;
+      set({ status: "ready" });
     } catch (error) {
       set({ status: "error", error: (error as Error).message });
     }
+  },
+  addRelease: (row) => set({ releases: [row, ...get().releases] }),
+  removeRelease: async (id) => {
+    await remove("releases", "id", String(id));
+    set({ releases: get().releases.filter((r) => r.id !== id) });
   },
   saveArtist: async (row, originalName) => {
     const match: [string, string] | null =

@@ -9696,5 +9696,6 @@ export const catalog = {
       "pronunciation": "굿",
       "alternatives": []
     }
-  ]
+  ],
+  "news": []
 };

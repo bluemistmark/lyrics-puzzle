@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Rows } from "./build-catalog.ts";
+import { RELEASE_COLUMNS, type ReleaseRow } from "./releases.ts";
 
 // Supabase returns at most 1000 rows per request by default. Pages are ordered
 // by a unique key so they never overlap; buildCatalog applies the real order.
@@ -53,4 +54,15 @@ export async function fetchRows(client: SupabaseClient): Promise<Rows> {
     ),
   ]);
   return { artists, songs, questions, dictionary };
+}
+
+/** Most recent releases first. */
+export async function fetchReleases(client: SupabaseClient, limit: number) {
+  const { data, error } = await client
+    .from("releases")
+    .select(RELEASE_COLUMNS)
+    .order("id", { ascending: false })
+    .limit(limit);
+  if (error) throw Error(`releases 읽기 실패: ${error.message}`);
+  return data as unknown as ReleaseRow[];
 }

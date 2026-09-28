@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
-    "test": "node --experimental-strip-types --test --test-isolation=none src/game.test.ts src/store.test.ts src/data/build-catalog.test.ts src/admin/ids.test.ts src/admin/bulk.test.ts",
+    "test": "node --experimental-strip-types --test --test-isolation=none src/game.test.ts src/store.test.ts src/data/build-catalog.test.ts src/data/releases.test.ts src/admin/ids.test.ts src/admin/bulk.test.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

@@ -5,7 +5,8 @@ import {
   type DictionaryEntry,
   type Token,
 } from "./data/english.ts";
-export type { Token };
+import type { NewsItem } from "./data/releases.ts";
+export type { NewsItem, Token };
 export type Song = {
   id: string;
   artist: string;
@@ -55,6 +56,8 @@ export const questions: Question[] = catalog.questions.map((q) => {
   };
 });
 export const units = [...new Set(songs.map((s) => s.unit))];
+/** 소식 tab entries, newest first (built from the releases table at deploy time). */
+export const news: NewsItem[] = catalog.news;
 export function titleMatches(q: Question, title: string) {
   return songTitleMatches(
     songs.find((s) => s.id === q.songId)!,
