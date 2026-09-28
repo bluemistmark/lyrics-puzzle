@@ -11,11 +11,13 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
 - `npm run dev` — Vite 개발 서버 (127.0.0.1)
 - `npm test` — Node 내장 test runner + `--experimental-strip-types`로 `src/game.test.ts`, `src/store.test.ts`를 직접 실행 (빌드/번들러 없음)
 - 단일 테스트: `node --experimental-strip-types --test --test-isolation=none --test-name-pattern="제목 정답" src/store.test.ts`
-- `npm run build` — `tsc --noEmit` 타입 체크 후 `vite build` (별도 lint 없음, 타입 체크가 사실상 lint)
+- `npm run build` — `tsc --noEmit` 타입 체크 후 `vite build`
+- `npm run lint` / `npm run lint:fix` — ESLint (flat config `eslint.config.js`: typescript-eslint recommended + react-hooks recommended + eslint-config-prettier)
+- `npm run format` / `npm run format:check` — Prettier (기본 설정). `src/catalog.ts`, `data/`, `package-lock.json`은 포맷·린트 대상에서 제외
 - `npm run data:refresh` — 구글 시트(가사 gid=0, 영어 사전 gid=230201622)를 CSV로 받아 `data/*.csv` 갱신 → `import-data.mjs` 실행 → `game.ts` 로드 확인. 실패 시 CSV와 `catalog.ts`를 원래대로 복원
 - `npm run data:import` — 이미 저장된 `data/*.csv`만으로 `src/catalog.ts` 재생성
 
-데이터 변경 후에는 `npm test`와 `npm run build`를 모두 실행한다.
+코드 변경 후에는 `npm run format`, `npm run lint`, `npm test`, `npm run build`를 실행한다.
 
 ## 아키텍처
 
@@ -34,5 +36,5 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
 
 - `game.test.ts`는 전체 데이터 개수(문제 642, 곡 165, 사전 525)와 유닛 목록을 하드코딩해 검사한다. 시트 데이터가 바뀌면 이 값과 README의 수치를 함께 갱신한다.
 - `game.ts`/`store.ts`/테스트는 Node가 직접 실행하므로 `.ts` 확장자를 붙여 import한다(`allowImportingTsExtensions`). Node strip-types가 지원하지 않는 TS 문법(enum, namespace, parameter property 등)은 쓰지 않는다. 테스트 파일은 `tsconfig`에서 제외되어 `tsc` 검사를 받지 않는다.
-- 코드 스타일이 파일마다 다르다: `game.ts`, `store.ts`, `scripts/*`, 테스트는 한 줄에 압축한 밀집 스타일, `main.tsx`와 `theme.ts`는 일반 포매팅. 수정하는 파일의 스타일을 따른다.
+- react-hooks v7 규칙(`set-state-in-effect` 등)이 켜져 있다. prop/스토어 값 변화에 따라 로컬 state를 초기화할 때는 effect 대신 렌더 중 이전 값 비교 패턴을 쓴다(`main.tsx`의 `roundId` 참고).
 - UI 문구, 에러 메시지, 테스트 이름은 한국어로 작성한다.

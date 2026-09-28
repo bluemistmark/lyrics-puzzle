@@ -34,16 +34,19 @@ function App() {
   >(null);
   const input = useRef<HTMLInputElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const [roundId, setRoundId] = useState(r.id);
+  if (roundId !== r.id) {
+    // Clear inputs during render when a new question starts, instead of in an effect.
+    setRoundId(r.id);
+    setWord("");
+    setTitle("");
+    setTitleError("");
+  }
   useEffect(() => {
     if (modal) {
       dialog.current?.showModal();
     } else dialog.current?.close();
   }, [modal]);
-  useEffect(() => {
-    setWord("");
-    setTitle("");
-    setTitleError("");
-  }, [r.id]);
   useEffect(() => {
     const ctx = (
       document as unknown as {
@@ -59,7 +62,9 @@ function App() {
         Promise.resolve(
           ctx.registerTool(tool, { signal: lifecycle.signal }),
         ).catch(() => {});
-      } catch {}
+      } catch {
+        /* Tool registration is optional; the game works without it. */
+      }
     };
     register({
       name: "guess_lyric_word",
@@ -119,230 +124,283 @@ function App() {
         </header>
         <main>
           <div className="game-tabs" role="tablist" aria-label="화면 선택">
-            <button id="play-tab" role="tab" aria-selected={activeTab === "play"} aria-controls="play-panel" onClick={() => setActiveTab("play")}>플레이</button>
-            <button id="record-tab" role="tab" aria-selected={activeTab === "record"} aria-controls="record-panel" onClick={() => setActiveTab("record")}>기록</button>
-          </div>
-          <div id="play-panel" role="tabpanel" aria-labelledby="play-tab" hidden={activeTab !== "play"}>
-          <div className="game-toolbar">
-            <h1>지금 도전 중</h1>
-            <button className="filter" onClick={() => setModal("settings")}>
-              {g.selected.length === units.length
-                ? "NCT 전체"
-                : g.selected.length === 1
-                  ? g.selected[0]
-                  : `${g.selected.length}개 유닛`}
-              <ChevronDown size={15} />
+            <button
+              id="play-tab"
+              role="tab"
+              aria-selected={activeTab === "play"}
+              aria-controls="play-panel"
+              onClick={() => setActiveTab("play")}
+            >
+              플레이
+            </button>
+            <button
+              id="record-tab"
+              role="tab"
+              aria-selected={activeTab === "record"}
+              aria-controls="record-panel"
+              onClick={() => setActiveTab("record")}
+            >
+              기록
             </button>
           </div>
-          <section className="puzzle-card" aria-label="초성 가사 문제">
-            <div className="card-top">
-              <span className="question-label">
-                초성 가사 <span>{q.lines.length}줄 문제</span>
-              </span>
+          <div
+            id="play-panel"
+            role="tabpanel"
+            aria-labelledby="play-tab"
+            hidden={activeTab !== "play"}
+          >
+            <div className="game-toolbar">
+              <h1>지금 도전 중</h1>
+              <button className="filter" onClick={() => setModal("settings")}>
+                {g.selected.length === units.length
+                  ? "NCT 전체"
+                  : g.selected.length === 1
+                    ? g.selected[0]
+                    : `${g.selected.length}개 유닛`}
+                <ChevronDown size={15} />
+              </button>
             </div>
-            <div className="lyrics" aria-label="문제 가사">
-              {q.lines.map((line, l) => (
-                <p key={l}>
-                  {line.map((token, w) => (
-                    <React.Fragment key={w}>
-                      <span
-                        className={`word ${token.pronunciation && r.english ? "english" : ""}`}
-                        aria-label={
-                          token.pronunciation && r.english
-                            ? "영어 구간"
-                            : undefined
-                        }
-                      >
-                        {token.pronunciation ? (
-                          <span
-                            className={
-                              r.revealed.includes(`${l}:${w}:en`)
-                                ? "revealed"
-                                : ""
-                            }
-                          >
-                            {r.givenUp || r.revealed.includes(`${l}:${w}:en`)
-                              ? token.text
-                              : [...token.pronunciation].map(initial).join("")}
-                          </span>
-                        ) : (
-                          [...token.text].map((c, i) => (
+            <section className="puzzle-card" aria-label="초성 가사 문제">
+              <div className="card-top">
+                <span className="question-label">
+                  초성 가사 <span>{q.lines.length}줄 문제</span>
+                </span>
+              </div>
+              <div className="lyrics" aria-label="문제 가사">
+                {q.lines.map((line, l) => (
+                  <p key={l}>
+                    {line.map((token, w) => (
+                      <React.Fragment key={w}>
+                        <span
+                          className={`word ${token.pronunciation && r.english ? "english" : ""}`}
+                          aria-label={
+                            token.pronunciation && r.english
+                              ? "영어 구간"
+                              : undefined
+                          }
+                        >
+                          {token.pronunciation ? (
                             <span
-                              key={i}
                               className={
-                                r.revealed.includes(`${l}:${w}:${i}`)
+                                r.revealed.includes(`${l}:${w}:en`)
                                   ? "revealed"
                                   : ""
                               }
                             >
-                              {r.givenUp ||
-                              r.revealed.includes(`${l}:${w}:${i}`)
-                                ? c
-                                : initial(c)}
+                              {r.givenUp || r.revealed.includes(`${l}:${w}:en`)
+                                ? token.text
+                                : [...token.pronunciation]
+                                    .map(initial)
+                                    .join("")}
                             </span>
-                          ))
-                        )}
-                      </span>
-                    </React.Fragment>
-                  ))}
-                </p>
-              ))}
+                          ) : (
+                            [...token.text].map((c, i) => (
+                              <span
+                                key={i}
+                                className={
+                                  r.revealed.includes(`${l}:${w}:${i}`)
+                                    ? "revealed"
+                                    : ""
+                                }
+                              >
+                                {r.givenUp ||
+                                r.revealed.includes(`${l}:${w}:${i}`)
+                                  ? c
+                                  : initial(c)}
+                              </span>
+                            ))
+                          )}
+                        </span>
+                      </React.Fragment>
+                    ))}
+                  </p>
+                ))}
+              </div>
+              <div
+                className="progress-track"
+                role="progressbar"
+                aria-label="가사 복원율"
+                aria-valuenow={percent}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              >
+                <div style={{ width: `${percent}%` }} />
+              </div>
+              <div className="progress-label">
+                <span>
+                  {r.givenUp ? "정답 공개" : full ? "가사 완성!" : "가사 복원"}
+                </span>
+                <b>{r.givenUp ? "—" : `${percent}%`}</b>
+              </div>
+              <div className="card-bottom">
+                <span className="small-status">
+                  {r.solved ? (
+                    <>
+                      <Check size={15} /> 제목 정답
+                    </>
+                  ) : (
+                    <>
+                      <span className="status-dot" /> 떠오르는 단어부터 천천히
+                    </>
+                  )}
+                </span>
+                <span>힌트 {r.hints}회</span>
+              </div>
+            </section>
+            {(r.solved || r.givenUp || full) && (
+              <div className="success-box">
+                <span className="success-icon">
+                  {r.givenUp ? <Headphones size={22} /> : <Check size={22} />}
+                </span>
+                <div>
+                  <strong>
+                    {r.solved || r.givenUp ? q.title : "가사를 모두 채웠어요!"}
+                  </strong>
+                  {(r.solved || r.givenUp) && <p>{q.unit}</p>}
+                  <p>
+                    {r.givenUp
+                      ? "정답을 확인했어요. 다음 문제에 도전해 보세요."
+                      : r.solved
+                        ? full
+                          ? "제목도 가사도 모두 맞혔어요!"
+                          : "제목 정답! 남은 가사도 계속 풀 수 있어요."
+                        : "이제 노래 제목에도 도전해 보세요."}
+                  </p>
+                </div>
+              </div>
+            )}
+            <form className="word-form" onSubmit={submit}>
+              <label htmlFor="word">떠오르는 단어</label>
+              <div className="input-wrap">
+                <input
+                  ref={input}
+                  id="word"
+                  value={word}
+                  onChange={(e) => setWord(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.nativeEvent.isComposing)
+                      e.preventDefault();
+                  }}
+                  placeholder="가사에 있을 것 같은 단어"
+                  autoComplete="off"
+                  maxLength={60}
+                  disabled={r.givenUp || full}
+                />
+                <button
+                  type="submit"
+                  aria-label="단어 확인"
+                  disabled={!word.trim() || r.givenUp || full}
+                >
+                  <ArrowRight size={23} />
+                </button>
+              </div>
+            </form>
+            <div className="feedback" role="status">
+              {g.notice}
             </div>
-            <div
-              className="progress-track"
-              role="progressbar"
-              aria-label="가사 복원율"
-              aria-valuenow={percent}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            >
-              <div style={{ width: `${percent}%` }} />
+            <div className="word-history">
+              {r.words.length ? (
+                r.words
+                  .slice(-8)
+                  .reverse()
+                  .map((w, i) => (
+                    <span className={w.hit ? "hit" : "miss"} key={i}>
+                      {w.word}
+                      {w.hit ? <Check size={13} /> : <X size={12} />}
+                    </span>
+                  ))
+              ) : (
+                <span className="empty-history">
+                  첫 단어가 노래의 시작이 될지도 몰라요.
+                </span>
+              )}
             </div>
-            <div className="progress-label">
-              <span>{r.givenUp ? "정답 공개" : full ? "가사 완성!" : "가사 복원"}</span>
-              <b>{r.givenUp ? "—" : `${percent}%`}</b>
-            </div>
-            <div className="card-bottom">
-              <span className="small-status">
-                {r.solved ? (
-                  <>
-                    <Check size={15} /> 제목 정답
-                  </>
-                ) : (
-                  <>
-                    <span className="status-dot" /> 떠오르는 단어부터 천천히
-                  </>
-                )}
-              </span>
-              <span>힌트 {r.hints}회</span>
-            </div>
-          </section>
-          {(r.solved || r.givenUp || full) && (
-            <div className="success-box">
-              <span className="success-icon">
-                {r.givenUp ? <Headphones size={22} /> : <Check size={22} />}
-              </span>
+            <div className="hints">
               <div>
-                <strong>
-                  {r.solved || r.givenUp ? q.title : "가사를 모두 채웠어요!"}
-                </strong>
-                {(r.solved || r.givenUp) && <p>{q.unit}</p>}
-                <p>
-                  {r.givenUp
-                    ? "정답을 확인했어요. 다음 문제에 도전해 보세요."
-                    : r.solved
-                      ? full
-                        ? "제목도 가사도 모두 맞혔어요!"
-                        : "제목 정답! 남은 가사도 계속 풀 수 있어요."
-                      : "이제 노래 제목에도 도전해 보세요."}
-                </p>
+                <button
+                  disabled={
+                    r.english ||
+                    r.givenUp ||
+                    full ||
+                    !q.lines.some((line) => line.some((t) => t.pronunciation))
+                  }
+                  onClick={() => g.hint("english")}
+                >
+                  {r.english ? (
+                    <Check size={14} />
+                  ) : (
+                    <span className="english-a">A</span>
+                  )}{" "}
+                  영어 표시
+                </button>
+                <button
+                  disabled={r.givenUp || full}
+                  onClick={() => g.hint("word")}
+                >
+                  <Sparkles size={14} /> 단어 공개
+                </button>
               </div>
             </div>
-          )}
-          <form className="word-form" onSubmit={submit}>
-            <label htmlFor="word">떠오르는 단어</label>
-            <div className="input-wrap">
-              <input
-                ref={input}
-                id="word"
-                value={word}
-                onChange={(e) => setWord(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && e.nativeEvent.isComposing)
-                    e.preventDefault();
-                }}
-                placeholder="가사에 있을 것 같은 단어"
-                autoComplete="off"
-                maxLength={60}
-                disabled={r.givenUp || full}
-              />
-              <button
-                type="submit"
-                aria-label="단어 확인"
-                disabled={!word.trim() || r.givenUp || full}
-              >
-                <ArrowRight size={23} />
-              </button>
-            </div>
-          </form>
-          <div className="feedback" role="status">{g.notice}</div>
-          <div className="word-history">
-            {r.words.length ? (
-              r.words
-                .slice(-8)
-                .reverse()
-                .map((w, i) => (
-                  <span className={w.hit ? "hit" : "miss"} key={i}>
-                    {w.word}
-                    {w.hit ? <Check size={13} /> : <X size={12} />}
-                  </span>
-                ))
-            ) : (
-              <span className="empty-history">
-                첫 단어가 노래의 시작이 될지도 몰라요.
-              </span>
-            )}
-          </div>
-          <div className="hints">
-            <div>
-              <button
-                disabled={
-                  r.english ||
-                  r.givenUp ||
-                  full ||
-                  !q.lines.some((line) => line.some((t) => t.pronunciation))
-                }
-                onClick={() => g.hint("english")}
-              >
-                {r.english ? (
-                  <Check size={14} />
-                ) : (
-                  <span className="english-a">A</span>
-                )}{" "}
-                영어 표시
-              </button>
-              <button
-                disabled={r.givenUp || full}
-                onClick={() => g.hint("word")}
-              >
-                <Sparkles size={14} /> 단어 공개
-              </button>
+            <div className="bottom-actions">
+              {r.solved || r.givenUp ? (
+                <button className="primary" onClick={g.next}>
+                  다음 문제 <ArrowRight size={18} />
+                </button>
+              ) : (
+                <>
+                  <button
+                    className="primary"
+                    onClick={() => {
+                      setTitleError("");
+                      setModal("title");
+                    }}
+                  >
+                    <AudioLines size={19} /> 제목 맞히기
+                  </button>
+                  <button className="skip" onClick={() => setModal("giveup")}>
+                    포기하기
+                  </button>
+                </>
+              )}
             </div>
           </div>
-          <div className="bottom-actions">
-            {r.solved || r.givenUp ? (
-              <button className="primary" onClick={g.next}>
-                다음 문제 <ArrowRight size={18} />
-              </button>
-            ) : (
-              <>
-                <button
-                  className="primary"
-                  onClick={() => {
-                    setTitleError("");
-                    setModal("title");
-                  }}
-                >
-                  <AudioLines size={19} /> 제목 맞히기
-                </button>
-                <button className="skip" onClick={() => setModal("giveup")}>
-                  포기하기
-                </button>
-              </>
-            )}
-          </div>
-          </div>
-          <section id="record-panel" role="tabpanel" aria-labelledby="record-tab" hidden={activeTab !== "record"} className="record-panel">
+          <section
+            id="record-panel"
+            role="tabpanel"
+            aria-labelledby="record-tab"
+            hidden={activeTab !== "record"}
+            className="record-panel"
+          >
             <h1>나의 기록</h1>
             <div className="record-grid">
-              <div className="record-item"><span>제목 정답</span><strong>{g.stats.solved}문제</strong></div>
-              <div className="record-item"><span>가사 완성</span><strong>{g.stats.completed}문제</strong></div>
-              <div className="record-item"><span>현재 연속 정답</span><strong>{g.stats.streak}문제</strong></div>
-              <div className="record-item"><span>최고 연속 정답</span><strong>{g.stats.best}문제</strong></div>
-              <div className="record-item"><span>직접 완성</span><strong>{g.stats.direct}문제</strong></div>
+              <div className="record-item">
+                <span>제목 정답</span>
+                <strong>{g.stats.solved}문제</strong>
+              </div>
+              <div className="record-item">
+                <span>가사 완성</span>
+                <strong>{g.stats.completed}문제</strong>
+              </div>
+              <div className="record-item">
+                <span>현재 연속 정답</span>
+                <strong>{g.stats.streak}문제</strong>
+              </div>
+              <div className="record-item">
+                <span>최고 연속 정답</span>
+                <strong>{g.stats.best}문제</strong>
+              </div>
+              <div className="record-item">
+                <span>직접 완성</span>
+                <strong>{g.stats.direct}문제</strong>
+              </div>
             </div>
-            <p className="record-note">기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도 삭제됩니다.</p>
-            <button className="reset-btn" onClick={() => setModal("reset")}><RotateCcw size={14} /> 기록 초기화</button>
+            <p className="record-note">
+              기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도
+              삭제됩니다.
+            </p>
+            <button className="reset-btn" onClick={() => setModal("reset")}>
+              <RotateCcw size={14} /> 기록 초기화
+            </button>
           </section>
         </main>
       </div>
@@ -444,9 +502,24 @@ function App() {
               <fieldset className="theme-settings">
                 <legend>화면 모드</legend>
                 <div className="theme-options">
-                  {([["system", "시스템"], ["light", "라이트"], ["dark", "다크"]] as [Theme, string][]).map(([value, label]) => (
-                    <label key={value} className={theme === value ? "selected" : ""}>
-                      <input type="radio" name="theme" value={value} checked={theme === value} onChange={() => setTheme(value)} />
+                  {(
+                    [
+                      ["system", "시스템"],
+                      ["light", "라이트"],
+                      ["dark", "다크"],
+                    ] as [Theme, string][]
+                  ).map(([value, label]) => (
+                    <label
+                      key={value}
+                      className={theme === value ? "selected" : ""}
+                    >
+                      <input
+                        type="radio"
+                        name="theme"
+                        value={value}
+                        checked={theme === value}
+                        onChange={() => setTheme(value)}
+                      />
                       {label}
                     </label>
                   ))}
@@ -471,8 +544,9 @@ function App() {
                 <li>
                   <b>단어를 입력해 가사를 열어요</b>
                   <p>
-                    입력한 말에서 연속 두 글자 이상 맞는 부분만 열려요. 한 글자는 독립된 단어이거나, 일부가 이미 공개된 단어에서 인정해요.
-                    영어는 원래 철자나 한글 발음으로 입력해요.
+                    입력한 말에서 연속 두 글자 이상 맞는 부분만 열려요. 한
+                    글자는 독립된 단어이거나, 일부가 이미 공개된 단어에서
+                    인정해요. 영어는 원래 철자나 한글 발음으로 입력해요.
                   </p>
                 </li>
                 <li>
