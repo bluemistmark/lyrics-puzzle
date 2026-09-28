@@ -1,4 +1,4 @@
-import { AudioLines, FileSpreadsheet, HelpCircle, Palette } from "lucide-react";
+import { FileSpreadsheet, HelpCircle, Palette } from "lucide-react";
 
 type Props = { discreet: boolean; onHelp: () => void; onTheme: () => void };
 
@@ -7,10 +7,14 @@ export function Header({ discreet, onHelp, onTheme }: Props) {
     <header className="topbar">
       <a className="brand" href="#">
         <span className="brand-icon">
-          {discreet ? <FileSpreadsheet size={23} /> : <AudioLines size={23} />}
+          {discreet ? (
+            <FileSpreadsheet size={23} />
+          ) : (
+            <img src="/favicon.svg" alt="" width="42" height="42" />
+          )}
         </span>
         <span>
-          {discreet ? "문서 정리" : "초성 가사 맞히기"}
+          {discreet ? "문서 정리" : "NCT 초성 가사 맞히기"}
           <span className="brand-sub">
             {discreet ? "SHEET1 · PERSONAL" : "LYRICS PUZZLE"}
           </span>

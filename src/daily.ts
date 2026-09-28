@@ -34,7 +34,7 @@ export function dailyResultText(result: ShareResult): string {
       ? "🎧 정답 확인"
       : "🎵 도전 중";
   return [
-    `초성 가사 맞히기 · 오늘의 문제 ${result.date.replaceAll("-", ".")}`,
+    `NCT 초성 가사 맞히기 · 오늘의 문제 ${result.date.replaceAll("-", ".")}`,
     outcome,
     `가사 복원 ${result.percent}% · 단어 ${result.guesses}번 · 힌트 ${result.hints}번`,
   ].join("\n");
