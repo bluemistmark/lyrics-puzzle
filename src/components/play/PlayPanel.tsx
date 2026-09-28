@@ -31,7 +31,7 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
       hidden={hidden}
     >
       <div className="game-toolbar">
-        <h1>지금 도전 중</h1>
+        <h1>가사 맞히기</h1>
         <button
           className="filter"
           aria-label={`유닛 선택, 현재 ${unitLabel(selected)}`}

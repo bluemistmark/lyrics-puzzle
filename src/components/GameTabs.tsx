@@ -1,7 +1,8 @@
-export type Tab = "play" | "record" | "news";
+export type Tab = "play" | "daily" | "record" | "news";
 
 const tabs: [Tab, string][] = [
   ["play", "플레이"],
+  ["daily", "오늘"],
   ["record", "기록"],
   ["news", "소식"],
 ];

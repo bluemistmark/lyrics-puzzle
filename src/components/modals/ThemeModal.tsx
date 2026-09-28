@@ -25,7 +25,6 @@ export function ThemeModal({ theme, onThemeChange, onClose }: Props) {
       <h2>화면 테마 고르기</h2>
       <p>원하는 분위기로 화면을 바꿔보세요.</p>
       <fieldset className="theme-settings">
-        <legend>테마 선택</legend>
         <div className="theme-options">
           {themes.map(([value, label]) => (
             <label key={value} className={theme === value ? "selected" : ""}>

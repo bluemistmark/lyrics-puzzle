@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="12" fill="#286442"/><text x="20" y="29" text-anchor="middle" font-size="28" font-family="sans-serif" fill="#DFFF80">ㅊ</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NCT 초성 가사 맞히기">
+  <rect width="64" height="64" rx="19" fill="#e0f0ec"/>
+  <path d="M34 17h4v25h-4zM38 17c10 2 15 9 10 17-1-6-4-9-10-10z" fill="#58d523"/>
+  <ellipse cx="27" cy="42" rx="10" ry="6.5" transform="rotate(-22 27 42)" fill="#58d523"/>
+</svg>

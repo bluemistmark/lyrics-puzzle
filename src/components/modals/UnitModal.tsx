@@ -19,11 +19,11 @@ export function UnitModal({ onClose }: Props) {
       <span className="modal-icon">
         <Headphones />
       </span>
-      <h2>어떤 노래를 만나볼까요?</h2>
+      <h2>유닛 선택</h2>
       <p>
-        여러 유닛을 함께 선택할 수 있어요.
+        여러 유닛을 선택할 수 있어요.
         <br />
-        다음 문제부터 적용돼요.
+        변경 사항은 다음 문제부터 적용돼요.
       </p>
       <div className="unit-options">
         <button
@@ -51,7 +51,7 @@ export function UnitModal({ onClose }: Props) {
         문제가 선택됐어요.
       </p>
       <button className="primary" onClick={onClose}>
-        이어서 플레이
+        선택 완료
       </button>
     </>
   );

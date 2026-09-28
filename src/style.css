@@ -74,11 +74,14 @@ button:active:not(:disabled) {
 .brand-icon {
   display: grid;
   place-items: center;
-  background: #286442;
-  color: #dfff80;
   width: 42px;
   height: 42px;
-  border-radius: 14px;
+  flex: none;
+}
+.brand-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .brand-sub {
   display: block;
@@ -397,6 +400,7 @@ input::placeholder {
 .hints > div {
   display: flex;
   gap: 7px;
+  flex-wrap: wrap;
 }
 .hints button {
   background: #eef1e7;
@@ -409,6 +413,16 @@ input::placeholder {
   padding: 9px 10px;
   font-size: 12px;
   min-height: 38px;
+  white-space: nowrap;
+}
+.artist-hint {
+  margin: -8px 0 17px;
+  color: #456033;
+  font-size: 13px;
+}
+.artist-hint strong {
+  margin-left: 6px;
+  font-size: 14px;
 }
 .english-a {
   font-family: serif;
@@ -716,12 +730,12 @@ h3 {
     height: 79px;
   }
   .brand {
-    font-size: 15px;
+    gap: 8px;
+    font-size: 14px;
   }
   .brand-icon {
     width: 36px;
     height: 36px;
-    border-radius: 12px;
   }
   .brand-sub {
     font-size: 8px;
@@ -2058,6 +2072,174 @@ main [hidden] {
 }
 [data-theme="console"] dialog::backdrop {
   background: #090715c4;
+}
+
+/* Today's shared puzzle and spoiler-free result. */
+.daily-panel {
+  padding-top: 26px;
+}
+.daily-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.daily-heading h1 {
+  font-size: 19px;
+  line-height: 1.4;
+  letter-spacing: -0.6px;
+  margin: 3px 0 0;
+}
+.daily-date {
+  font-size: 11px;
+  font-weight: 700;
+  color: #66795a;
+}
+.daily-badge {
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #eef1e7;
+  color: #456033;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.share-results {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid #d8e4d1;
+  border-radius: 13px;
+  background: #f5f8f0;
+}
+.share-results h2 {
+  margin: 0 0 3px;
+  font-size: 17px;
+}
+.share-results > p {
+  margin: 0;
+  color: #66795a;
+  font-size: 12px;
+}
+.share-results pre {
+  margin: 14px 0;
+  padding: 13px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  font:
+    12px/1.7 "Noto Sans KR",
+    sans-serif;
+  color: #304532;
+  background: white;
+  border: 1px solid #d8e4d1;
+  border-radius: 8px;
+  user-select: text;
+}
+.share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.share-actions button,
+.share-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 38px;
+  padding: 8px 11px;
+  border: 1px solid #bfd2b7;
+  border-radius: 8px;
+  background: white;
+  color: #315b39;
+  font-size: 12px;
+  font-weight: 700;
+}
+.share-actions button:hover,
+.share-actions a:hover {
+  background: #eaf2e3;
+}
+.share-results .share-status {
+  min-height: 18px;
+  margin-top: 11px;
+  line-height: 1.5;
+}
+[data-theme="dark"] .daily-date,
+[data-theme="dark"] .share-results > p {
+  color: #adbba3;
+}
+[data-theme="dark"] .daily-badge,
+[data-theme="dark"] .share-results {
+  background: #263528;
+  color: #e7eee1;
+  border-color: #46593d;
+}
+[data-theme="dark"] .share-results pre,
+[data-theme="dark"] .share-actions button,
+[data-theme="dark"] .share-actions a {
+  background: #1e2820;
+  color: #dff2c6;
+  border-color: #46593d;
+}
+[data-theme="excel"] .daily-badge,
+[data-theme="excel"] .share-results {
+  background: white;
+  border-radius: 2px;
+  border-color: #cbd6cd;
+}
+[data-theme="excel"] .share-results pre,
+[data-theme="excel"] .share-actions button,
+[data-theme="excel"] .share-actions a {
+  border-radius: 2px;
+}
+[data-theme="notebook"] .daily-date,
+[data-theme="notebook"] .share-results > p {
+  color: #9b6980;
+}
+[data-theme="notebook"] .daily-badge,
+[data-theme="notebook"] .share-results {
+  background: #fff1f5;
+  color: #884465;
+  border-color: #edc8d8;
+}
+[data-theme="notebook"] .share-results pre,
+[data-theme="notebook"] .share-actions button,
+[data-theme="notebook"] .share-actions a {
+  background: #fffdfb;
+  color: #884465;
+  border-color: #edc8d8;
+}
+[data-theme="console"] .daily-date,
+[data-theme="console"] .share-results > p {
+  color: #9fc9ba;
+}
+[data-theme="console"] .daily-badge,
+[data-theme="console"] .share-results {
+  background: #204047;
+  color: #b8ffe5;
+  border-color: #72bfae;
+  border-radius: 4px;
+}
+[data-theme="console"] .share-results pre,
+[data-theme="console"] .share-actions button,
+[data-theme="console"] .share-actions a {
+  background: #132e35;
+  color: #b8ffe5;
+  border-color: #72bfae;
+  border-radius: 3px;
+  font-family: Galmuri11, monospace;
+}
+[data-theme="dark"] .artist-hint {
+  color: #d0eba9;
+}
+[data-theme="excel"] .artist-hint {
+  color: #17683b;
+}
+[data-theme="notebook"] .artist-hint {
+  color: #a34f78;
+}
+[data-theme="console"] .artist-hint {
+  color: #b8ffe5;
 }
 
 /* Handheld shell around the console screen. */

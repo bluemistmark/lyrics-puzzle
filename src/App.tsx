@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Footer } from "./components/Footer";
 import { GameTabs, type Tab } from "./components/GameTabs";
 import { Header } from "./components/Header";
@@ -10,17 +10,38 @@ import { ResetModal } from "./components/modals/ResetModal";
 import { ThemeModal } from "./components/modals/ThemeModal";
 import { TitleModal } from "./components/modals/TitleModal";
 import { UnitModal } from "./components/modals/UnitModal";
+import { DailyPanel } from "./components/play/DailyPanel";
 import { PlayPanel } from "./components/play/PlayPanel";
 import { RecordPanel } from "./components/RecordPanel";
 import { useModelContextTools } from "./hooks/useModelContextTools";
 import { useNewsSeen } from "./hooks/useNewsSeen";
 import { news } from "./game";
+import { koreaDate } from "./daily";
+import { useGame } from "./store";
 import { useTheme } from "./theme";
 
 export function App() {
   const { theme, setTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState<Tab>("play");
+  const [activeTab, setActiveTab] = useState<Tab>(() =>
+    new URLSearchParams(window.location.search).get("today") === "1"
+      ? "daily"
+      : "play",
+  );
   const [modal, setModal] = useState<ModalName | null>(null);
+  const [today, setToday] = useState(koreaDate);
+  const syncDaily = useGame((s) => s.syncDaily);
+  useEffect(() => {
+    const refresh = () => setToday(koreaDate());
+    const timer = window.setInterval(refresh, 60_000);
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+  }, []);
+  useEffect(() => syncDaily(today), [syncDaily, today]);
   const { unread, markSeen } = useNewsSeen(news[0]?.id ?? 0);
   const changeTab = (tab: Tab) => {
     setActiveTab(tab);
@@ -65,6 +86,7 @@ export function App() {
             dots={{ news: unread && activeTab !== "news" }}
           />
           <PlayPanel hidden={activeTab !== "play"} onOpenModal={setModal} />
+          <DailyPanel hidden={activeTab !== "daily"} onOpenModal={setModal} />
           <RecordPanel
             hidden={activeTab !== "record"}
             onReset={() => setModal("reset")}
@@ -91,12 +113,16 @@ export function App() {
       </div>
       <Modal open={modal !== null} onClose={close}>
         {modal === "title" && <TitleModal onClose={close} />}
+        {modal === "daily-title" && <TitleModal onClose={close} mode="daily" />}
         {modal === "units" && <UnitModal onClose={close} />}
         {modal === "theme" && (
           <ThemeModal theme={theme} onThemeChange={setTheme} onClose={close} />
         )}
         {modal === "help" && <HelpModal onClose={close} />}
         {modal === "giveup" && <GiveUpModal onClose={close} />}
+        {modal === "daily-giveup" && (
+          <GiveUpModal onClose={close} mode="daily" />
+        )}
         {modal === "reset" && <ResetModal onClose={close} onCancel={close} />}
       </Modal>
     </>
