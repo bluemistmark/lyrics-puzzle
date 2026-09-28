@@ -6,15 +6,16 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
-    "test": "node --experimental-strip-types --test --test-isolation=none src/game.test.ts src/store.test.ts",
-    "data:import": "node scripts/import-data.mjs",
-    "data:refresh": "node scripts/refresh-data.mjs",
+    "test": "node --experimental-strip-types --test --test-isolation=none src/game.test.ts src/store.test.ts src/data/build-catalog.test.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "data:pull": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/pull-catalog.ts",
+    "data:seed": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/seed-supabase.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
     "lucide-react": "^0.468.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^10.11.0",
@@ -32,5 +34,8 @@
     "typescript": "^5.8.0",
     "typescript-eslint": "^8.70.1",
     "vite": "^6.3.0"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }
