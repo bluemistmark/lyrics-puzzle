@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { questions, allKeys } from "./game.ts";
+import { koreaDate } from "./daily.ts";
 const memory = new Map<string, string>();
 Object.defineProperty(globalThis, "localStorage", {
   value: {
@@ -75,4 +76,41 @@ test("공개 전 실패한 한 글자를 부분 공개 후 다시 입력 가능"
   const before = useGame.getState().round.revealed.length;
   useGame.getState().guess(suffix);
   assert.ok(useGame.getState().round.revealed.length > before);
+});
+
+test("오늘의 도전은 일반 진행과 기록을 건드리지 않고 저장됨", async () => {
+  useGame.getState().reset();
+  const normalId = useGame.getState().round.id;
+  const stats = { ...useGame.getState().stats };
+  const today = koreaDate();
+  useGame.getState().syncDaily(today);
+  const dailyId = useGame.getState().daily.round.id;
+  const question = questions.find((q) => q.id === dailyId)!;
+  useGame.getState().guess(question.lines[0][0].text, "daily");
+  assert.ok(useGame.getState().solve(question.title, "daily"));
+  assert.equal(useGame.getState().round.id, normalId);
+  assert.deepEqual(useGame.getState().stats, stats);
+  await useGame.persist.rehydrate();
+  assert.equal(useGame.getState().daily.round.id, dailyId);
+  assert.equal(useGame.getState().daily.round.solved, true);
+  const tomorrow = koreaDate(new Date(Date.now() + 24 * 60 * 60 * 1000));
+  useGame.getState().syncDaily(tomorrow);
+  assert.equal(useGame.getState().daily.date, tomorrow);
+  assert.equal(useGame.getState().daily.round.solved, false);
+  assert.equal(useGame.getState().daily.round.words.length, 0);
+});
+
+test("가수명 힌트는 각 모드에서 한 번만 사용됨", () => {
+  useGame.getState().reset();
+  useGame.getState().hint("artist");
+  assert.equal(useGame.getState().round.artist, true);
+  assert.equal(useGame.getState().round.hints, 1);
+  useGame.getState().hint("artist");
+  assert.equal(useGame.getState().round.hints, 1);
+
+  useGame.getState().syncDaily(koreaDate());
+  useGame.getState().hint("artist", "daily");
+  assert.equal(useGame.getState().daily.round.artist, true);
+  assert.equal(useGame.getState().daily.round.hints, 1);
+  assert.equal(useGame.getState().round.hints, 1);
 });

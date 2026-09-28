@@ -24,6 +24,12 @@ export function HelpModal({ onClose }: { onClose: () => void }) {
           <b>제목을 맞히고 계속 즐겨요</b>
           <p>바로 다음 문제로 가거나, 남은 초성을 끝까지 채울 수 있어요.</p>
         </li>
+        <li>
+          <b>오늘의 문제에 도전해요</b>
+          <p>
+            한국 시간으로 매일 새 문제가 열리고, 결과는 정답을 가려 공유해요.
+          </p>
+        </li>
       </ol>
       <div className="help-example">
         영어는 <b>원문</b>과 <b>등록된 한글 발음</b> 모두 인정해요. 제목은 괄호

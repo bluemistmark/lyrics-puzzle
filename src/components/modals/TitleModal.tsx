@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { ArrowRight, AudioLines } from "lucide-react";
-import { useGame } from "../../store";
+import { useGame, type GameMode } from "../../store";
 import { blockComposingEnter } from "../../utils/ime";
 
-export function TitleModal({ onClose }: { onClose: () => void }) {
+export function TitleModal({
+  onClose,
+  mode = "play",
+}: {
+  onClose: () => void;
+  mode?: GameMode;
+}) {
   const solve = useGame((s) => s.solve);
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
@@ -17,7 +23,7 @@ export function TitleModal({ onClose }: { onClose: () => void }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (solve(title)) onClose();
+          if (solve(title, mode)) onClose();
           else setError("아직 정답이 아니에요. 다시 생각해 볼까요?");
         }}
       >

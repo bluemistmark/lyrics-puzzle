@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { dailyQuestionId, koreaDate } from "./daily.ts";
 import {
   allKeys,
   matches,
@@ -25,10 +26,13 @@ export type Round = {
   solved: boolean;
   givenUp: boolean;
   english: boolean;
+  artist: boolean;
   hints: number;
   wordHints: number;
   counted: boolean;
 };
+export type GameMode = "play" | "daily";
+export type DailyState = { date: string; round: Round; notice: string };
 const newRound = (id: string): Round => ({
   id,
   revealed: [],
@@ -36,9 +40,20 @@ const newRound = (id: string): Round => ({
   solved: false,
   givenUp: false,
   english: false,
+  artist: false,
   hints: 0,
   wordHints: 0,
   counted: false,
+});
+const newDailyState = (date: string): DailyState => ({
+  date,
+  round: newRound(
+    dailyQuestionId(
+      date,
+      questions.map((q) => q.id),
+    ),
+  ),
+  notice: "",
 });
 const emptyStats = (): Stats => ({
   solved: 0,
@@ -61,12 +76,14 @@ type Store = {
   selected: string[];
   seen: string[];
   round: Round;
+  daily: DailyState;
   stats: Stats;
   notice: string;
-  guess: (word: string) => void;
-  solve: (title: string) => boolean;
-  hint: (type: "english" | "word") => void;
-  giveUp: () => void;
+  guess: (word: string, mode?: GameMode) => void;
+  solve: (title: string, mode?: GameMode) => boolean;
+  hint: (type: "english" | "word" | "artist", mode?: GameMode) => void;
+  giveUp: (mode?: GameMode) => void;
+  syncDaily: (date: string) => void;
   next: () => void;
   select: (selected: string[]) => void;
   reset: () => void;
@@ -78,54 +95,73 @@ export const useGame = create<Store>()(
       selected: units,
       seen: [firstQuestion.id],
       round: newRound(firstQuestion.id),
+      daily: newDailyState(koreaDate()),
       stats: emptyStats(),
       notice: "",
-      guess: (word) => {
+      guess: (word, mode = "play") => {
         const s = get();
-        if (s.round.givenUp) return;
+        const current = mode === "daily" ? s.daily.round : s.round;
+        if (current.givenUp) return;
         const text = word.trim().slice(0, 60);
         if (!text) return;
         const found = matches(
-          questions.find((q) => q.id === s.round.id)!,
+          questions.find((q) => q.id === current.id)!,
           text,
-          s.round.revealed,
+          current.revealed,
         );
-        const added = found.filter((k) => !s.round.revealed.includes(k));
+        const added = found.filter((k) => !current.revealed.includes(k));
         if (
           !added.length &&
-          s.round.words.some((w) => normalize(w.word) === normalize(text))
+          current.words.some((w) => normalize(w.word) === normalize(text))
         ) {
-          set({ notice: "이미 찾아본 단어예요. 새로 열리는 부분이 없어요." });
+          const notice = "이미 찾아본 단어예요. 새로 열리는 부분이 없어요.";
+          set(
+            mode === "daily" ? { daily: { ...s.daily, notice } } : { notice },
+          );
           return;
         }
         const round = {
-          ...s.round,
-          revealed: [...new Set([...s.round.revealed, ...found])],
-          words: [...s.round.words, { word: text, hit: found.length > 0 }],
+          ...current,
+          revealed: [...new Set([...current.revealed, ...found])],
+          words: [...current.words, { word: text, hit: found.length > 0 }],
         };
-        const stats = { ...s.stats };
-        complete(round, stats);
-        set({
-          round,
-          stats,
-          notice: added.length
-            ? "좋아요! 숨겨진 가사를 찾았어요."
-            : found.length
-              ? "이미 공개된 가사예요."
-              : "이 구간에는 없는 단어예요. 다시 도전해 봐요.",
-        });
+        const notice = added.length
+          ? "좋아요! 숨겨진 가사를 찾았어요."
+          : found.length
+            ? "이미 공개된 가사예요."
+            : "이 구간에는 없는 단어예요. 다시 도전해 봐요.";
+        if (mode === "daily") set({ daily: { ...s.daily, round, notice } });
+        else {
+          const stats = { ...s.stats };
+          complete(round, stats);
+          set({ round, stats, notice });
+        }
       },
-      solve: (title) => {
+      solve: (title, mode = "play") => {
         const s = get();
-        if (s.round.solved || s.round.givenUp) return false;
-        const q = questions.find((q) => q.id === s.round.id)!;
+        const current = mode === "daily" ? s.daily.round : s.round;
+        if (current.solved || current.givenUp) return false;
+        const q = questions.find((q) => q.id === current.id)!;
         if (!titleMatches(q, title)) {
-          set({ notice: "아직 정답이 아니에요. 가사를 조금 더 채워 보세요." });
+          const notice = "아직 정답이 아니에요. 가사를 조금 더 채워 보세요.";
+          set(
+            mode === "daily" ? { daily: { ...s.daily, notice } } : { notice },
+          );
           return false;
+        }
+        if (mode === "daily") {
+          set({
+            daily: {
+              ...s.daily,
+              round: { ...current, solved: true },
+              notice: "오늘의 문제 정답! 결과를 공유해 보세요.",
+            },
+          });
+          return true;
         }
         const streak = s.stats.streak + 1;
         set({
-          round: { ...s.round, solved: true },
+          round: { ...current, solved: true },
           stats: {
             ...s.stats,
             solved: s.stats.solved + 1,
@@ -136,13 +172,17 @@ export const useGame = create<Store>()(
         });
         return true;
       },
-      hint: (type) => {
+      hint: (type, mode = "play") => {
         const s = get();
-        if (s.round.givenUp) return;
-        const round = { ...s.round, revealed: [...s.round.revealed] };
+        const current = mode === "daily" ? s.daily.round : s.round;
+        if (current.givenUp) return;
+        const round = { ...current, revealed: [...current.revealed] };
         if (type === "english") {
           if (round.english) return;
           round.english = true;
+        } else if (type === "artist") {
+          if (round.artist) return;
+          round.artist = true;
         } else {
           const q = questions.find((q) => q.id === round.id)!;
           const hidden = allKeys(q).find((k) => !round.revealed.includes(k));
@@ -157,25 +197,41 @@ export const useGame = create<Store>()(
           round.wordHints++;
         }
         round.hints++;
-        const stats = { ...s.stats };
-        complete(round, stats);
-        set({
-          round,
-          stats,
-          notice:
-            type === "english"
-              ? "영어 부분에 보라색 밑줄을 표시했어요."
-              : "숨겨진 단어 하나를 공개했어요.",
-        });
+        const notice =
+          type === "english"
+            ? "영어 부분에 보라색 밑줄을 표시했어요."
+            : type === "artist"
+              ? "가수명을 공개했어요."
+              : "숨겨진 단어 하나를 공개했어요.";
+        if (mode === "daily") set({ daily: { ...s.daily, round, notice } });
+        else {
+          const stats = { ...s.stats };
+          complete(round, stats);
+          set({ round, stats, notice });
+        }
       },
-      giveUp: () => {
+      giveUp: (mode = "play") => {
         const s = get();
-        if (s.round.givenUp || s.round.solved) return;
+        const current = mode === "daily" ? s.daily.round : s.round;
+        if (current.givenUp || current.solved) return;
+        if (mode === "daily") {
+          set({
+            daily: {
+              ...s.daily,
+              round: { ...current, givenUp: true },
+              notice: "내일 새로운 문제에서 다시 만나요.",
+            },
+          });
+          return;
+        }
         set({
-          round: { ...s.round, givenUp: true },
+          round: { ...current, givenUp: true },
           stats: { ...s.stats, skipped: s.stats.skipped + 1, streak: 0 },
           notice: "괜찮아요. 다음 노래에서 다시 만나요.",
         });
+      },
+      syncDaily: (date) => {
+        if (get().daily.date !== date) set({ daily: newDailyState(date) });
       },
       next: () => {
         const s = get();
@@ -205,7 +261,10 @@ export const useGame = create<Store>()(
     {
       name: "chosung-lyrics-live-v1",
       version: 1,
-      partialize: ({ notice, ...s }) => s,
+      partialize: ({ notice, ...s }) => ({
+        ...s,
+        daily: { ...s.daily, notice: "" },
+      }),
       merge: (persisted, current) => {
         const p = persisted as Partial<Store> | undefined;
         if (!p || !p.round || !questions.some((q) => q.id === p.round?.id))
@@ -217,6 +276,11 @@ export const useGame = create<Store>()(
           ...current,
           ...p,
           selected: selected.length ? selected : units,
+          daily:
+            p.daily?.date === koreaDate() &&
+            questions.some((q) => q.id === p.daily?.round?.id)
+              ? { ...p.daily, notice: "" }
+              : current.daily,
           notice: "",
         };
       },

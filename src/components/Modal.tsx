@@ -2,7 +2,14 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { X } from "lucide-react";
 
 export type ModalName =
-  "title" | "units" | "theme" | "help" | "giveup" | "reset";
+  | "title"
+  | "daily-title"
+  | "units"
+  | "theme"
+  | "help"
+  | "giveup"
+  | "daily-giveup"
+  | "reset";
 
 type Props = { open: boolean; onClose: () => void; children: ReactNode };
 

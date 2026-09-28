@@ -1,7 +1,13 @@
 import { Headphones } from "lucide-react";
-import { useGame } from "../../store";
+import { useGame, type GameMode } from "../../store";
 
-export function GiveUpModal({ onClose }: { onClose: () => void }) {
+export function GiveUpModal({
+  onClose,
+  mode = "play",
+}: {
+  onClose: () => void;
+  mode?: GameMode;
+}) {
   const giveUp = useGame((s) => s.giveUp);
   return (
     <>
@@ -12,12 +18,14 @@ export function GiveUpModal({ onClose }: { onClose: () => void }) {
       <p>
         제목과 가사 전체가 공개되고,
         <br />
-        연속 정답 기록이 초기화돼요.
+        {mode === "daily"
+          ? "오늘의 도전이 끝나요. 내일 새 문제가 열려요."
+          : "연속 정답 기록이 초기화돼요."}
       </p>
       <button
         className="primary"
         onClick={() => {
-          giveUp();
+          giveUp(mode);
           onClose();
         }}
       >
