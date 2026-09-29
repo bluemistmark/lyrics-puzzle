@@ -3,5 +3,8 @@
   "framework": "vite",
   "buildCommand": "npm run data:pull && npm test && npm run build",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/admin", "destination": "/admin.html" }]
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/privacy", "destination": "/privacy.html" }
+  ]
 }

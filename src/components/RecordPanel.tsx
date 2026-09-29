@@ -2,6 +2,7 @@ import { RotateCcw } from "lucide-react";
 import { calendarWeeks, playLevel } from "../calendar";
 import { dailySummary, type DailySummary } from "../daily";
 import { useGame, type Stats } from "../store";
+import { useAccount } from "../account";
 import { Achievements } from "./Achievements";
 
 const items: [string, keyof Stats][] = [
@@ -35,6 +36,7 @@ export function RecordPanel({ hidden, onReset }: Props) {
   const history = useGame((s) => s.dailyHistory);
   const today = useGame((s) => s.daily.date);
   const playLog = useGame((s) => s.playLog);
+  const signedIn = useAccount((s) => s.status === "signedIn");
   const daily = dailySummary(history, today);
   const days = calendarWeeks(today, GRASS_WEEKS).flat();
   const played = days.filter((d) => playLog[d.date]);
@@ -94,9 +96,11 @@ export function RecordPanel({ hidden, onReset }: Props) {
       </div>
       <Achievements today={today} />
       <p className="record-note">
-        기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도
-        삭제됩니다. 잔디는 일반 플레이에서 제목을 맞히거나 포기한 문제 수로
-        진해지고, 오늘의 문제는 하루를 건너뛰거나 포기하면 연속 정답이 끊겨요.
+        {signedIn
+          ? "기록은 계정에 저장돼 로그인한 다른 기기에서도 이어져요."
+          : "기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도 삭제되니, 설정에서 로그인하면 계정에 저장할 수 있어요."}{" "}
+        잔디는 일반 플레이에서 제목을 맞히거나 포기한 문제 수로 진해지고, 오늘의
+        문제는 하루를 건너뛰거나 포기하면 연속 정답이 끊겨요.
       </p>
       <button className="reset-btn" onClick={onReset}>
         <RotateCcw size={14} /> 기록 초기화

@@ -2576,6 +2576,70 @@ main [hidden] {
   font-size: 15px;
   font-weight: 700;
 }
+/* 설정 > 계정 */
+.account-section {
+  margin: 4px 0 0;
+  padding: 16px;
+  border-radius: 14px;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+.account-section h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.account-section p {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.account-section p.account-note {
+  font-size: 12px;
+  opacity: 0.8;
+}
+.site-footer a,
+.account-note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.account-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.account-buttons button {
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: 10px;
+  background: none;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+/* Provider colors follow Kakao/Google login button guidelines. */
+.account-buttons .account-login.kakao {
+  border-color: #fee500;
+  background: #fee500;
+  color: #191919;
+}
+.account-buttons .account-login.google {
+  border-color: #747775;
+  background: #fff;
+  color: #1f1f1f;
+}
+.account-buttons .danger,
+.account-buttons .account-delete {
+  color: #b3452c;
+}
+.account-buttons .danger {
+  border-color: #b3452c;
+}
+.account-confirm {
+  padding: 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, #b3452c 8%, transparent);
+}
 .error.saved {
   color: inherit;
   opacity: 0.75;

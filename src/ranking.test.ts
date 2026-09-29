@@ -1,19 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import "./testing/fake-storage.ts";
 
-const memory = new Map<string, string>();
-Object.defineProperty(globalThis, "localStorage", {
-  value: {
-    getItem: (k: string) => memory.get(k) ?? null,
-    setItem: (k: string, v: string) => memory.set(k, v),
-    removeItem: (k: string) => memory.delete(k),
-  },
-  configurable: true,
-});
-Object.defineProperty(globalThis, "window", {
-  value: { localStorage: globalThis.localStorage },
-  configurable: true,
-});
 type Call = { url: string; init: RequestInit };
 let calls: Call[] = [];
 /** Every test installs its own fake fetch: test files share one process (--test-isolation=none). */
