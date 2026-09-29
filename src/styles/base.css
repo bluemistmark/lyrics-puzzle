@@ -1301,6 +1301,96 @@ main [hidden] {
   margin-top: 10px;
 }
 
+/* 기록 tab: a summary card, a 통계/업적 switch and 2-column stat tiles. */
+.record-hero {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-top: 14px;
+  padding: 18px 8px;
+  text-align: center;
+}
+
+.record-hero > * {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 4px;
+}
+
+.record-hero > * + * {
+  border-left: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.record-hero button {
+  background: none;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.record-hero span {
+  font-size: 12px;
+  word-break: keep-all;
+}
+
+.record-hero strong {
+  font-size: 26px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.record-hero small {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.record-views {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.record-views .filter[aria-pressed="true"] {
+  border-color: currentColor;
+  font-weight: 800;
+}
+
+.record-views .filter[aria-pressed="false"] {
+  opacity: 0.7;
+}
+
+.stat-tiles {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.record-grid + .stat-tiles {
+  margin-top: 10px;
+}
+
+.record-item.stat-tile {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 14px;
+}
+
+.stat-tile span {
+  font-size: 12px;
+  word-break: keep-all;
+}
+
+.stat-tile strong {
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
 .record-item.play-grass {
   display: block;
   --grass-on: #4f7a2a;
