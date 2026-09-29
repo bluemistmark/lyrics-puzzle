@@ -1,6 +1,7 @@
 import { Check, Headphones } from "lucide-react";
 import type { Question } from "../../game";
 import type { Round } from "../../store";
+import { DifficultyVote } from "./DifficultyVote";
 
 type Props = {
   question: Question;
@@ -30,6 +31,13 @@ export function ResultBox({ question, round, full, daily = false }: Props) {
                 : "남은 가사도 계속 풀 수 있어요."
               : "이제 제목을 입력하세요."}
         </p>
+        {answered && (
+          <DifficultyVote
+            questionId={question.id}
+            solved={round.solved}
+            daily={daily}
+          />
+        )}
       </div>
     </div>
   );

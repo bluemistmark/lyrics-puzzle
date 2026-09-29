@@ -387,3 +387,22 @@ label.stack textarea {
 .pre-line {
   white-space: pre-line;
 }
+
+/* 난이도 탭: 쉬워요/보통이에요/어려워요 비율 막대 */
+.difficulty-bar {
+  display: flex;
+  width: 140px;
+  height: 10px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--line);
+}
+.difficulty-bar .easy {
+  background: #7fb069;
+}
+.difficulty-bar .normal {
+  background: #e3c567;
+}
+.difficulty-bar .hard {
+  background: #d9634c;
+}

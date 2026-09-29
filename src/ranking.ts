@@ -28,19 +28,25 @@ export type DailySubmission = {
 
 const ENDPOINT = "/api/ranking";
 
-async function call<T>(init: RequestInit & { query?: string }): Promise<T> {
+/** Fetches JSON from our /api; failures become Korean errors (the server's message when it sent one). */
+export async function requestJson<T>(
+  url: string,
+  init: RequestInit = {},
+): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(`${ENDPOINT}${init.query ?? ""}`, init);
+    response = await fetch(url, init);
   } catch {
-    throw Error("랭킹 서버에 연결할 수 없어요.");
+    throw Error("서버에 연결할 수 없어요.");
   }
   const body = (await response.json().catch(() => null)) as
     (T & { error?: string }) | null;
   if (!response.ok || !body)
-    throw Error(body?.error ?? "랭킹을 불러올 수 없어요.");
+    throw Error(body?.error ?? "요청을 처리하지 못했어요.");
   return body;
 }
+const call = <T>(init: RequestInit & { query?: string }) =>
+  requestJson<T>(`${ENDPOINT}${init.query ?? ""}`, init);
 
 /** 32 random bytes as base64url. The server only stores its SHA-256. */
 function newToken() {
@@ -65,19 +71,21 @@ type RankingStore = {
   saveNickname: (name: string) => Promise<void>;
   skipNickname: () => void;
   load: (date: string) => Promise<RankingBoard>;
+  /** Anonymous player token, created on first use; also used by 체감 난이도. */
+  ensureToken: () => string;
 };
 
 export const useRanking = create<RankingStore>()(
   persist(
     (set, get) => {
-      const token = () => {
+      const ensureToken = () => {
         if (!get().token) set({ token: newToken() });
         return get().token;
       };
       const json = (method: string, body: object): RequestInit => ({
         method,
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ token: token(), ...body }),
+        body: JSON.stringify({ token: ensureToken(), ...body }),
       });
       return {
         token: "",
@@ -99,6 +107,7 @@ export const useRanking = create<RankingStore>()(
           set((s) => ({ nickname, asked: true, version: s.version + 1 }));
         },
         skipNickname: () => set({ asked: true }),
+        ensureToken,
         load: (date) =>
           call<RankingBoard>({
             query: `?date=${date}`,

@@ -3,6 +3,7 @@ import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { buildCatalog } from "../data/build-catalog.ts";
 import { ArtistsTab } from "./ArtistsTab";
 import { DictionaryTab } from "./DictionaryTab";
+import { DifficultyTab } from "./DifficultyTab";
 import { Login } from "./Login";
 import { PublishTab } from "./PublishTab";
 import { QuestionsTab } from "./QuestionsTab";
@@ -72,7 +73,13 @@ function AuthGate({ client }: { client: SupabaseClient }) {
 }
 
 type Tab =
-  "artists" | "songs" | "questions" | "dictionary" | "publish" | "ranking";
+  | "artists"
+  | "songs"
+  | "questions"
+  | "dictionary"
+  | "publish"
+  | "ranking"
+  | "difficulty";
 
 function AdminShell({
   email,
@@ -104,6 +111,7 @@ function AdminShell({
     ["dictionary", "영어 사전", dictionary.length],
     ["publish", "게시", issues.length],
     ["ranking", "랭킹", null],
+    ["difficulty", "난이도", null],
   ];
 
   return (
@@ -161,6 +169,8 @@ function AdminShell({
             <DictionaryTab />
           ) : tab === "ranking" ? (
             <RankingTab />
+          ) : tab === "difficulty" ? (
+            <DifficultyTab />
           ) : (
             <PublishTab catalog={catalog} issues={issues} />
           ))}

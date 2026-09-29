@@ -30,6 +30,8 @@ const ok = () => new Response('{"ok":true}');
 const result = { date: "2026-09-29", solved: true, guesses: 3, hints: 0 };
 
 test("랭킹 조회는 토큰이 없으면 만들지 않고, 첫 제출 때 토큰을 만들어 저장", async () => {
+  // Other test files share this store in the same process.
+  useRanking.setState({ token: "", submitted: "", nickname: "", asked: false });
   const board = { participants: 0, solved: 0, entries: [], me: null };
   mockFetch(() => new Response(JSON.stringify(board)));
   assert.deepEqual(await useRanking.getState().load("2026-09-29"), board);
@@ -43,7 +45,11 @@ test("랭킹 조회는 토큰이 없으면 만들지 않고, 첫 제출 때 토�
   assert.match(token, /^[A-Za-z0-9_-]{43}$/);
   assert.deepEqual(body(calls[0]), { token, ...result });
   assert.equal(useRanking.getState().submitted, "2026-09-29");
-  assert.equal(JSON.parse(memory.get("lyrics-ranking-v1")!).state.token, token);
+  // Read through the store's own storage: whichever test file created it first owns it.
+  const saved = await useRanking.persist
+    .getOptions()
+    .storage!.getItem("lyrics-ranking-v1");
+  assert.equal((saved!.state as { token: string }).token, token);
 
   await useRanking.getState().submit(result);
   assert.equal(calls.length, 1, "같은 날은 다시 보내지 않음");

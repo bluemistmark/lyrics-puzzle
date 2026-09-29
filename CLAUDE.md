@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 개요
 
-NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음. 예외는 오늘의 랭킹뿐이며 실패해도 게임은 동작해야 함)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
+NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음. 예외는 오늘의 랭킹과 체감 난이도 응답뿐이며 실패해도 게임은 동작해야 함)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
 
 ## 명령어
 
@@ -50,6 +50,7 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
   - 게시·소식: `PublishTab`이 `draftRelease`(`src/data/releases.ts`)로 직전 release의 `song_ids`/`question_ids` 스냅샷과 현재 catalog를 비교해 새 곡·문제를 계산하고, 새 기능·메모와 함께 `/api/publish`에 보낸다. API는 release를 insert한 뒤 Deploy Hook을 호출하고, 훅이 실패하면 그 release를 지운다. 빌드(`pull-catalog`)는 `toNews`로 최근 소식을 `catalog.news`에 넣고, 게임은 `NewsPanel`로 보여 준다. 소식 확인 여부는 `hooks/useNewsSeen`(localStorage `lyrics-news-seen`). 어드민의 releases 로딩 실패는 치명적이지 않게(`releasesError`) 처리한다.
   - 환경 변수가 없으면 `supabase`가 `null`이고 설정 안내 화면만 보인다.
 - **오늘의 랭킹** — `api/ranking.ts`(GET 조회·POST 결과 제출·PUT 닉네임, service role로 `players`/`daily_scores`와 `daily_ranking()` RPC 사용) ↔ `src/ranking.ts`(zustand persist `lyrics-ranking-v1`: 토큰·닉네임·제출한 날짜·닉네임 질문 여부). 플레이어 ID는 브라우저 토큰의 SHA-256이고 서버는 토큰을 저장하지 않는다. 제출값은 `dailyHistory[오늘]`(처음 끝낸 순간의 값)이고, `DailyRanking`이 오늘 탭에서 제출 후 조회한다. 첫 정답 뒤 닉네임 질문은 `App`의 `afterDailySolve`가 띄운다(effect 아님). 닉네임 규칙은 `src/nickname.ts`이고 `api/ranking.ts`가 복사해 쓰며 `api/ranking.test.ts`가 둘이 같은지 검사한다. 어드민 `RankingTab`은 supabase-js로 직접 읽고 `players.hidden`만 바꾼다(컬럼 권한으로 제한).
+- **체감 난이도** — 문제를 끝내면 `ResultBox` 안의 `DifficultyVote`가 쉬워요/보통이에요/어려워요를 받는다. `src/difficulty.ts`(persist `lyrics-difficulty-v1`, 문제ID별 내 응답)가 로컬에 먼저 반영하고 `/api/difficulty`(`api/difficulty.ts`)에 보내며, 실패하면 되돌린다. 토큰은 `useRanking.getState().ensureToken()`을 공유하고 요청은 `ranking.ts`의 `requestJson`을 쓴다. DB는 `difficulty_votes`(PK 문제ID+플레이어, 다시 고르면 병합)와 집계 뷰 `question_difficulty`(security_invoker)이고, 어드민 `DifficultyTab`이 뷰를 읽는다. 응답 값 목록은 `src/difficulty.test.ts`가 API와 같은지 검사한다.
 
 ## 주의 사항
 
