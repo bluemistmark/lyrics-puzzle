@@ -1,5 +1,6 @@
 import { Settings } from "lucide-react";
 import { THEMES, type Theme } from "../../themes";
+import { AccountSection } from "../AccountSection";
 import { NicknameForm } from "../NicknameForm";
 
 type Props = {
@@ -15,7 +16,8 @@ export function SettingsModal({ theme, onThemeChange, onClose }: Props) {
         <Settings />
       </span>
       <h2>설정</h2>
-      <p>화면 테마와 랭킹 닉네임을 바꿀 수 있어요.</p>
+      <p>계정, 화면 테마, 랭킹 닉네임을 관리해요.</p>
+      <AccountSection />
       <fieldset className="theme-settings">
         <legend>화면 테마</legend>
         <div className="theme-options">

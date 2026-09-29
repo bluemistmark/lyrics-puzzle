@@ -119,6 +119,18 @@ const logPlay = (log: PlayLog): PlayLog => {
 export type PlayLog = Record<string, number>;
 export const ACHIEVEMENTS = achievementList({ songs, questions });
 /** Achievements reached by the given records, keeping earlier unlock dates. */
+/** Records an account sync reads and replaces. */
+export type SyncedRecords = Pick<
+  Store,
+  | "stats"
+  | "collected"
+  | "dailyHistory"
+  | "playLog"
+  | "feats"
+  | "themes"
+  | "achievements"
+  | "resetAt"
+>;
 type Records = Pick<
   Store,
   "stats" | "collected" | "dailyHistory" | "playLog" | "feats" | "themes"
@@ -153,6 +165,8 @@ type Store = {
   feats: Feats;
   /** Theme choices used at least once (업적 "패셔니스타"). */
   themes: string[];
+  /** When records were last reset (ms, 0 = never); the newer reset wins an account sync. */
+  resetAt: number;
   /** Achievement id → Korean date it was first reached. */
   achievements: Record<string, string>;
   /** Achievements reached during this visit, for the toast (not persisted). */
@@ -172,6 +186,8 @@ type Store = {
   noteTheme: (theme: string) => void;
   /** Re-judges achievements after another store (ranking, 난이도) changed. */
   checkAchievements: () => void;
+  /** Replaces records with ones merged from the account (see account/save.ts); no toasts. */
+  loadRecords: (records: SyncedRecords) => void;
 };
 const firstQuestion = pickQuestion(units, []);
 export const useGame = create<Store>()(
@@ -202,6 +218,7 @@ export const useGame = create<Store>()(
         playLog: {},
         feats: emptyFeats(),
         themes: [],
+        resetAt: 0,
         achievements: {},
         justUnlocked: [],
         notice: "",
@@ -389,6 +406,7 @@ export const useGame = create<Store>()(
             feats: emptyFeats(),
             // Theme use is a preference history, not a play record, so it survives a reset.
             themes: get().themes,
+            resetAt: Date.now(),
           };
           rawSet({
             ...records,
@@ -407,6 +425,11 @@ export const useGame = create<Store>()(
             set({ themes: [...get().themes, theme] });
         },
         checkAchievements: () => set({}),
+        loadRecords: (records) =>
+          rawSet({
+            ...records,
+            achievements: earned(records, records.achievements),
+          }),
       };
     },
     {
@@ -447,6 +470,7 @@ export const useGame = create<Store>()(
           playLog: p.playLog && typeof p.playLog === "object" ? p.playLog : {},
           feats: { ...emptyFeats(), ...p.feats },
           themes: Array.isArray(p.themes) ? p.themes : [],
+          resetAt: typeof p.resetAt === "number" ? p.resetAt : 0,
         };
         return {
           ...current,

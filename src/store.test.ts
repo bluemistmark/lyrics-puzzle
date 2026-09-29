@@ -1,20 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { memory } from "./testing/fake-storage.ts";
 import { questions, allKeys } from "./game.ts";
 import { koreaDate } from "./daily.ts";
-const memory = new Map<string, string>();
-Object.defineProperty(globalThis, "localStorage", {
-  value: {
-    getItem: (k: string) => memory.get(k) ?? null,
-    setItem: (k: string, v: string) => memory.set(k, v),
-    removeItem: (k: string) => memory.delete(k),
-  },
-  configurable: true,
-});
-Object.defineProperty(globalThis, "window", {
-  value: { localStorage: globalThis.localStorage },
-  configurable: true,
-});
 const { useGame } = await import("./store.ts");
 
 test("첫 문제를 아무 입력 전에 저장하고 재수화해도 유지", async () => {

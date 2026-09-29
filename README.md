@@ -26,7 +26,7 @@ React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 
 ### 최초 설정
 
-1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/](supabase/migrations/)의 파일을 이름 순서대로 실행합니다(`20260928000000_init.sql` → `20260929000000_artists.sql` → `20260930000000_releases.sql` → `20261001000000_ranking.sql` → `20261002000000_difficulty.sql`). 이미 실행한 파일은 건너뛰고 새 파일만 실행하면 됩니다. 기존 곡에서 가수 목록과 접두어를 자동으로 채웁니다.
+1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/](supabase/migrations/)의 파일을 이름 순서대로 실행합니다(`20260928000000_init.sql` → `20260929000000_artists.sql` → `20260930000000_releases.sql` → `20261001000000_ranking.sql` → `20261002000000_difficulty.sql` → `20261003000000_player_saves.sql`). 이미 실행한 파일은 건너뛰고 새 파일만 실행하면 됩니다. 기존 곡에서 가수 목록과 접두어를 자동으로 채웁니다.
 2. **관리자 계정**: Authentication > Users > Add user로 이메일·비밀번호 계정을 만들고, SQL Editor에서 `insert into public.admins (email) values ('이메일');`을 실행합니다. Authentication 설정에서 새 가입(Allow new users to sign up)은 꺼 두는 것을 권장합니다. 가입하더라도 `admins`에 없으면 데이터에 접근할 수 없습니다.
 3. **환경 변수**: [.env.example](.env.example)을 `.env.local`로 복사해 값을 채우고, Vercel > Project Settings > Environment Variables에도 같은 이름으로 등록합니다(Production, Preview).
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`: 어드민 화면용. 공개돼도 되는 값이며, Vite가 `VITE_`로 시작하는 변수만 브라우저에 넘겨주므로 **이 두 개는 접두사가 반드시 있어야** 합니다.
@@ -64,6 +64,22 @@ React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 ### 업적
 
 기록 탭 아래에 업적 목록이 정답·가사·오늘의 문제·도감·플레이·숨은 업적으로 나뉘어 있습니다. 제목 정답 수, 연속 정답, 가사 완성, 하루 플레이 수, 오늘의 문제 기록, 곡 도감(유닛별·전체 완성, 완곡), 연속 플레이 일수, 랭킹 닉네임 등록, 난이도 응답 수와 정답 순간의 기록(단어 입력 수, 영어 힌트 사용, 풀이 시간, 시각, 같은 유닛 연속)으로 판정합니다. 숨은 업적은 달성하기 전까지 이름과 조건이 "???"로 보입니다. 달성하면 화면 아래에 잠깐 알림이 뜨고, 한 번에 여러 개를 달성하면 하나로 묶어 보여 줍니다. 달성 날짜는 브라우저에 저장되고 서버로는 보내지 않습니다. 기록 초기화를 하면 업적도 다시 계산됩니다.
+
+### 로그인 (선택)
+
+설정 맨 위의 "계정"에서 카카오 또는 구글로 로그인할 수 있습니다. 로그인하지 않아도 모든 기능을 쓸 수 있고, 로그인하면 기록·도감·업적·잔디·오늘의 문제 기록·난이도 응답과 랭킹 토큰·닉네임이 계정(`player_saves` 테이블, 본인만 읽고 쓰기)에 저장돼 다른 기기에서 이어집니다. 두 기기의 기록은 합쳐지고(횟수는 큰 값, 도감은 합집합, 업적은 먼저 달성한 날짜), 기록 초기화는 가장 나중에 초기화한 기기를 따릅니다. 로그인한 모든 기기는 같은 랭킹 토큰을 써서 랭킹에서 한 사람으로 나옵니다. 로그아웃해도 기기의 기록은 남고, 회원 탈퇴(`/api/account`)는 계정·저장 기록·랭킹 기록을 삭제합니다.
+
+게임 번들에는 supabase-js가 들어가지 않고, 저장된 로그인 세션이 있거나 로그인 버튼을 누를 때만 별도 파일로 불러옵니다. `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY`가 없으면 계정 영역이 숨겨집니다.
+
+설정 순서(Supabase 대시보드와 각 개발자 콘솔):
+
+1. `20261003000000_player_saves.sql` 마이그레이션을 실행합니다.
+2. Authentication > URL Configuration에서 Site URL을 게임 주소로 하고, Redirect URLs에 게임 주소(`https://<도메인>/**`)와 로컬 개발 주소(`http://127.0.0.1:5173/**`)를 추가합니다.
+3. Authentication > Sign In / Providers에서 새 사용자 가입을 허용하고 Google·Kakao를 켭니다. 가입을 허용해도 RLS가 `admins` 목록의 사용자에게만 어드민 데이터를 열어 두므로 일반 사용자는 어드민 데이터에 접근할 수 없습니다.
+4. **구글**: Google Cloud Console에서 OAuth 클라이언트(웹)를 만들고, 승인된 리디렉션 URI에 Supabase가 보여 주는 콜백 URL(`https://<프로젝트>.supabase.co/auth/v1/callback`)을 넣은 뒤 클라이언트 ID·보안 비밀을 Supabase에 입력합니다.
+5. **카카오**: Kakao Developers에서 앱을 만들고 카카오 로그인을 켠 뒤, Redirect URI에 같은 Supabase 콜백 URL을 넣고 REST API 키와 Client Secret을 Supabase에 입력합니다. Supabase는 닉네임·프로필 사진·이메일 동의 항목을 요청하므로 동의 항목을 설정해야 하며, 이메일(account_email)은 비즈 앱 전환이 필요할 수 있습니다. 실제 요구 사항은 콘솔에서 확인하세요.
+
+로그인은 이메일·이름 같은 개인정보를 받습니다. 개인정보 처리방침은 `public/privacy.html`(배포 주소 `/privacy`, 게임 푸터와 설정의 계정 카드에서 링크)이며 **초안**입니다. 문서 안의 `[확인 필요]` 항목(Supabase 리전, 수탁자 연락처, 로그 보관 기간)을 채우고, 공개 전에 법무·개인정보 전문가 검토를 받으세요. 구글 OAuth 브랜딩의 개인정보처리방침 URL에는 `https://<도메인>/privacy`를 넣습니다. 수집 항목이 바뀌는 기능을 추가하면 이 문서도 함께 고칩니다.
 
 ### 체감 난이도
 

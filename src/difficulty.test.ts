@@ -1,20 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import "./testing/fake-storage.ts";
 
-const memory = new Map<string, string>();
-const storage = {
-  getItem: (k: string) => memory.get(k) ?? null,
-  setItem: (k: string, v: string) => memory.set(k, v),
-  removeItem: (k: string) => memory.delete(k),
-};
-Object.defineProperty(globalThis, "localStorage", {
-  value: storage,
-  configurable: true,
-});
-Object.defineProperty(globalThis, "window", {
-  value: { localStorage: storage },
-  configurable: true,
-});
 type Call = { url: string; body: Record<string, unknown> };
 let calls: Call[] = [];
 /** Every test installs its own fake fetch: test files share one process (--test-isolation=none). */
@@ -38,6 +25,8 @@ test("게임과 API는 같은 체감 난이도 값을 씀", () => {
 });
 
 test("응답은 익명 토큰과 함께 보내고, 같은 답은 다시 보내지 않으며 바꾸면 다시 보냄", async () => {
+  // Other test files share the ranking store in this process.
+  useRanking.setState({ token: "" });
   useDifficulty.setState({ votes: {} });
   mockFetch(() => new Response('{"ok":true}'));
   await useDifficulty.getState().vote("Q1", "easy", context);
