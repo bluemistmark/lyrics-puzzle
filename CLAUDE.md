@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 개요
 
-NCT 노래 퀴즈(가사 초성 퍼즐, React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음. 예외는 오늘의 랭킹, 체감 난이도 응답, 오류 제보, 선택 로그인, 방문 통계(Vercel Web Analytics)뿐이며 실패해도 게임은 동작해야 함)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
+네오 노래 퀴즈(가사 초성 퍼즐, React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음. 예외는 오늘의 랭킹, 체감 난이도 응답, 오류 제보, 선택 로그인, 방문 통계(Vercel Web Analytics)뿐이며 실패해도 게임은 동작해야 함)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
 
 ## 명령어
 

@@ -38,7 +38,7 @@ export function dailyResultText(result: ShareResult): string {
       ? "🎧 정답 확인"
       : "🎵 도전 중";
   return [
-    `NCT 노래 퀴즈 · 오늘의 문제 ${result.date.replaceAll("-", ".")}`,
+    `네오 노래 퀴즈 · 오늘의 문제 ${result.date.replaceAll("-", ".")}`,
     outcome,
     `가사 복원 ${result.percent}% · 단어 ${result.guesses}번 · 힌트 ${result.hints}번`,
     ...(result.solved && (result.streak ?? 0) >= 2

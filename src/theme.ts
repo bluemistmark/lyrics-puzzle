@@ -34,7 +34,7 @@ export function useTheme() {
           console: "#17132b",
         }[activeTheme],
       );
-      document.title = theme === "excel" ? "Sheet1 - 문서" : "NCT 노래 퀴즈";
+      document.title = theme === "excel" ? "Sheet1 - 문서" : "네오 노래 퀴즈";
       document
         .querySelector('link[rel="icon"]')
         ?.setAttribute(
