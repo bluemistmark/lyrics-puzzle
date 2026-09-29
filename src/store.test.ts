@@ -415,3 +415,27 @@ test("공유받은 문제가 풀던 문제를 바꿀 때만 확인이 필요함"
   assert.equal(replacesProgress(started, started.round.id, "classic"), false);
   assert.equal(replacesProgress(started, other.id, "easy"), false);
 });
+
+test("선택 범위를 한 바퀴 다 보면 알려 주고 다시 처음부터 나옴", () => {
+  useGame.getState().reset();
+  const unit = questions[0].unit;
+  const pool = questions.filter((q) => q.unit === unit).map((q) => q.id);
+  useGame.setState({
+    selected: [unit],
+    seen: pool,
+    round: { ...useGame.getState().round, id: pool[0], solved: true },
+  });
+  useGame.getState().next();
+  const s = useGame.getState();
+  assert.ok(s.notice.includes("한 바퀴"));
+  assert.deepEqual(s.seen, [s.round.id]);
+  useGame.getState().next();
+  useGame.getState().giveUp();
+  useGame.getState().next();
+  // Right after a lap only a one-question range is used up again.
+  assert.equal(
+    useGame.getState().notice.includes("한 바퀴"),
+    pool.length === 1,
+  );
+  useGame.getState().reset();
+});

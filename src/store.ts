@@ -501,12 +501,22 @@ export const useGame = create<Store>()(
           const round = playRound(s);
           const seenIds = playSeen(s);
           if (!round.solved && !round.givenUp) return;
-          const q = pickQuestion(s.selected, seenIds, round.id);
+          // Classic fills the 도감, so questions whose title isn't collected yet come first.
+          const q = pickQuestion(
+            s.selected,
+            seenIds,
+            round.id,
+            s.playMode === "classic" ? s.collected : [],
+          );
           const pool = questions.filter((q) => s.selected.includes(q.unit));
-          const seen = pool.every((q) => seenIds.includes(q.id))
-            ? [q.id]
-            : [...seenIds, q.id];
-          set({ ...playPatch(s, newRound(q.id), seen), notice: "" });
+          const lap = pool.every((q) => seenIds.includes(q.id));
+          const seen = lap ? [q.id] : [...seenIds, q.id];
+          set({
+            ...playPatch(s, newRound(q.id), seen),
+            notice: lap
+              ? "선택한 범위의 문제를 한 바퀴 다 봤어요. 이제 처음부터 다시 나와요."
+              : "",
+          });
         },
         setPlayMode: (playMode) => {
           if (playMode !== get().playMode) set({ playMode, notice: "" });
