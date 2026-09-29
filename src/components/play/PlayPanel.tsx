@@ -6,6 +6,7 @@ import type { ModalName } from "../Modal";
 import { BottomActions } from "./BottomActions";
 import { HintButtons } from "./HintButtons";
 import { PuzzleCard } from "./PuzzleCard";
+import { ReportLink } from "./ReportLink";
 import { ResultBox } from "./ResultBox";
 import { WordForm } from "./WordForm";
 import { WordHistory } from "./WordHistory";
@@ -62,6 +63,7 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
         onTitle={() => onOpenModal("title")}
         onGiveUp={() => onOpenModal("giveup")}
       />
+      <ReportLink onClick={() => onOpenModal("report")} />
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { beforeSend } from "./analytics";
 import { AchievementToast } from "./components/AchievementToast";
 import { CollectionPanel } from "./components/CollectionPanel";
 import { Footer } from "./components/Footer";
@@ -10,7 +12,9 @@ import { GiveUpModal } from "./components/modals/GiveUpModal";
 import { HelpModal } from "./components/modals/HelpModal";
 import { ResetModal } from "./components/modals/ResetModal";
 import { NicknameModal } from "./components/modals/NicknameModal";
-import { SettingsModal } from "./components/modals/SettingsModal";
+import { ReportModal } from "./components/modals/ReportModal";
+import { AccountModal } from "./components/modals/AccountModal";
+import { ThemeModal } from "./components/modals/ThemeModal";
 import { TitleModal } from "./components/modals/TitleModal";
 import { UnitModal } from "./components/modals/UnitModal";
 import { DailyPanel } from "./components/play/DailyPanel";
@@ -82,7 +86,8 @@ export function App() {
         <Header
           discreet={theme === "excel"}
           onHelp={() => setModal("help")}
-          onSettings={() => setModal("settings")}
+          onTheme={() => setModal("theme")}
+          onAccount={() => setModal("account")}
         />
         <main>
           {theme === "console" && (
@@ -124,6 +129,8 @@ export function App() {
         )}
         <Footer />
         <AchievementToast />
+        {/* Page-view statistics; the admin page doesn't include this. */}
+        <Analytics beforeSend={beforeSend} />
       </div>
       <Modal open={modal !== null} onClose={close}>
         {modal === "title" && <TitleModal onClose={close} />}
@@ -131,13 +138,17 @@ export function App() {
           <TitleModal onClose={afterDailySolve} mode="daily" />
         )}
         {modal === "units" && <UnitModal onClose={close} />}
-        {modal === "settings" && (
-          <SettingsModal
-            theme={theme}
-            onThemeChange={setTheme}
-            onClose={close}
-          />
+        {modal === "theme" && (
+          <ThemeModal theme={theme} onThemeChange={setTheme} onClose={close} />
         )}
+        {modal === "account" && (
+          <AccountModal onReport={() => setModal("general-report")} />
+        )}
+        {modal === "report" && <ReportModal mode="play" onClose={close} />}
+        {modal === "daily-report" && (
+          <ReportModal mode="daily" onClose={close} />
+        )}
+        {modal === "general-report" && <ReportModal onClose={close} />}
         {modal === "nickname" && <NicknameModal onClose={close} />}
         {modal === "help" && <HelpModal onClose={close} />}
         {modal === "giveup" && <GiveUpModal onClose={close} />}

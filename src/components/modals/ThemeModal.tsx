@@ -1,7 +1,5 @@
-import { Settings } from "lucide-react";
+import { Palette } from "lucide-react";
 import { THEMES, type Theme } from "../../themes";
-import { AccountSection } from "../AccountSection";
-import { NicknameForm } from "../NicknameForm";
 
 type Props = {
   theme: Theme;
@@ -9,17 +7,15 @@ type Props = {
   onClose: () => void;
 };
 
-export function SettingsModal({ theme, onThemeChange, onClose }: Props) {
+export function ThemeModal({ theme, onThemeChange, onClose }: Props) {
   return (
     <>
       <span className="modal-icon">
-        <Settings />
+        <Palette />
       </span>
-      <h2>설정</h2>
-      <p>계정, 화면 테마, 랭킹 닉네임을 관리해요.</p>
-      <AccountSection />
+      <h2>화면 테마 고르기</h2>
+      <p>원하는 분위기로 화면을 바꿔보세요.</p>
       <fieldset className="theme-settings">
-        <legend>화면 테마</legend>
         <div className="theme-options">
           {THEMES.map(([value, label]) => (
             <label key={value} className={theme === value ? "selected" : ""}>
@@ -35,9 +31,8 @@ export function SettingsModal({ theme, onThemeChange, onClose }: Props) {
           ))}
         </div>
       </fieldset>
-      <NicknameForm submitLabel="닉네임 저장" />
-      <button className="secondary" onClick={onClose}>
-        닫기
+      <button className="primary" onClick={onClose}>
+        완료
       </button>
     </>
   );

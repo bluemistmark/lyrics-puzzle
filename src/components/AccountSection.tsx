@@ -18,7 +18,7 @@ const time = (ms: number) =>
     minute: "2-digit",
   });
 
-/** 계정 part of the settings modal. Hidden when the Supabase env vars are missing. */
+/** Login part of the account modal. Hidden when the Supabase env vars are missing. */
 export function AccountSection() {
   const { status, user, syncing, syncedAt, error } = useAccount();
   const [busy, setBusy] = useState(false);
@@ -41,14 +41,13 @@ export function AccountSection() {
 
   return (
     <section className="account-section" aria-labelledby="account-title">
-      <h3 id="account-title">계정</h3>
+      <h3 id="account-title">로그인</h3>
       {status === "checking" && <p>로그인 상태를 확인하는 중…</p>}
       {status === "signedOut" && (
         <>
           <p>
-            로그인하면 기록·도감·업적과 랭킹 닉네임이 계정에 저장돼 다른
-            기기에서도 이어서 할 수 있어요. 로그인하지 않아도 모든 기능을 쓸 수
-            있어요.
+            로그인하면 기록·도감·업적을 다른 기기에서도 이어서 할 수 있어요.
+            로그인하지 않아도 모든 기능을 쓸 수 있어요.
           </p>
           <p className="account-note">
             로그인은 만 14세 이상만 할 수 있어요. 로그인하면{" "}

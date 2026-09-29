@@ -8,6 +8,7 @@ import { Login } from "./Login";
 import { PublishTab } from "./PublishTab";
 import { QuestionsTab } from "./QuestionsTab";
 import { RankingTab } from "./RankingTab";
+import { ReportsTab } from "./ReportsTab";
 import { SongsTab } from "./SongsTab";
 import { useAdmin } from "./store";
 import { supabase } from "./supabase";
@@ -79,7 +80,8 @@ type Tab =
   | "dictionary"
   | "publish"
   | "ranking"
-  | "difficulty";
+  | "difficulty"
+  | "reports";
 
 function AdminShell({
   email,
@@ -112,6 +114,7 @@ function AdminShell({
     ["publish", "게시", issues.length],
     ["ranking", "랭킹", null],
     ["difficulty", "난이도", null],
+    ["reports", "제보", null],
   ];
 
   return (
@@ -171,6 +174,8 @@ function AdminShell({
             <RankingTab />
           ) : tab === "difficulty" ? (
             <DifficultyTab />
+          ) : tab === "reports" ? (
+            <ReportsTab />
           ) : (
             <PublishTab catalog={catalog} issues={issues} />
           ))}

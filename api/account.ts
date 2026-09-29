@@ -1,6 +1,7 @@
 // Vercel Function: DELETE /api/account  header Authorization: Bearer <user JWT>, body { token? }
 // 회원 탈퇴: deletes the signed-in user (player_saves goes with it via ON DELETE CASCADE) and,
-// when the ranking token is sent, that ranking player with its daily scores and 난이도 votes.
+// when the ranking token is sent, that ranking player with its daily scores and 난이도 votes,
+// and the 오류 제보 sent with that token.
 // Self-contained on purpose (plain fetch, no local imports) so Vercel bundles it as-is;
 // the token hash matches api/ranking.ts.
 
@@ -55,11 +56,18 @@ export async function DELETE(request: Request) {
     token?: unknown;
   };
   if (typeof body.token === "string" && TOKEN.test(body.token)) {
-    const player = await fetch(
-      `${url}/rest/v1/players?id=eq.${await playerId(body.token)}`,
-      { method: "DELETE", headers: service },
-    );
+    const id = await playerId(body.token);
+    const player = await fetch(`${url}/rest/v1/players?id=eq.${id}`, {
+      method: "DELETE",
+      headers: service,
+    });
     if (!player.ok) return json(502, { error: "랭킹 기록을 지우지 못했어요." });
+    const reports = await fetch(`${url}/rest/v1/reports?player_id=eq.${id}`, {
+      method: "DELETE",
+      headers: service,
+    });
+    if (!reports.ok)
+      return json(502, { error: "제보 기록을 지우지 못했어요." });
   }
 
   const removed = await fetch(`${url}/auth/v1/admin/users/${userId}`, {
