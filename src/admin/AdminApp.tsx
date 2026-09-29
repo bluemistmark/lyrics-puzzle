@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { buildCatalog } from "../data/build-catalog.ts";
 import { ArtistsTab } from "./ArtistsTab";
+import { DashboardTab } from "./DashboardTab";
 import { DictionaryTab } from "./DictionaryTab";
 import { DifficultyTab } from "./DifficultyTab";
 import { Login } from "./Login";
@@ -74,6 +75,7 @@ function AuthGate({ client }: { client: SupabaseClient }) {
 }
 
 type Tab =
+  | "dashboard"
   | "artists"
   | "songs"
   | "questions"
@@ -97,7 +99,7 @@ function AdminShell({
   const status = useAdmin((s) => s.status);
   const error = useAdmin((s) => s.error);
   const load = useAdmin((s) => s.load);
-  const [tab, setTab] = useState<Tab>("questions");
+  const [tab, setTab] = useState<Tab>("dashboard");
   useEffect(() => {
     load();
   }, [load]);
@@ -107,6 +109,7 @@ function AdminShell({
     [artists, songs, questions, dictionary],
   );
   const tabs: [Tab, string, number | null][] = [
+    ["dashboard", "대시보드", null],
     ["questions", "문제", questions.length],
     ["songs", "곡", songs.length],
     ["artists", "가수", artists.length],
@@ -162,7 +165,13 @@ function AdminShell({
           </p>
         )}
         {status === "ready" &&
-          (tab === "artists" ? (
+          (tab === "dashboard" ? (
+            <DashboardTab
+              catalog={catalog}
+              issues={issues}
+              onNavigate={setTab}
+            />
+          ) : tab === "artists" ? (
             <ArtistsTab />
           ) : tab === "songs" ? (
             <SongsTab />
