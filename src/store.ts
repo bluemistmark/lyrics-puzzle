@@ -21,6 +21,7 @@ import {
   songs,
   units,
 } from "./game.ts";
+import { isPlayMode, type PlayMode } from "./modes.ts";
 import { useRanking } from "./ranking.ts";
 export type Stats = {
   solved: number;
@@ -45,7 +46,12 @@ export type Round = {
   startedAt?: number;
 };
 export type GameMode = "play" | "daily";
+/** 단어 공개 hints per question in classic rules (the play tab's classic and the daily challenge). */
+export const WORD_HINT_LIMIT = 5;
 export type DailyState = { date: string; round: Round; notice: string };
+/** Progress of one non-classic play mode (classic keeps `round`/`seen` from older saves). */
+export type ModeState = { round: Round; seen: string[] };
+type SideMode = Exclude<PlayMode, "classic">;
 const newRound = (id: string): Round => ({
   id,
   revealed: [],
@@ -69,6 +75,34 @@ const newDailyState = (date: string): DailyState => ({
   ),
   notice: "",
 });
+const newModeState = (): ModeState => {
+  const q = pickQuestion(units, []);
+  return { round: newRound(q.id), seen: [q.id] };
+};
+const newModes = (): Record<SideMode, ModeState> => ({
+  simple: newModeState(),
+  easy: newModeState(),
+});
+type PlayRounds = Pick<Store, "playMode" | "round" | "seen" | "modes">;
+/** The play tab's current round in the chosen mode. */
+export const playRound = (s: PlayRounds) =>
+  s.playMode === "classic" ? s.round : s.modes[s.playMode].round;
+const playSeen = (s: PlayRounds) =>
+  s.playMode === "classic" ? s.seen : s.modes[s.playMode].seen;
+/** State change that stores the play tab's round (and `seen`) for the chosen mode. */
+const playPatch = (
+  s: PlayRounds,
+  round: Round,
+  seen = playSeen(s),
+): Partial<Store> =>
+  s.playMode === "classic"
+    ? { round, seen }
+    : { modes: { ...s.modes, [s.playMode]: { round, seen } } };
+const filled = (round: Round) => {
+  const q = questions.find((q) => q.id === round.id)!;
+  const p = progress(q, round.revealed);
+  return p.count === p.total;
+};
 const emptyStats = (): Stats => ({
   solved: 0,
   completed: 0,
@@ -111,7 +145,7 @@ const todayHistory = (
     : daily.round.solved || daily.round.givenUp
       ? recordDaily({}, daily.date, daily.round)
       : {};
-/** Counts a finished normal-mode question (title or give up) on today's date. */
+/** Counts a finished classic question (title or give up) on today's date. */
 const logPlay = (log: PlayLog): PlayLog => {
   const date = koreaDate();
   return { ...log, [date]: (log[date] ?? 0) + 1 };
@@ -151,11 +185,15 @@ const earned = (s: Records, achievements: Record<string, string>) =>
   earnedAchievements(ACHIEVEMENTS, achievementInput(s), achievements);
 type Store = {
   selected: string[];
+  /** Classic mode's seen questions and round (top level for older saves). */
   seen: string[];
   round: Round;
+  /** Mode of the play tab; only classic adds to records, 도감 and achievements. */
+  playMode: PlayMode;
+  modes: Record<SideMode, ModeState>;
   daily: DailyState;
   stats: Stats;
-  /** Question ids whose title was guessed in either mode (곡 도감). */
+  /** Question ids whose title was guessed in classic or the daily challenge (곡 도감). */
   collected: string[];
   /** First finish (title or give up) of each day's daily challenge. */
   dailyHistory: DailyHistory;
@@ -178,6 +216,7 @@ type Store = {
   giveUp: (mode?: GameMode) => void;
   syncDaily: (date: string) => void;
   next: () => void;
+  setPlayMode: (mode: PlayMode) => void;
   select: (selected: string[]) => void;
   reset: () => void;
   /** Clears the toast (it shows every achievement reached so far at once). */
@@ -211,6 +250,8 @@ export const useGame = create<Store>()(
         selected: units,
         seen: [firstQuestion.id],
         round: newRound(firstQuestion.id),
+        playMode: "classic",
+        modes: newModes(),
         daily: newDailyState(koreaDate()),
         stats: emptyStats(),
         collected: [],
@@ -224,7 +265,12 @@ export const useGame = create<Store>()(
         notice: "",
         guess: (word, mode = "play") => {
           const s = get();
-          const current = mode === "daily" ? s.daily.round : s.round;
+          const current = mode === "daily" ? s.daily.round : playRound(s);
+          const style = mode === "daily" ? "classic" : s.playMode;
+          if (style === "simple") {
+            set({ notice: "심플 모드는 가사가 모두 공개돼 있어요." });
+            return;
+          }
           if (current.givenUp) return;
           const text = word.trim().slice(0, 60);
           if (!text) return;
@@ -255,16 +301,24 @@ export const useGame = create<Store>()(
               ? "이미 공개된 부분이에요."
               : "일치하는 단어가 없어요.";
           if (mode === "daily") set({ daily: { ...s.daily, round, notice } });
-          else {
+          else if (style === "classic") {
             const stats = { ...s.stats };
             complete(round, stats);
             set({ round, stats, notice });
+          } else {
+            round.solved = filled(round);
+            set({
+              ...playPatch(s, round),
+              notice: round.solved ? "가사를 모두 채웠어요." : notice,
+            });
           }
         },
         solve: (title, mode = "play") => {
           const s = get();
-          const current = mode === "daily" ? s.daily.round : s.round;
-          if (current.solved || current.givenUp) return false;
+          const current = mode === "daily" ? s.daily.round : playRound(s);
+          const style = mode === "daily" ? "classic" : s.playMode;
+          if (current.solved || current.givenUp || style === "easy")
+            return false;
           const q = questions.find((q) => q.id === current.id)!;
           if (!titleMatches(q, title)) {
             const notice = "제목이 일치하지 않아요.";
@@ -272,6 +326,13 @@ export const useGame = create<Store>()(
               mode === "daily" ? { daily: { ...s.daily, notice } } : { notice },
             );
             return false;
+          }
+          if (style === "simple") {
+            set({
+              ...playPatch(s, { ...current, solved: true }),
+              notice: "제목 정답. 다음 문제로 넘어갈 수 있어요.",
+            });
+            return true;
           }
           const collected = s.collected.includes(q.id)
             ? s.collected
@@ -319,8 +380,12 @@ export const useGame = create<Store>()(
         },
         hint: (type, mode = "play") => {
           const s = get();
-          const current = mode === "daily" ? s.daily.round : s.round;
+          const current = mode === "daily" ? s.daily.round : playRound(s);
+          const style = mode === "daily" ? "classic" : s.playMode;
           if (current.givenUp) return;
+          // 심플 shows the lyrics and 이지 the artist, so those hints don't apply.
+          if (style === "simple" && type !== "artist") return;
+          if (style === "easy" && type === "artist") return;
           const round = { ...current, revealed: [...current.revealed] };
           if (type === "english") {
             if (round.english) return;
@@ -329,6 +394,8 @@ export const useGame = create<Store>()(
             if (round.artist) return;
             round.artist = true;
           } else {
+            if (style === "classic" && round.wordHints >= WORD_HINT_LIMIT)
+              return;
             const q = questions.find((q) => q.id === round.id)!;
             const hidden = allKeys(q).find((k) => !round.revealed.includes(k));
             if (!hidden) return;
@@ -349,15 +416,21 @@ export const useGame = create<Store>()(
                 ? "가수명을 공개했어요."
                 : "단어 하나를 공개했어요.";
           if (mode === "daily") set({ daily: { ...s.daily, round, notice } });
-          else {
+          else if (style === "classic") {
             const stats = { ...s.stats };
             complete(round, stats);
             set({ round, stats, notice });
+          } else {
+            if (style === "easy") round.solved = filled(round);
+            set({
+              ...playPatch(s, round),
+              notice: round.solved ? "가사를 모두 채웠어요." : notice,
+            });
           }
         },
         giveUp: (mode = "play") => {
           const s = get();
-          const current = mode === "daily" ? s.daily.round : s.round;
+          const current = mode === "daily" ? s.daily.round : playRound(s);
           if (current.givenUp || current.solved) return;
           if (mode === "daily") {
             const round = { ...current, givenUp: true };
@@ -368,6 +441,13 @@ export const useGame = create<Store>()(
                 round,
                 notice: "오늘의 문제가 종료됐어요.",
               },
+            });
+            return;
+          }
+          if (s.playMode !== "classic") {
+            set({
+              ...playPatch(s, { ...current, givenUp: true }),
+              notice: "정답을 확인했어요.",
             });
             return;
           }
@@ -384,13 +464,18 @@ export const useGame = create<Store>()(
         },
         next: () => {
           const s = get();
-          if (!s.round.solved && !s.round.givenUp) return;
-          const q = pickQuestion(s.selected, s.seen, s.round.id);
+          const round = playRound(s);
+          const seenIds = playSeen(s);
+          if (!round.solved && !round.givenUp) return;
+          const q = pickQuestion(s.selected, seenIds, round.id);
           const pool = questions.filter((q) => s.selected.includes(q.unit));
-          const seen = pool.every((q) => s.seen.includes(q.id))
+          const seen = pool.every((q) => seenIds.includes(q.id))
             ? [q.id]
-            : [...s.seen, q.id];
-          set({ round: newRound(q.id), seen, notice: "" });
+            : [...seenIds, q.id];
+          set({ ...playPatch(s, newRound(q.id), seen), notice: "" });
+        },
+        setPlayMode: (playMode) => {
+          if (playMode !== get().playMode) set({ playMode, notice: "" });
         },
         select: (selected) => {
           if (selected.length)
@@ -414,6 +499,7 @@ export const useGame = create<Store>()(
             achievements: earned(records, {}),
             justUnlocked: [],
             round: newRound(q.id),
+            modes: newModes(),
             selected: units,
             seen: [q.id],
             notice: "기록을 초기화했어요.",
@@ -463,6 +549,15 @@ export const useGame = create<Store>()(
           p.dailyHistory && typeof p.dailyHistory === "object"
             ? p.dailyHistory
             : todayHistory(daily);
+        const modes = { ...current.modes };
+        for (const m of ["simple", "easy"] as const) {
+          const saved = p.modes?.[m];
+          if (saved?.round && questions.some((q) => q.id === saved.round.id))
+            modes[m] = {
+              round: saved.round,
+              seen: Array.isArray(saved.seen) ? saved.seen : [saved.round.id],
+            };
+        }
         const records = {
           stats: { ...current.stats, ...p.stats },
           collected,
@@ -477,6 +572,8 @@ export const useGame = create<Store>()(
           ...p,
           ...records,
           selected: selected.length ? selected : units,
+          playMode: isPlayMode(p.playMode) ? p.playMode : "classic",
+          modes,
           daily,
           // Saves from before 업적 get what they already reached, without toasts.
           achievements: earned(

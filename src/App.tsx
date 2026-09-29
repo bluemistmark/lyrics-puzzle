@@ -16,6 +16,7 @@ import { ReportModal } from "./components/modals/ReportModal";
 import { AccountModal } from "./components/modals/AccountModal";
 import { ThemeModal } from "./components/modals/ThemeModal";
 import { TitleModal } from "./components/modals/TitleModal";
+import { ModeModal } from "./components/modals/ModeModal";
 import { UnitModal } from "./components/modals/UnitModal";
 import { DailyPanel } from "./components/play/DailyPanel";
 import { PlayPanel } from "./components/play/PlayPanel";
@@ -138,6 +139,7 @@ export function App() {
           <TitleModal onClose={afterDailySolve} mode="daily" />
         )}
         {modal === "units" && <UnitModal onClose={close} />}
+        {modal === "modes" && <ModeModal onClose={close} />}
         {modal === "theme" && (
           <ThemeModal theme={theme} onThemeChange={setTheme} onClose={close} />
         )}

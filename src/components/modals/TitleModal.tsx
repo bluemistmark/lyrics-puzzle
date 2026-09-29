@@ -11,6 +11,7 @@ export function TitleModal({
   mode?: GameMode;
 }) {
   const solve = useGame((s) => s.solve);
+  const simple = useGame((s) => mode === "play" && s.playMode === "simple");
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
   return (
@@ -19,7 +20,11 @@ export function TitleModal({
         <AudioLines />
       </span>
       <h2>노래 제목 입력</h2>
-      <p>제목을 맞힌 뒤에도 가사를 계속 풀 수 있어요.</p>
+      <p>
+        {simple
+          ? "가사를 읽고 노래 제목을 입력하세요."
+          : "제목을 맞힌 뒤에도 가사를 계속 풀 수 있어요."}
+      </p>
       <form
         onSubmit={(e) => {
           e.preventDefault();

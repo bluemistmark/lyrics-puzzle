@@ -5,6 +5,7 @@ export type ModalName =
   | "title"
   | "daily-title"
   | "units"
+  | "modes"
   | "theme"
   | "account"
   | "nickname"

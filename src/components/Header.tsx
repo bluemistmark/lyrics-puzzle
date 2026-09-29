@@ -19,7 +19,7 @@ export function Header({ discreet, onHelp, onTheme, onAccount }: Props) {
           )}
         </span>
         <span>
-          {discreet ? "문서 정리" : "NCT 초성 가사 맞히기"}
+          {discreet ? "문서 정리" : "NCT 노래 퀴즈"}
           <span className="brand-sub">
             {discreet ? "SHEET1 · PERSONAL" : "LYRICS PUZZLE"}
           </span>

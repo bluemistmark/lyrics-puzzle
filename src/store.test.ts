@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { memory } from "./testing/fake-storage.ts";
 import { questions, allKeys } from "./game.ts";
 import { koreaDate } from "./daily.ts";
-const { useGame } = await import("./store.ts");
+import { emptyFeats } from "./achievements.ts";
+const { useGame, WORD_HINT_LIMIT } = await import("./store.ts");
 
 test("첫 문제를 아무 입력 전에 저장하고 재수화해도 유지", async () => {
   const firstId = useGame.getState().round.id;
@@ -250,4 +251,102 @@ test("정답 순간의 기록과 테마 사용을 업적용으로 남기고, 닉
   useGame.getState().reset();
   assert.equal(useGame.getState().feats.noWord, 0);
   assert.ok(useGame.getState().themes.includes("dark"), "테마 기록은 유지");
+});
+
+test("플레이 모드마다 진행 중인 문제가 따로 저장되고 클래식 외 모드는 기록·도감에 남지 않음", async () => {
+  useGame.getState().reset();
+  const classic = useGame.getState().round.id;
+  useGame.getState().setPlayMode("simple");
+  const s = useGame.getState();
+  const q = questions.find((q) => q.id === s.modes.simple.round.id)!;
+  // 심플: 단어 입력·가사 힌트 없이 제목만 맞힘.
+  useGame.getState().guess(q.lines[0][0].text);
+  useGame.getState().hint("word");
+  assert.deepEqual(useGame.getState().modes.simple.round.revealed, []);
+  assert.ok(useGame.getState().solve(q.title));
+  assert.ok(useGame.getState().modes.simple.round.solved);
+  assert.equal(useGame.getState().round.id, classic);
+  assert.equal(useGame.getState().round.solved, false);
+  useGame.getState().next();
+  assert.notEqual(useGame.getState().modes.simple.round.id, q.id);
+  useGame.getState().giveUp();
+
+  // 이지: 제목 입력·가수 힌트 없이 가사를 모두 채우면 끝남.
+  useGame.getState().setPlayMode("easy");
+  const e = questions.find(
+    (q) => q.id === useGame.getState().modes.easy.round.id,
+  )!;
+  assert.equal(useGame.getState().solve(e.title), false);
+  useGame.getState().hint("artist");
+  assert.equal(useGame.getState().modes.easy.round.artist, false);
+  for (const line of e.lines)
+    for (const t of line) useGame.getState().guess(t.text);
+  assert.ok(useGame.getState().modes.easy.round.solved);
+  useGame.getState().next();
+  assert.notEqual(useGame.getState().modes.easy.round.id, e.id);
+
+  const after = useGame.getState();
+  assert.deepEqual(after.collected, []);
+  assert.deepEqual(after.playLog, {});
+  assert.equal(after.stats.solved, 0);
+  assert.equal(after.stats.skipped, 0);
+  assert.equal(after.stats.completed, 0);
+  assert.deepEqual(after.feats, emptyFeats());
+
+  const easyId = after.modes.easy.round.id;
+  await useGame.persist.rehydrate();
+  assert.equal(useGame.getState().playMode, "easy");
+  assert.equal(useGame.getState().modes.easy.round.id, easyId);
+  useGame.getState().setPlayMode("classic");
+  assert.equal(useGame.getState().round.id, classic);
+});
+
+test("오늘의 문제는 선택한 플레이 모드와 관계없이 클래식 규칙", () => {
+  useGame.getState().reset();
+  useGame.getState().setPlayMode("simple");
+  const { daily } = useGame.getState();
+  useGame.setState({
+    daily: {
+      ...daily,
+      round: {
+        ...daily.round,
+        revealed: [],
+        words: [],
+        solved: false,
+        givenUp: false,
+      },
+    },
+  });
+  const q = questions.find((q) => q.id === daily.round.id)!;
+  useGame
+    .getState()
+    .guess(q.lines[0].find((t) => t.text.trim())!.text, "daily");
+  assert.ok(useGame.getState().daily.round.revealed.length > 0);
+  assert.ok(useGame.getState().solve(q.title, "daily"));
+  assert.ok(useGame.getState().collected.includes(q.id));
+  assert.deepEqual(useGame.getState().modes.simple.round.words, []);
+  useGame.getState().setPlayMode("classic");
+});
+
+test("클래식 규칙에서는 단어 공개 힌트를 문제당 5번까지만 쓰고, 이지 모드는 제한 없음", () => {
+  const long = questions.find(
+    (q) => q.lines.flat().filter((t) => t.text.trim()).length > 6,
+  )!;
+  useGame.getState().reset();
+  useGame.setState({ round: { ...useGame.getState().round, id: long.id } });
+  for (let i = 0; i < 7; i++) useGame.getState().hint("word");
+  assert.equal(useGame.getState().round.wordHints, WORD_HINT_LIMIT);
+  assert.equal(useGame.getState().round.hints, WORD_HINT_LIMIT);
+
+  useGame.getState().setPlayMode("easy");
+  const easy = useGame.getState().modes.easy;
+  useGame.setState({
+    modes: {
+      ...useGame.getState().modes,
+      easy: { ...easy, round: { ...easy.round, id: long.id } },
+    },
+  });
+  for (let i = 0; i < 7; i++) useGame.getState().hint("word");
+  assert.equal(useGame.getState().modes.easy.round.wordHints, 7);
+  useGame.getState().setPlayMode("classic");
 });
