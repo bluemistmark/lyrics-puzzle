@@ -35,7 +35,6 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
       hidden={hidden}
     >
       <div className="game-toolbar">
-        <h1>가사 맞히기</h1>
         <div className="toolbar-filters">
           <button
             className="filter"
