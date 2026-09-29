@@ -150,3 +150,54 @@ test("도감 이전 저장값은 현재 맞힌 문제로 도감을 시작", asyn
   await useGame.persist.rehydrate();
   assert.deepEqual(useGame.getState().collected, [q.id]);
 });
+
+test("오늘의 문제는 처음 끝낸 결과만 날짜별로 기록되고 초기화해도 오늘 결과는 유지", () => {
+  useGame.setState({ dailyHistory: {} });
+  const date = koreaDate(new Date(Date.now() + 5 * 24 * 60 * 60 * 1000));
+  useGame.getState().syncDaily(date);
+  const q = questions.find((q) => q.id === useGame.getState().daily.round.id)!;
+  useGame.getState().guess("없는단어없는단어", "daily");
+  useGame.getState().hint("artist", "daily");
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().dailyHistory, {});
+  assert.ok(useGame.getState().solve(q.title, "daily"));
+  const recorded = { [date]: { solved: true, guesses: 1, hints: 1 } };
+  assert.deepEqual(useGame.getState().dailyHistory, recorded);
+  useGame.getState().guess("또없는단어", "daily");
+  useGame.getState().giveUp("daily");
+  assert.deepEqual(useGame.getState().dailyHistory, recorded);
+
+  const next = koreaDate(new Date(Date.now() + 6 * 24 * 60 * 60 * 1000));
+  useGame.getState().syncDaily(next);
+  useGame.getState().giveUp("daily");
+  assert.deepEqual(useGame.getState().dailyHistory[next], {
+    solved: false,
+    guesses: 0,
+    hints: 0,
+  });
+  useGame.getState().reset();
+  assert.deepEqual(Object.keys(useGame.getState().dailyHistory), [next]);
+  assert.deepEqual(useGame.getState().stats.solved, 0);
+});
+
+test("일반 모드에서 끝낸 문제만 오늘 날짜의 플레이 수로 세고 초기화하면 비워짐", () => {
+  useGame.getState().reset();
+  const today = koreaDate();
+  const q = questions.find((q) => q.id === useGame.getState().round.id)!;
+  useGame.getState().solve("틀린 제목");
+  assert.deepEqual(useGame.getState().playLog, {});
+  useGame.getState().solve(q.title);
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().playLog, { [today]: 1 });
+  useGame.getState().next();
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().playLog, { [today]: 2 });
+
+  useGame
+    .getState()
+    .syncDaily(koreaDate(new Date(Date.now() + 8 * 24 * 60 * 60 * 1000)));
+  useGame.getState().giveUp("daily");
+  assert.deepEqual(useGame.getState().playLog, { [today]: 2 });
+  useGame.getState().reset();
+  assert.deepEqual(useGame.getState().playLog, {});
+});

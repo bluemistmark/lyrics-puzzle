@@ -3,9 +3,14 @@ import { Copy, Share2 } from "lucide-react";
 import { dailyResultText } from "../../daily";
 import type { Round } from "../../store";
 
-type Props = { date: string; round: Round; percent: number };
+type Props = {
+  date: string;
+  round: Round;
+  percent: number;
+  streak: number;
+};
 
-export function ShareResults({ date, round, percent }: Props) {
+export function ShareResults({ date, round, percent, streak }: Props) {
   const [status, setStatus] = useState("");
   const result = dailyResultText({
     date,
@@ -14,6 +19,7 @@ export function ShareResults({ date, round, percent }: Props) {
     percent,
     guesses: round.words.length,
     hints: round.hints,
+    streak,
   });
   const link = new URL(window.location.href);
   link.searchParams.set("today", "1");

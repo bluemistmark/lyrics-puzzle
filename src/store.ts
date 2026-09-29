@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { dailyQuestionId, koreaDate } from "./daily.ts";
+import { dailyQuestionId, koreaDate, type DailyHistory } from "./daily.ts";
 import {
   allKeys,
   matches,
@@ -72,6 +72,37 @@ const complete = (round: Round, stats: Stats) => {
     if (!round.wordHints) stats.direct++;
   }
 };
+const recordDaily = (
+  history: DailyHistory,
+  date: string,
+  round: Round,
+): DailyHistory =>
+  history[date]
+    ? history
+    : {
+        ...history,
+        [date]: {
+          solved: round.solved,
+          guesses: round.words.length,
+          hints: round.hints,
+        },
+      };
+/** Today's challenge can't be replayed, so a finished one always stays recorded. */
+const todayHistory = (
+  daily: DailyState,
+  history: DailyHistory = {},
+): DailyHistory =>
+  history[daily.date]
+    ? { [daily.date]: history[daily.date] }
+    : daily.round.solved || daily.round.givenUp
+      ? recordDaily({}, daily.date, daily.round)
+      : {};
+/** Counts a finished normal-mode question (title or give up) on today's date. */
+const logPlay = (log: PlayLog): PlayLog => {
+  const date = koreaDate();
+  return { ...log, [date]: (log[date] ?? 0) + 1 };
+};
+export type PlayLog = Record<string, number>;
 type Store = {
   selected: string[];
   seen: string[];
@@ -80,6 +111,10 @@ type Store = {
   stats: Stats;
   /** Question ids whose title was guessed in either mode (곡 도감). */
   collected: string[];
+  /** First finish (title or give up) of each day's daily challenge. */
+  dailyHistory: DailyHistory;
+  /** Normal-mode questions finished per Korean date (플레이 잔디). */
+  playLog: PlayLog;
   notice: string;
   guess: (word: string, mode?: GameMode) => void;
   solve: (title: string, mode?: GameMode) => boolean;
@@ -100,6 +135,8 @@ export const useGame = create<Store>()(
       daily: newDailyState(koreaDate()),
       stats: emptyStats(),
       collected: [],
+      dailyHistory: {},
+      playLog: {},
       notice: "",
       guess: (word, mode = "play") => {
         const s = get();
@@ -156,11 +193,13 @@ export const useGame = create<Store>()(
           ? s.collected
           : [...s.collected, q.id];
         if (mode === "daily") {
+          const round = { ...current, solved: true };
           set({
             collected,
+            dailyHistory: recordDaily(s.dailyHistory, s.daily.date, round),
             daily: {
               ...s.daily,
-              round: { ...current, solved: true },
+              round,
               notice: "제목 정답. 결과를 공유할 수 있어요.",
             },
           });
@@ -169,6 +208,7 @@ export const useGame = create<Store>()(
         const streak = s.stats.streak + 1;
         set({
           collected,
+          playLog: logPlay(s.playLog),
           round: { ...current, solved: true },
           stats: {
             ...s.stats,
@@ -223,16 +263,19 @@ export const useGame = create<Store>()(
         const current = mode === "daily" ? s.daily.round : s.round;
         if (current.givenUp || current.solved) return;
         if (mode === "daily") {
+          const round = { ...current, givenUp: true };
           set({
+            dailyHistory: recordDaily(s.dailyHistory, s.daily.date, round),
             daily: {
               ...s.daily,
-              round: { ...current, givenUp: true },
+              round,
               notice: "오늘의 문제가 종료됐어요.",
             },
           });
           return;
         }
         set({
+          playLog: logPlay(s.playLog),
           round: { ...current, givenUp: true },
           stats: { ...s.stats, skipped: s.stats.skipped + 1, streak: 0 },
           notice: "정답을 확인했어요.",
@@ -260,6 +303,8 @@ export const useGame = create<Store>()(
         set({
           stats: emptyStats(),
           collected: [],
+          dailyHistory: todayHistory(get().daily, get().dailyHistory),
+          playLog: {},
           round: newRound(q.id),
           selected: units,
           seen: [q.id],
@@ -294,12 +339,18 @@ export const useGame = create<Store>()(
                 [p.round, daily.round].filter((r) => r.solved).map((r) => r.id),
               ),
             ];
+        const dailyHistory =
+          p.dailyHistory && typeof p.dailyHistory === "object"
+            ? p.dailyHistory
+            : todayHistory(daily);
         return {
           ...current,
           ...p,
           selected: selected.length ? selected : units,
           daily,
           collected,
+          dailyHistory,
+          playLog: p.playLog && typeof p.playLog === "object" ? p.playLog : {},
           notice: "",
         };
       },
