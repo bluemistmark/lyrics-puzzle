@@ -11,7 +11,7 @@ export function DifficultyVote({ questionId, solved, daily }: Props) {
   return (
     <div className="difficulty-vote">
       <span id={`difficulty-${questionId}`}>
-        {mine ? "응답해 줘서 고마워요!" : "이 문제, 어땠나요?"}
+        {mine ? "답변해주셔서 감사해요! 더 나은 게임을 만들어 갈게요" : "이 문제, 어땠나요?"}
       </span>
       <div role="group" aria-labelledby={`difficulty-${questionId}`}>
         {RATINGS.map(([rating, label]) => (

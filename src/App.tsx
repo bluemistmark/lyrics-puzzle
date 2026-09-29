@@ -11,7 +11,8 @@ import { HelpModal } from "./components/modals/HelpModal";
 import { ResetModal } from "./components/modals/ResetModal";
 import { NicknameModal } from "./components/modals/NicknameModal";
 import { ReportModal } from "./components/modals/ReportModal";
-import { SettingsModal } from "./components/modals/SettingsModal";
+import { AccountModal } from "./components/modals/AccountModal";
+import { ThemeModal } from "./components/modals/ThemeModal";
 import { TitleModal } from "./components/modals/TitleModal";
 import { UnitModal } from "./components/modals/UnitModal";
 import { DailyPanel } from "./components/play/DailyPanel";
@@ -83,7 +84,8 @@ export function App() {
         <Header
           discreet={theme === "excel"}
           onHelp={() => setModal("help")}
-          onSettings={() => setModal("settings")}
+          onTheme={() => setModal("theme")}
+          onAccount={() => setModal("account")}
         />
         <main>
           {theme === "console" && (
@@ -132,13 +134,11 @@ export function App() {
           <TitleModal onClose={afterDailySolve} mode="daily" />
         )}
         {modal === "units" && <UnitModal onClose={close} />}
-        {modal === "settings" && (
-          <SettingsModal
-            theme={theme}
-            onThemeChange={setTheme}
-            onClose={close}
-            onReport={() => setModal("general-report")}
-          />
+        {modal === "theme" && (
+          <ThemeModal theme={theme} onThemeChange={setTheme} onClose={close} />
+        )}
+        {modal === "account" && (
+          <AccountModal onReport={() => setModal("general-report")} />
         )}
         {modal === "report" && <ReportModal mode="play" onClose={close} />}
         {modal === "daily-report" && (

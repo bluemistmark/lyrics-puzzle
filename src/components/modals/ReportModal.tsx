@@ -102,7 +102,7 @@ export function ReportModal({ mode, onClose }: Props) {
           placeholder={
             mode
               ? "예) 두 번째 줄 '그대'가 원곡에서는 '너'예요."
-              : "예) 설정 창이 닫히지 않아요."
+              : "예) 테마 창이 닫히지 않아요."
           }
         />
         <p className="report-count">
