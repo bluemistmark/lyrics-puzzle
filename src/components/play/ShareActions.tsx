@@ -1,18 +1,15 @@
 import { useState } from "react";
 import { Copy, Image as ImageIcon, Share2 } from "lucide-react";
-import type { ShareGrid } from "../../share";
-import { drawShareCard } from "../../share-image";
-
 type Props = {
-  /** Spoiler-free result text; its first four lines also go on the card image. */
+  /** Spoiler-free text for X and the clipboard. */
   text: string;
   link: string;
-  /** Squares for the card; null draws the card without a grid (심플). */
-  grid: ShareGrid | null;
+  /** Draws the card image (share-image.ts) when the player asks for it. */
+  draw: () => Promise<Blob>;
 };
 
-/** 이미지로 공유 · X에 공유 · 결과 복사, shared by the play and daily tabs. */
-export function ShareActions({ text, link, grid }: Props) {
+/** 이미지로 공유 · X에 공유 · 결과 복사, shared by the play, daily and record tabs. */
+export function ShareActions({ text, link, draw }: Props) {
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
   const xLink = new URL("https://x.com/intent/tweet");
@@ -25,7 +22,7 @@ export function ShareActions({ text, link, grid }: Props) {
     setBusy(true);
     setStatus("");
     try {
-      const blob = await drawShareCard(grid, text.split("\n"));
+      const blob = await draw();
       const file = new File([blob], "neo-song-quiz.png", { type: "image/png" });
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], text: `${text}\n${link}` });

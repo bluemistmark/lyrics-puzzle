@@ -31,7 +31,7 @@ export function ResultBox({
         <p>
           {round.givenUp
             ? daily
-              ? "오늘의 문제를 마쳤어요."
+              ? "데일리 퀴즈를 마쳤어요."
               : "다음 문제로 넘어갈 수 있어요."
             : playMode === "easy"
               ? "가사를 모두 채웠어요."

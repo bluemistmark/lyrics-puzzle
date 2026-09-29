@@ -139,7 +139,7 @@ export function ReportsTab() {
                         <>
                           <span className="mono">{r.question_id}</span>
                           {r.mode === "daily" && (
-                            <span className="muted"> · 오늘의 문제</span>
+                            <span className="muted"> · 데일리 퀴즈</span>
                           )}
                           <br />
                           <span className="muted">

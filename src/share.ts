@@ -50,6 +50,23 @@ export function playResultText(r: PlayResult): string {
   ].join("\n");
 }
 
+export type RecordSummary = {
+  solved: number;
+  best: number;
+  dailyStreak: number;
+  achieved: number;
+  achievements: number;
+};
+
+/** Share text for the 기록 tab (classic records only, nothing about specific songs). */
+export function recordShareText(r: RecordSummary): string {
+  return [
+    "네오 노래 퀴즈 · 나의 기록",
+    `🎵 제목 정답 ${r.solved}문제 · 최고 ${r.best}연속`,
+    `📅 데일리 ${r.dailyStreak}일 연속 · 🏆 업적 ${r.achieved}/${r.achievements}`,
+  ].join("\n");
+}
+
 export type SharedLink = { id: string; mode: PlayMode };
 
 /** Reads a same-question link (`questionLink`); an unknown mode falls back to classic. */

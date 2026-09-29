@@ -74,7 +74,7 @@ export function DashboardTab({ catalog, issues, onNavigate }: Props) {
       setErrors(
         [
           stats.error &&
-            `오늘의 문제 추이: ${describeError(stats.error)} (daily_stats 마이그레이션을 실행했는지 확인하세요.)`,
+            `데일리 퀴즈 추이: ${describeError(stats.error)} (daily_stats 마이그레이션을 실행했는지 확인하세요.)`,
           players.error && `플레이어: ${describeError(players.error)}`,
           reports.error && `제보: ${describeError(reports.error)}`,
           difficulty.error && `난이도: ${describeError(difficulty.error)}`,
@@ -131,7 +131,7 @@ export function DashboardTab({ catalog, issues, onNavigate }: Props) {
 
       <div className="dash-tiles">
         <Tile
-          label="오늘의 문제 참여"
+          label="데일리 퀴즈 참여"
           value={data ? `${todayStat.participants}명` : "…"}
           detail={
             todayStat.participants
@@ -174,7 +174,7 @@ export function DashboardTab({ catalog, issues, onNavigate }: Props) {
         일반 플레이는 서버에 기록하지 않아 여기에 포함되지 않아요.
       </p>
 
-      <h2>오늘의 문제 · 최근 {DAYS}일</h2>
+      <h2>데일리 퀴즈 · 최근 {DAYS}일</h2>
       <p className="dash-readout" aria-live="polite">
         <b>{shown.date.replaceAll("-", ".")}</b> 참여 {shown.participants}명
         {shown.participants > 0 && (

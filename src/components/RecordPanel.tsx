@@ -5,6 +5,9 @@ import { dailySummary, type DailySummary } from "../daily";
 import { ACHIEVEMENTS, useGame, type Stats } from "../store";
 import { useAccount } from "../account";
 import { Achievements } from "./Achievements";
+import { ShareActions } from "./play/ShareActions";
+import { recordShareText } from "../share";
+import { drawRecordCard } from "../share-image";
 
 type Tile = [label: string, value: string];
 
@@ -50,10 +53,36 @@ export function RecordPanel({ hidden, onReset }: Props) {
   const earned = useGame((s) => s.achievements);
   const signedIn = useAccount((s) => s.status === "signedIn");
   const daily = dailySummary(history, today);
-  const days = calendarWeeks(today, GRASS_WEEKS).flat();
+  const weeks = calendarWeeks(today, GRASS_WEEKS);
+  const days = weeks.flat();
   const played = days.filter((d) => playLog[d.date]);
   const total = played.reduce((n, d) => n + playLog[d.date], 0);
   const achieved = ACHIEVEMENTS.filter((a) => earned[a.id]).length;
+  const shareText = recordShareText({
+    solved: stats.solved,
+    best: stats.best,
+    dailyStreak: daily.current,
+    achieved,
+    achievements: ACHIEVEMENTS.length,
+  });
+  const drawCard = () =>
+    drawRecordCard({
+      headline: [
+        ["제목 정답", `${stats.solved}`],
+        ["데일리 연속", `${daily.current}일`],
+        ["업적", `${achieved}/${ACHIEVEMENTS.length}`],
+      ],
+      details: [
+        ["가사 완성", `${stats.completed}문제`],
+        ["최고 연속 정답", `${stats.best}문제`],
+        ["데일리 퀴즈 참여", `${daily.played}일`],
+        ["최근 16주 플레이", `${played.length}일`],
+      ],
+      grass: weeks.map((week) =>
+        week.map((d) => (d.future ? null : playLevel(playLog[d.date] ?? 0))),
+      ),
+      footer: `${today.replaceAll("-", ".")} 기준`,
+    });
   return (
     <section
       id="record-panel"
@@ -71,7 +100,7 @@ export function RecordPanel({ hidden, onReset }: Props) {
           <strong>{stats.solved}</strong>
         </div>
         <div>
-          <span>오늘의 문제 연속</span>
+          <span>데일리 연속</span>
           <strong>{daily.current}일</strong>
         </div>
         <button type="button" onClick={() => setView("achievements")}>
@@ -141,7 +170,7 @@ export function RecordPanel({ hidden, onReset }: Props) {
           </div>
           <Tiles tiles={playTiles(stats)} />
 
-          <h2 className="record-subtitle">오늘의 문제</h2>
+          <h2 className="record-subtitle">데일리 퀴즈</h2>
           <Tiles tiles={dailyTiles(daily)} />
 
           <h2 className="record-subtitle">다른 모드</h2>
@@ -152,11 +181,21 @@ export function RecordPanel({ hidden, onReset }: Props) {
             ]}
           />
 
+          <div className="share-results">
+            <h2>기록 공유</h2>
+            <p>클래식 기록과 잔디를 이미지 카드로 공유해요.</p>
+            <ShareActions
+              text={shareText}
+              link={new URL("/", window.location.href).href}
+              draw={drawCard}
+            />
+          </div>
+
           <p className="record-note">
             {signedIn
               ? "기록은 계정에 저장돼 로그인한 다른 기기에서도 이어져요."
               : "기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도 삭제되니, 오른쪽 위 계정 메뉴에서 로그인하면 계정에 저장할 수 있어요."}{" "}
-            플레이 기록·잔디·도감·업적은 클래식 모드만 반영해요. 오늘의 문제는
+            플레이 기록·잔디·도감·업적은 클래식 모드만 반영해요. 데일리 퀴즈는
             하루를 건너뛰거나 포기하면 연속 정답이 끊겨요.
           </p>
           <button className="reset-btn" onClick={onReset}>

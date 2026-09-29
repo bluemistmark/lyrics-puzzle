@@ -1,6 +1,7 @@
 import { dailyResultText } from "../../daily";
 import type { Question } from "../../game";
 import { shareGrid } from "../../share";
+import { drawShareCard } from "../../share-image";
 import type { Round } from "../../store";
 import { ShareActions } from "./ShareActions";
 
@@ -38,17 +39,22 @@ export function ShareResults({
     heading,
     outcome,
     stats,
-    extra ?? "오늘의 문제에 도전해 보세요!",
+    extra ?? "데일리 퀴즈에 도전해 보세요!",
   ].join("\n");
 
   return (
     <div className="share-results">
-      <h2>오늘의 결과</h2>
+      <h2>데일리 결과</h2>
       <pre>{`${cardText}\n${link.href}`}</pre>
       <ShareActions
         text={cardText}
         link={link.href}
-        grid={shareGrid(question, round.revealed)}
+        draw={() =>
+          drawShareCard(
+            shareGrid(question, round.revealed),
+            cardText.split("\n"),
+          )
+        }
       />
     </div>
   );

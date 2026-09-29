@@ -472,7 +472,7 @@ export const useGame = create<Store>()(
               daily: {
                 ...s.daily,
                 round,
-                notice: "오늘의 문제가 종료됐어요.",
+                notice: "데일리 퀴즈가 종료됐어요.",
               },
             });
             return;

@@ -86,11 +86,8 @@ function roundRect(
   ctx.fill();
 }
 
-/** `lines` is the share text split into lines; the first is the heading. */
-export async function drawShareCard(
-  grid: ShareGrid | null,
-  lines: string[],
-): Promise<Blob> {
+/** Canvas with the theme's background and card drawn, fonts loaded. */
+async function startCard() {
   const theme = document.documentElement.dataset.theme ?? "light";
   const p = PALETTES[theme] ?? PALETTES.light;
   await document.fonts?.ready;
@@ -98,11 +95,44 @@ export async function drawShareCard(
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d")!;
-
   ctx.fillStyle = p.bg;
   ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = p.card;
   roundRect(ctx, 40, 40, W - 80, H - 80, 36);
+  return { canvas, ctx, p };
+}
+
+const toPng = (canvas: HTMLCanvasElement) =>
+  new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob(
+      (blob) =>
+        blob ? resolve(blob) : reject(Error("이미지를 만들 수 없어요.")),
+      "image/png",
+    ),
+  );
+
+/** `#rrggbb` blend of two palette colors (t = 0 → a, 1 → b). */
+function mix(a: string, b: string, t: number) {
+  const ch = (h: string, i: number) =>
+    parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
+  return (
+    "#" +
+    [0, 1, 2]
+      .map((i) =>
+        Math.round(ch(a, i) + (ch(b, i) - ch(a, i)) * t)
+          .toString(16)
+          .padStart(2, "0"),
+      )
+      .join("")
+  );
+}
+
+/** `lines` is the share text split into lines; the first is the heading. */
+export async function drawShareCard(
+  grid: ShareGrid | null,
+  lines: string[],
+): Promise<Blob> {
+  const { canvas, ctx, p } = await startCard();
 
   const [heading, outcome, stats] = lines;
   ctx.fillStyle = p.ink;
@@ -148,11 +178,76 @@ export async function drawShareCard(
   ctx.font = `600 24px ${FONT}`;
   ctx.fillText(lines[3] ?? "", 96, H - 88);
 
-  return new Promise((resolve, reject) =>
-    canvas.toBlob(
-      (blob) =>
-        blob ? resolve(blob) : reject(Error("이미지를 만들 수 없어요.")),
-      "image/png",
-    ),
+  return toPng(canvas);
+}
+
+export type RecordCard = {
+  /** Big numbers across the top: [label, value]. */
+  headline: [string, string][];
+  /** Smaller figures beside the grass: [label, value]. */
+  details: [string, string][];
+  /** Grass levels 0–4 by week (columns) then day (rows); null for future days. */
+  grass: (number | null)[][];
+  /** Line at the bottom, e.g. the date the card was made. */
+  footer: string;
+};
+
+/** 기록 탭 share card: headline numbers, recent grass and a few details. */
+export async function drawRecordCard(r: RecordCard): Promise<Blob> {
+  const { canvas, ctx, p } = await startCard();
+  ctx.fillStyle = p.ink;
+  ctx.font = `800 40px ${FONT}`;
+  ctx.fillText("네오 노래 퀴즈 · 나의 기록", 96, 128);
+
+  // Headline: equal columns of label over a big number.
+  const colW = (W - 192) / r.headline.length;
+  r.headline.forEach(([label, value], i) => {
+    const x = 96 + i * colW;
+    ctx.fillStyle = p.sub;
+    ctx.font = `600 24px ${FONT}`;
+    ctx.fillText(label, x, 196);
+    ctx.fillStyle = p.ink;
+    ctx.font = `800 58px ${FONT}`;
+    ctx.fillText(value, x, 262);
+  });
+
+  // Grass: weeks left to right, days top to bottom, shaded from miss to hit.
+  const top = 320;
+  const cell = 26;
+  const gap = 6;
+  r.grass.forEach((week, w) =>
+    week.forEach((level, d) => {
+      if (level === null) return;
+      ctx.fillStyle = level
+        ? mix(p.miss, p.hit, 0.25 + level * 0.1875)
+        : p.miss;
+      roundRect(
+        ctx,
+        96 + w * (cell + gap),
+        top + d * (cell + gap),
+        cell,
+        cell,
+        6,
+      );
+    }),
   );
+
+  // Details to the right of the grass.
+  const dx = 96 + r.grass.length * (cell + gap) + 40;
+  r.details.forEach(([label, value], i) => {
+    const y = top + 22 + i * 56;
+    ctx.fillStyle = p.sub;
+    ctx.font = `500 24px ${FONT}`;
+    ctx.fillText(label, dx, y);
+    ctx.fillStyle = p.ink;
+    ctx.font = `800 28px ${FONT}`;
+    ctx.textAlign = "right";
+    ctx.fillText(value, W - 96, y);
+    ctx.textAlign = "left";
+  });
+
+  ctx.fillStyle = p.sub;
+  ctx.font = `600 24px ${FONT}`;
+  ctx.fillText(r.footer, 96, H - 72);
+  return toPng(canvas);
 }

@@ -70,7 +70,7 @@ export function CollectionPanel({ hidden }: { hidden: boolean }) {
         ))}
       </div>
       <p className="record-note">
-        제목을 맞히면 곡이 도감에 등록돼요. 오늘의 문제도 포함되며, 유닛을
+        제목을 맞히면 곡이 도감에 등록돼요. 데일리 퀴즈도 포함되며, 유닛을
         누르면 곡 목록을 볼 수 있어요.
       </p>
     </section>

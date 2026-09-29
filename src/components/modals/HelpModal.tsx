@@ -34,7 +34,7 @@ export function HelpModal({ onClose }: { onClose: () => void }) {
           </p>
         </li>
         <li>
-          <b>오늘의 문제</b>
+          <b>데일리 퀴즈</b>
           <p>
             한국 시간 자정에 새 문제가 열립니다. 공유 결과에는 정답이 포함되지
             않습니다.

@@ -1,6 +1,7 @@
 import type { Question } from "../../game";
 import type { PlayMode } from "../../modes";
 import { playResultText, questionLink, shareGrid } from "../../share";
+import { drawShareCard } from "../../share-image";
 import type { Round } from "../../store";
 import { ShareActions } from "./ShareActions";
 
@@ -30,8 +31,11 @@ export function PlayShare({ question, round, percent, playMode }: Props) {
       <ShareActions
         text={text}
         link={questionLink(window.location.href, question.id, playMode)}
-        grid={
-          playMode === "simple" ? null : shareGrid(question, round.revealed)
+        draw={() =>
+          drawShareCard(
+            playMode === "simple" ? null : shareGrid(question, round.revealed),
+            text.split("\n"),
+          )
         }
       />
     </div>

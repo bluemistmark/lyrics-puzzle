@@ -30,7 +30,7 @@ export function DailyPanel({ hidden, onOpenModal }: Props) {
       <div className="daily-heading">
         <div>
           <span className="daily-date">{daily.date.replaceAll("-", ".")}</span>
-          <h1>오늘의 문제</h1>
+          <h1>데일리 퀴즈</h1>
         </div>
         <span className="daily-badge">하루 한 곡</span>
       </div>

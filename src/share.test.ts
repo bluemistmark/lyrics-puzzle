@@ -5,6 +5,7 @@ import {
   parseSharedLink,
   playResultText,
   questionLink,
+  recordShareText,
   shareGrid,
 } from "./share.ts";
 
@@ -71,4 +72,17 @@ test("같은 문제 링크를 읽고, 모르는 모드는 클래식으로 봄", 
     mode: "classic",
   });
   assert.equal(parseSharedLink("https://example.com/?today=1"), null);
+});
+
+test("기록 공유 문구는 클래식 기록 요약만 담음", () => {
+  const text = recordShareText({
+    solved: 42,
+    best: 11,
+    dailyStreak: 3,
+    achieved: 7,
+    achievements: 37,
+  });
+  assert.equal(text.split("\n").length, 3);
+  assert.ok(text.includes("제목 정답 42문제"));
+  assert.ok(text.includes("업적 7/37"));
 });
