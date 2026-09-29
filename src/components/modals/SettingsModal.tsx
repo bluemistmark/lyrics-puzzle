@@ -1,15 +1,6 @@
 import { Settings } from "lucide-react";
-import type { Theme } from "../../theme";
+import { THEMES, type Theme } from "../../themes";
 import { NicknameForm } from "../NicknameForm";
-
-const themes: [Theme, string][] = [
-  ["system", "시스템"],
-  ["light", "라이트"],
-  ["dark", "다크"],
-  ["excel", "엑셀"],
-  ["notebook", "노트"],
-  ["console", "게임기"],
-];
 
 type Props = {
   theme: Theme;
@@ -28,7 +19,7 @@ export function SettingsModal({ theme, onThemeChange, onClose }: Props) {
       <fieldset className="theme-settings">
         <legend>화면 테마</legend>
         <div className="theme-options">
-          {themes.map(([value, label]) => (
+          {THEMES.map(([value, label]) => (
             <label key={value} className={theme === value ? "selected" : ""}>
               <input
                 type="radio"

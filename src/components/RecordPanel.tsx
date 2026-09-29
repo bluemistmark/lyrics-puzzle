@@ -2,6 +2,7 @@ import { RotateCcw } from "lucide-react";
 import { calendarWeeks, playLevel } from "../calendar";
 import { dailySummary, type DailySummary } from "../daily";
 import { useGame, type Stats } from "../store";
+import { Achievements } from "./Achievements";
 
 const items: [string, keyof Stats][] = [
   ["제목 정답", "solved"],
@@ -91,6 +92,7 @@ export function RecordPanel({ hidden, onReset }: Props) {
           </div>
         ))}
       </div>
+      <Achievements today={today} />
       <p className="record-note">
         기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도
         삭제됩니다. 잔디는 일반 플레이에서 제목을 맞히거나 포기한 문제 수로
