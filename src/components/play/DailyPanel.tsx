@@ -5,6 +5,7 @@ import { useGame } from "../../store";
 import type { ModalName } from "../Modal";
 import { HintButtons } from "./HintButtons";
 import { PuzzleCard } from "./PuzzleCard";
+import { ReportLink } from "./ReportLink";
 import { DailyRanking } from "./DailyRanking";
 import { ResultBox } from "./ResultBox";
 import { ShareResults } from "./ShareResults";
@@ -80,6 +81,7 @@ export function DailyPanel({ hidden, onOpenModal }: Props) {
           </button>
         </div>
       )}
+      <ReportLink onClick={() => onOpenModal("daily-report")} />
     </section>
   );
 }

@@ -572,6 +572,27 @@ dialog {
   color: #253421;
   box-shadow: 0 20px 100px #17261130;
 }
+/* Modal scrollbar: thin, colored from the dialog text so every theme gets a matching one.
+   Chrome/Edge 121+ and Firefox use the standard properties; Safari uses the ::-webkit ones. */
+dialog {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, currentColor 28%, transparent) transparent;
+}
+dialog::-webkit-scrollbar {
+  width: 10px;
+}
+dialog::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 20px;
+}
+dialog::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 28%, transparent) padding-box;
+}
+dialog::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, currentColor 45%, transparent);
+}
 dialog::backdrop {
   background: #20302066;
   backdrop-filter: blur(5px);
@@ -2575,6 +2596,107 @@ main [hidden] {
   margin-bottom: 8px;
   font-size: 15px;
   font-weight: 700;
+}
+/* 오류 제보 */
+.report-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 14px auto 0;
+  padding: 6px 8px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 12px;
+  opacity: 0.6;
+}
+.report-link:hover {
+  opacity: 0.9;
+}
+.report-general {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 10px;
+  background: none;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+.report-form fieldset {
+  margin: 0 0 16px;
+  padding: 0;
+  border: 0;
+}
+.report-form legend,
+.report-form label[for] {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.report-kinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.report-kinds label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.report-kinds label.selected {
+  border-color: currentColor;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  font-weight: 700;
+}
+/* Visually hidden radio kept inside its chip (modal inputs are width: 100% by default). */
+.report-kinds input {
+  position: absolute;
+  inset: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.report-kinds label:has(input:focus-visible) {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.report-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d8e0cc;
+  border-radius: 10px;
+  background: #fbfcf8;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+}
+[data-theme="dark"] .report-form textarea,
+[data-theme="console"] .report-form textarea {
+  border-color: #4a5a44;
+  background: transparent;
+}
+.report-count {
+  margin: 4px 2px 0;
+  font-size: 11px;
+  text-align: right;
+  opacity: 0.6;
 }
 /* 설정 > 계정 */
 .account-section {

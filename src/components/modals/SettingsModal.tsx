@@ -1,4 +1,4 @@
-import { Settings } from "lucide-react";
+import { Flag, Settings } from "lucide-react";
 import { THEMES, type Theme } from "../../themes";
 import { AccountSection } from "../AccountSection";
 import { NicknameForm } from "../NicknameForm";
@@ -7,9 +7,15 @@ type Props = {
   theme: Theme;
   onThemeChange: (theme: Theme) => void;
   onClose: () => void;
+  onReport: () => void;
 };
 
-export function SettingsModal({ theme, onThemeChange, onClose }: Props) {
+export function SettingsModal({
+  theme,
+  onThemeChange,
+  onClose,
+  onReport,
+}: Props) {
   return (
     <>
       <span className="modal-icon">
@@ -36,6 +42,9 @@ export function SettingsModal({ theme, onThemeChange, onClose }: Props) {
         </div>
       </fieldset>
       <NicknameForm submitLabel="닉네임 저장" />
+      <button type="button" className="report-general" onClick={onReport}>
+        <Flag size={15} aria-hidden="true" /> 오류·의견 보내기
+      </button>
       <button className="secondary" onClick={onClose}>
         닫기
       </button>

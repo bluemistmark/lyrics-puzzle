@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 개요
 
-NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음. 예외는 오늘의 랭킹, 체감 난이도 응답, 선택 로그인뿐이며 실패해도 게임은 동작해야 함)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
+NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음. 예외는 오늘의 랭킹, 체감 난이도 응답, 오류 제보, 선택 로그인뿐이며 실패해도 게임은 동작해야 함)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
 
 ## 명령어
 
@@ -51,6 +51,7 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
   - 환경 변수가 없으면 `supabase`가 `null`이고 설정 안내 화면만 보인다.
 - **오늘의 랭킹** — `api/ranking.ts`(GET 조회·POST 결과 제출·PUT 닉네임, service role로 `players`/`daily_scores`와 `daily_ranking()` RPC 사용) ↔ `src/ranking.ts`(zustand persist `lyrics-ranking-v1`: 토큰·닉네임·제출한 날짜·닉네임 질문 여부). 플레이어 ID는 브라우저 토큰의 SHA-256이고 서버는 토큰을 저장하지 않는다. 제출값은 `dailyHistory[오늘]`(처음 끝낸 순간의 값)이고, `DailyRanking`이 오늘 탭에서 제출 후 조회한다. 첫 정답 뒤 닉네임 질문은 `App`의 `afterDailySolve`가 띄운다(effect 아님). 닉네임 규칙은 `src/nickname.ts`이고 `api/ranking.ts`가 복사해 쓰며 `api/ranking.test.ts`가 둘이 같은지 검사한다. 어드민 `RankingTab`은 supabase-js로 직접 읽고 `players.hidden`만 바꾼다(컬럼 권한으로 제한).
 - **체감 난이도** — 문제를 끝내면 `ResultBox` 안의 `DifficultyVote`가 쉬워요/보통이에요/어려워요를 받는다. `src/difficulty.ts`(persist `lyrics-difficulty-v1`, 문제ID별 내 응답)가 로컬에 먼저 반영하고 `/api/difficulty`(`api/difficulty.ts`)에 보내며, 실패하면 되돌린다. 토큰은 `useRanking.getState().ensureToken()`을 공유하고 요청은 `ranking.ts`의 `requestJson`을 쓴다. DB는 `difficulty_votes`(PK 문제ID+플레이어, 다시 고르면 병합)와 집계 뷰 `question_difficulty`(security_invoker)이고, 어드민 `DifficultyTab`이 뷰를 읽는다. 응답 값 목록은 `src/difficulty.test.ts`가 API와 같은지 검사한다.
+- **오류 제보** — `ReportLink`(플레이·오늘 패널)와 설정의 버튼이 `ReportModal`을 연다(모달 이름 `report`/`daily-report`/`general-report`, 문제 화면이면 스토어에서 현재 문제 ID를 붙임). `src/report.ts`(종류 `REPORT_KINDS`, `sendReport`) → `api/report.ts`(검증·내용 정리, 토큰 해시 기준 10분 5건 제한) → `reports` 테이블 → 어드민 `ReportsTab`(상태 new/done, 삭제). 종류 목록은 `src/report.test.ts`가 API와 같은지 검사한다. 탈퇴 시 `api/account.ts`가 그 토큰의 제보도 지운다.
 - **로그인(선택)** — `src/account/index.ts`(게임 번들: 상태 `useAccount`, `startAccount`는 `main.tsx`에서 호출, 저장된 세션(`lyrics-auth` 키)이나 OAuth 복귀(`?code=`)가 있을 때만 `session.ts`를 불러옴) → `session.ts`(supabase-js PKCE, 카카오·구글, `player_saves` 읽기→합치기→적용→쓰기, 스토어 변경 4초 뒤·탭 숨김 시 재동기화) → `save.ts`(순수: `SaveData`, `mergeSaves`는 max·합집합·먼저 달성한 날짜로 멱등, `resetAt`이 더 나중인 쪽의 기록이 이김, 랭킹 토큰은 계정 것을 따름) / `snapshot.ts`(세 스토어 ↔ `SaveData`, 적용 시 업적 알림 없음). 게임 스토어의 `reset`은 `resetAt`을 갱신한다. 탈퇴는 `api/account.ts`(JWT 확인 → 랭킹 플레이어 삭제 → auth 사용자 삭제, `player_saves`는 cascade). 설정 모달 맨 위 `AccountSection`이 UI다. 개인정보 처리방침은 `public/privacy.html`(Vercel `/privacy` 리라이트)이고, 서버로 보내거나 저장하는 항목을 바꾸면 이 문서와 `Footer`의 수집 안내도 함께 고친다.
 - **테스트의 가짜 저장소** — 스토어를 불러오는 테스트는 `src/testing/fake-storage.ts`를 먼저 import한다. 모든 테스트 파일이 한 프로세스에서 돌고 스토어는 생성 시점의 저장소에 묶이므로, 파일마다 따로 만들면 서로 간섭한다. 공유 스토어(랭킹·난이도 등)에 의존하는 테스트는 시작할 때 필요한 상태를 직접 초기화한다.
 

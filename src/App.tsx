@@ -10,6 +10,7 @@ import { GiveUpModal } from "./components/modals/GiveUpModal";
 import { HelpModal } from "./components/modals/HelpModal";
 import { ResetModal } from "./components/modals/ResetModal";
 import { NicknameModal } from "./components/modals/NicknameModal";
+import { ReportModal } from "./components/modals/ReportModal";
 import { SettingsModal } from "./components/modals/SettingsModal";
 import { TitleModal } from "./components/modals/TitleModal";
 import { UnitModal } from "./components/modals/UnitModal";
@@ -136,8 +137,14 @@ export function App() {
             theme={theme}
             onThemeChange={setTheme}
             onClose={close}
+            onReport={() => setModal("general-report")}
           />
         )}
+        {modal === "report" && <ReportModal mode="play" onClose={close} />}
+        {modal === "daily-report" && (
+          <ReportModal mode="daily" onClose={close} />
+        )}
+        {modal === "general-report" && <ReportModal onClose={close} />}
         {modal === "nickname" && <NicknameModal onClose={close} />}
         {modal === "help" && <HelpModal onClose={close} />}
         {modal === "giveup" && <GiveUpModal onClose={close} />}

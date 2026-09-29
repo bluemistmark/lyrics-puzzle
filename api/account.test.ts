@@ -31,7 +31,7 @@ const remove = (headers: Record<string, string>, body?: object) =>
   );
 const user = () => new Response('{"id":"user-1"}');
 
-test("탈퇴는 로그인한 사용자를 확인한 뒤 랭킹 플레이어와 계정을 지움", async () => {
+test("탈퇴는 로그인한 사용자를 확인한 뒤 랭킹 플레이어·제보와 계정을 지움", async () => {
   mockFetch((call) =>
     call.url.endsWith("/auth/v1/user")
       ? user()
@@ -46,8 +46,13 @@ test("탈퇴는 로그인한 사용자를 확인한 뒤 랭킹 플레이어와 �
   assert.equal(calls[0].auth, "Bearer user-jwt");
   assert.match(calls[1].url, /\/rest\/v1\/players\?id=eq\.[0-9a-f]{64}$/);
   assert.equal(calls[1].method, "DELETE");
-  assert.equal(calls[2].url, "https://db.test/auth/v1/admin/users/user-1");
-  assert.equal(calls[2].auth, "Bearer service-key");
+  assert.match(
+    calls[2].url,
+    /\/rest\/v1\/reports\?player_id=eq\.[0-9a-f]{64}$/,
+  );
+  assert.equal(calls[2].method, "DELETE");
+  assert.equal(calls[3].url, "https://db.test/auth/v1/admin/users/user-1");
+  assert.equal(calls[3].auth, "Bearer service-key");
 });
 
 test("랭킹 토큰이 없으면 계정만 지움", async () => {

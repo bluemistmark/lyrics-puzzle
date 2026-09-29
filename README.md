@@ -26,7 +26,7 @@ React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 
 ### 최초 설정
 
-1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/](supabase/migrations/)의 파일을 이름 순서대로 실행합니다(`20260928000000_init.sql` → `20260929000000_artists.sql` → `20260930000000_releases.sql` → `20261001000000_ranking.sql` → `20261002000000_difficulty.sql` → `20261003000000_player_saves.sql`). 이미 실행한 파일은 건너뛰고 새 파일만 실행하면 됩니다. 기존 곡에서 가수 목록과 접두어를 자동으로 채웁니다.
+1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/](supabase/migrations/)의 파일을 이름 순서대로 실행합니다(`20260928000000_init.sql` → `20260929000000_artists.sql` → `20260930000000_releases.sql` → `20261001000000_ranking.sql` → `20261002000000_difficulty.sql` → `20261003000000_player_saves.sql` → `20261004000000_reports.sql`). 이미 실행한 파일은 건너뛰고 새 파일만 실행하면 됩니다. 기존 곡에서 가수 목록과 접두어를 자동으로 채웁니다.
 2. **관리자 계정**: Authentication > Users > Add user로 이메일·비밀번호 계정을 만들고, SQL Editor에서 `insert into public.admins (email) values ('이메일');`을 실행합니다. Authentication 설정에서 새 가입(Allow new users to sign up)은 꺼 두는 것을 권장합니다. 가입하더라도 `admins`에 없으면 데이터에 접근할 수 없습니다.
 3. **환경 변수**: [.env.example](.env.example)을 `.env.local`로 복사해 값을 채우고, Vercel > Project Settings > Environment Variables에도 같은 이름으로 등록합니다(Production, Preview).
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`: 어드민 화면용. 공개돼도 되는 값이며, Vite가 `VITE_`로 시작하는 변수만 브라우저에 넘겨주므로 **이 두 개는 접두사가 반드시 있어야** 합니다.
@@ -80,6 +80,10 @@ React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 5. **카카오**: Kakao Developers에서 앱을 만들고 카카오 로그인을 켠 뒤, Redirect URI에 같은 Supabase 콜백 URL을 넣고 REST API 키와 Client Secret을 Supabase에 입력합니다. Supabase는 닉네임·프로필 사진·이메일 동의 항목을 요청하므로 동의 항목을 설정해야 하며, 이메일(account_email)은 비즈 앱 전환이 필요할 수 있습니다. 실제 요구 사항은 콘솔에서 확인하세요.
 
 로그인은 이메일·이름 같은 개인정보를 받습니다. 개인정보 처리방침은 `public/privacy.html`(배포 주소 `/privacy`, 게임 푸터와 설정의 계정 카드에서 링크)이며 **초안**입니다. 문서 안의 `[확인 필요]` 항목(Supabase 리전, 수탁자 연락처, 로그 보관 기간)을 채우고, 공개 전에 법무·개인정보 전문가 검토를 받으세요. 구글 OAuth 브랜딩의 개인정보처리방침 URL에는 `https://<도메인>/privacy`를 넣습니다. 수집 항목이 바뀌는 기능을 추가하면 이 문서도 함께 고칩니다.
+
+### 오류 제보
+
+플레이·오늘 탭의 문제 아래 "이 문제 오류 제보"와 설정의 "오류·의견 보내기"로 제보를 받습니다. 문제 화면에서 보내면 문제 ID와 모드가 함께 저장되고, 연락처는 받지 않습니다. 제보는 `/api/report`로 `reports` 테이블에 저장되며(같은 사람은 10분에 5건까지), 어드민 "제보" 탭에서 곡·첫 줄과 함께 보고 처리 완료로 표시하거나 삭제합니다. 개인정보 처리방침에 따라 처리가 끝난 제보는 삭제하고 1년 넘게 두지 않습니다(자동 삭제는 없음).
 
 ### 체감 난이도
 
