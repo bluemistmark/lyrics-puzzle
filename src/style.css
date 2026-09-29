@@ -519,6 +519,49 @@ footer small {
   margin: 4px 0 0;
   line-height: 1.7;
 }
+.success-box > div {
+  flex: 1;
+  min-width: 0;
+}
+.success-box:has(.difficulty-vote) .success-icon {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+/* 체감 난이도: colors inherit from the result box so every theme applies */
+.difficulty-vote {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed color-mix(in srgb, currentColor 25%, transparent);
+}
+.difficulty-vote > span {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.difficulty-vote [role="group"] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.difficulty-vote button {
+  padding: 8px 4px;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  word-break: keep-all;
+}
+.difficulty-vote button[aria-pressed="true"] {
+  border-color: currentColor;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  font-weight: 800;
+}
+.success-box p.difficulty-error {
+  margin-top: 6px;
+}
 dialog {
   border: 1px solid #e0e6d6;
   border-radius: 24px;
@@ -1303,6 +1346,88 @@ main [hidden] {
 .record-panel .reset-btn {
   margin: 20px auto;
 }
+.record-subtitle {
+  margin: 22px 2px 0;
+  font-size: 14px;
+  letter-spacing: -0.3px;
+}
+.record-subtitle + .record-grid {
+  margin-top: 10px;
+}
+.record-item.play-grass {
+  display: block;
+  --grass-on: #4f7a2a;
+  --grass-empty: #d8e0cc;
+}
+.grass-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, auto);
+  gap: 3px;
+  margin-top: 12px;
+}
+.grass-cell {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 3px;
+  background: var(--grass-empty);
+}
+.grass-cell.level-1 {
+  background: color-mix(in srgb, var(--grass-on) 30%, var(--grass-empty));
+}
+.grass-cell.level-2 {
+  background: color-mix(in srgb, var(--grass-on) 55%, var(--grass-empty));
+}
+.grass-cell.level-3 {
+  background: color-mix(in srgb, var(--grass-on) 78%, var(--grass-empty));
+}
+.grass-cell.level-4 {
+  background: var(--grass-on);
+}
+.grass-cell.future {
+  visibility: hidden;
+}
+.grass-cell.today {
+  outline: 1.5px solid currentColor;
+  outline-offset: 1px;
+}
+.grass-legend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 3px;
+  margin-top: 10px;
+  font-size: 11px;
+}
+.grass-legend .grass-cell {
+  width: 10px;
+}
+.grass-legend .grass-cell:first-child {
+  margin-left: 3px;
+}
+.grass-legend .grass-cell:last-child {
+  margin-right: 3px;
+}
+[data-theme="dark"] .play-grass {
+  --grass-on: #c6f08a;
+  --grass-empty: #36412f;
+}
+[data-theme="excel"] .play-grass {
+  --grass-on: #17683b;
+  --grass-empty: #e2ebe3;
+}
+[data-theme="notebook"] .play-grass {
+  --grass-on: #c2517f;
+  --grass-empty: #f1dce5;
+}
+[data-theme="console"] .play-grass {
+  --grass-on: #7cf5d8;
+  --grass-empty: #3d3558;
+}
+[data-theme="excel"] .grass-cell,
+[data-theme="console"] .grass-cell {
+  border-radius: 0;
+}
 [data-theme="dark"] .game-tabs {
   border-color: #3d4b39;
 }
@@ -1488,6 +1613,78 @@ main [hidden] {
 }
 [data-theme="dark"] .tab-dot {
   background: #ff9a73;
+}
+
+/* 도감 tab: reuses record styles so every theme applies; colors below inherit. */
+.collection-summary {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #627050;
+}
+.collection-summary b {
+  font-size: 15px;
+  color: #286442;
+}
+.record-item.collection-unit {
+  display: block;
+}
+.collection-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  cursor: pointer;
+}
+.collection-head::-webkit-details-marker {
+  display: none;
+}
+.collection-head span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.collection-head svg {
+  transition: transform 0.2s;
+}
+.collection-unit[open] .collection-head svg {
+  transform: rotate(180deg);
+}
+.collection-unit .progress-track {
+  margin: 10px 0 0;
+}
+.collection-songs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.collection-songs li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.collection-songs small {
+  flex: none;
+  font-size: 12px;
+  opacity: 0.7;
+}
+.collection-songs .locked {
+  opacity: 0.45;
+  letter-spacing: 2px;
+}
+[data-theme="dark"] .collection-summary {
+  color: #adbba3;
+}
+[data-theme="dark"] .collection-summary b {
+  color: #e1ffb0;
 }
 
 /* Rights notice under every tab */
@@ -2164,6 +2361,109 @@ main [hidden] {
   margin-top: 11px;
   line-height: 1.5;
 }
+/* 오늘의 랭킹 (reuses the share box so every theme styles it) */
+.share-results h2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ranking-me {
+  margin-top: 12px !important;
+  font-size: 13px !important;
+}
+.ranking-me b {
+  font-size: 15px;
+}
+.ranking-me button,
+.ranking-error button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 11px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ranking-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ranking-list {
+  display: grid;
+  gap: 2px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+.ranking-list li {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 8px;
+}
+.ranking-list li.me {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  font-weight: 700;
+}
+.ranking-list li.ranking-gap {
+  display: block;
+  padding: 0;
+  text-align: center;
+  opacity: 0.5;
+}
+.ranking-more {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+.ranking-rank {
+  font-weight: 700;
+  text-align: center;
+}
+.ranking-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ranking-score {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.ranking-rule {
+  margin-top: 12px !important;
+  line-height: 1.6;
+}
+.nickname-form {
+  margin-top: 0 !important;
+}
+.nickname-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.error.saved {
+  color: inherit;
+  opacity: 0.75;
+}
 [data-theme="dark"] .daily-date,
 [data-theme="dark"] .share-results > p {
   color: #adbba3;
@@ -2515,4 +2815,17 @@ main [hidden] {
     margin-bottom: 10px;
     letter-spacing: 0;
   }
+}
+/* 도감 summary per theme */
+[data-theme="notebook"] .collection-summary {
+  color: #8f7281;
+}
+[data-theme="notebook"] .collection-summary b {
+  color: #a34f78;
+}
+[data-theme="console"] .collection-summary {
+  color: #9dbdb8;
+}
+[data-theme="console"] .collection-summary b {
+  color: #b8ffe5;
 }

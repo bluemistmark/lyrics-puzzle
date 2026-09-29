@@ -1,9 +1,11 @@
 import { AudioLines } from "lucide-react";
+import { dailySummary } from "../../daily";
 import { useRound } from "../../hooks/useRound";
 import { useGame } from "../../store";
 import type { ModalName } from "../Modal";
 import { HintButtons } from "./HintButtons";
 import { PuzzleCard } from "./PuzzleCard";
+import { DailyRanking } from "./DailyRanking";
 import { ResultBox } from "./ResultBox";
 import { ShareResults } from "./ShareResults";
 import { WordForm } from "./WordForm";
@@ -14,6 +16,7 @@ type Props = { hidden: boolean; onOpenModal: (name: ModalName) => void };
 export function DailyPanel({ hidden, onOpenModal }: Props) {
   const { round, question, percent, full } = useRound("daily");
   const daily = useGame((s) => s.daily);
+  const history = useGame((s) => s.dailyHistory);
   const finished = round.solved || round.givenUp;
   return (
     <section
@@ -50,7 +53,20 @@ export function DailyPanel({ hidden, onOpenModal }: Props) {
       <WordHistory words={round.words} />
       <HintButtons question={question} round={round} full={full} mode="daily" />
       {finished ? (
-        <ShareResults date={daily.date} round={round} percent={percent} />
+        <>
+          <ShareResults
+            date={daily.date}
+            round={round}
+            percent={percent}
+            streak={dailySummary(history, daily.date).current}
+          />
+          <DailyRanking
+            key={daily.date}
+            date={daily.date}
+            result={history[daily.date]}
+            onOpenModal={onOpenModal}
+          />
+        </>
       ) : (
         <div className="bottom-actions">
           <button

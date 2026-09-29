@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 개요
 
-NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
+NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음. 예외는 오늘의 랭킹과 체감 난이도 응답뿐이며 실패해도 게임은 동작해야 함)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
 
 ## 명령어
 
@@ -34,13 +34,13 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
 - **공개 키 형식**: `"${줄}:${토큰}:${글자인덱스}"` (한글), `"${줄}:${토큰}:en"` (영어 토큰 전체). `matches`, `allKeys`, `progress`, 스토어의 `revealed`, 힌트 로직이 모두 이 형식에 의존한다. 공백·문장부호 토큰은 키가 없어 완성률에서 제외된다.
 - `matches` 규칙: 영어는 원문/표시발음/대체발음과 전체 일치해야 공개. 한글은 입력과 토큰 사이 연속 2글자 이상 공통 부분을 공개하고, 1글자 입력은 토큰 전체가 그 글자이거나 해당 토큰이 이미 일부 공개된 경우에만 인정.
 - `pickQuestion`: 선택 유닛 안에서 `seen`에 없는 문제 우선, 가능하면 직전과 다른 곡. 풀을 한 바퀴 돌면 `store.next`가 `seen`을 리셋.
-- **`store.ts`** — Zustand + `persist`. localStorage 키 `chosung-lyrics-live-v1` (`notice`는 저장 제외). `merge`는 저장된 `round.id`가 현재 catalog에 없으면 저장값을 버리고, 없어진 유닛은 `selected`에서 걸러낸다. 모듈 하단에서 첫 문제를 즉시 저장해 새로고침해도 같은 문제가 유지되게 한다. 예전 키 `chosung-lyrics-v1`은 삭제하지 말고 보존한다.
+- **`store.ts`** — Zustand + `persist`. localStorage 키 `chosung-lyrics-live-v1` (`notice`는 저장 제외). `merge`는 저장된 `round.id`가 현재 catalog에 없으면 저장값을 버리고, 없어진 유닛은 `selected`에서 걸러낸다. 모듈 하단에서 첫 문제를 즉시 저장해 새로고침해도 같은 문제가 유지되게 한다. 예전 키 `chosung-lyrics-v1`은 삭제하지 말고 보존한다. `collected`(곡 도감)는 두 모드에서 제목을 맞힌 문제 ID 목록이고, 화면용 집계는 순수 함수 `src/collection.ts`의 `buildCollection`이 한다. `dailyHistory`는 날짜별 오늘의 문제 첫 종료 결과(정답·포기)이고, 연속 정답·평균 입력 수는 `daily.ts`의 `dailySummary`가 계산한다. 오늘의 문제는 다시 풀 수 없으므로 `reset`해도 오늘 결과는 남긴다. `playLog`는 일반 모드에서 끝낸(제목 정답·포기) 문제 수를 한국 날짜별로 센 것으로, 기록 탭 잔디(`src/calendar.ts`의 `calendarWeeks`·`playLevel`)에 쓴다.
 - **UI** — `main.tsx`는 마운트만 한다. `App.tsx`가 탭(`activeTab`)과 열린 모달(`ModalName`) 상태를 갖고 `components/` 아래를 조립한다.
   - `components/play/*`: 플레이 화면. `PlayPanel`이 `hooks/useRound`(현재 문제·진행률)를 한 번 호출해 하위에 props로 넘기고, 하위 컴포넌트는 스토어 액션만 `useGame((s) => s.xxx)` 셀렉터로 직접 가져온다. 데이터 표시 쪽은 props, 액션은 셀렉터라는 구분을 유지한다.
   - `components/modals/*`: 모달 내용만 담당하고, 공용 `components/Modal.tsx`가 네이티브 `<dialog>` 하나를 열고 닫는다. 모달은 열릴 때마다 새로 마운트되므로 입력 초안 같은 로컬 state는 닫으면 사라진다.
   - 문제별 로컬 state 초기화는 `key={round.id}`로 리마운트해서 처리한다(`WordForm` 참고).
   - `hooks/useModelContextTools`: `document.modelContext`가 있으면 WebMCP 도구(`guess_lyric_word`)를 등록한다.
-  - 테마는 `theme.ts`(`lyrics-theme` 키, `data-theme` 속성)에서 관리하며, `useTheme`은 `App`에서만 호출하고 설정 모달에는 props로 넘긴다(여러 곳에서 호출하면 상태가 따로 논다).
+  - 테마는 `theme.ts`(`lyrics-theme` 키, `data-theme` 속성)에서 관리하며, `useTheme`은 `App`에서만 호출하고 설정 모달(`SettingsModal`: 테마 + 랭킹 닉네임)에는 props로 넘긴다(여러 곳에서 호출하면 상태가 따로 논다).
   - 한글 IME 조합 중 Enter 제출 방지는 `utils/ime.ts`의 `blockComposingEnter`를 쓴다.
 - **어드민** (`admin.html` → `src/admin/`) — 별도 Vite 엔트리(`vite.config.ts`)라 supabase-js는 어드민 번들에만 들어간다. 게임 코드(`src/components`, `game.ts` 등)에서 `src/admin/`이나 supabase-js를 import하지 말 것.
   - `admin/store.ts`(zustand)가 데이터 테이블 전체를 메모리에 들고, 각 액션은 Supabase에 먼저 쓰고 성공하면 로컬 상태를 갱신한다. 에러는 `describeError`로 한국어 메시지로 바꿔 throw한다.
@@ -49,6 +49,8 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
   - 문제 대량 등록: `admin/bulk.ts`의 `parseBulkQuestions`(탭이 있으면 엑셀 행 모드, 아니면 빈 줄 구분)로 나누고 `BulkQuestionForm`이 미리보기(연속 ID, 줄 수 오류, 기존·입력 내 중복, 사전 누락)를 보여 준다. `addQuestions`는 한 번의 insert라 전부 저장되거나 전부 실패한다.
   - 게시·소식: `PublishTab`이 `draftRelease`(`src/data/releases.ts`)로 직전 release의 `song_ids`/`question_ids` 스냅샷과 현재 catalog를 비교해 새 곡·문제를 계산하고, 새 기능·메모와 함께 `/api/publish`에 보낸다. API는 release를 insert한 뒤 Deploy Hook을 호출하고, 훅이 실패하면 그 release를 지운다. 빌드(`pull-catalog`)는 `toNews`로 최근 소식을 `catalog.news`에 넣고, 게임은 `NewsPanel`로 보여 준다. 소식 확인 여부는 `hooks/useNewsSeen`(localStorage `lyrics-news-seen`). 어드민의 releases 로딩 실패는 치명적이지 않게(`releasesError`) 처리한다.
   - 환경 변수가 없으면 `supabase`가 `null`이고 설정 안내 화면만 보인다.
+- **오늘의 랭킹** — `api/ranking.ts`(GET 조회·POST 결과 제출·PUT 닉네임, service role로 `players`/`daily_scores`와 `daily_ranking()` RPC 사용) ↔ `src/ranking.ts`(zustand persist `lyrics-ranking-v1`: 토큰·닉네임·제출한 날짜·닉네임 질문 여부). 플레이어 ID는 브라우저 토큰의 SHA-256이고 서버는 토큰을 저장하지 않는다. 제출값은 `dailyHistory[오늘]`(처음 끝낸 순간의 값)이고, `DailyRanking`이 오늘 탭에서 제출 후 조회한다. 첫 정답 뒤 닉네임 질문은 `App`의 `afterDailySolve`가 띄운다(effect 아님). 닉네임 규칙은 `src/nickname.ts`이고 `api/ranking.ts`가 복사해 쓰며 `api/ranking.test.ts`가 둘이 같은지 검사한다. 어드민 `RankingTab`은 supabase-js로 직접 읽고 `players.hidden`만 바꾼다(컬럼 권한으로 제한).
+- **체감 난이도** — 문제를 끝내면 `ResultBox` 안의 `DifficultyVote`가 쉬워요/보통이에요/어려워요를 받는다. `src/difficulty.ts`(persist `lyrics-difficulty-v1`, 문제ID별 내 응답)가 로컬에 먼저 반영하고 `/api/difficulty`(`api/difficulty.ts`)에 보내며, 실패하면 되돌린다. 토큰은 `useRanking.getState().ensureToken()`을 공유하고 요청은 `ranking.ts`의 `requestJson`을 쓴다. DB는 `difficulty_votes`(PK 문제ID+플레이어, 다시 고르면 병합)와 집계 뷰 `question_difficulty`(security_invoker)이고, 어드민 `DifficultyTab`이 뷰를 읽는다. 응답 값 목록은 `src/difficulty.test.ts`가 API와 같은지 검사한다.
 
 ## 주의 사항
 

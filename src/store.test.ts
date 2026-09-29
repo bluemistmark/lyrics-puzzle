@@ -114,3 +114,90 @@ test("가수명 힌트는 각 모드에서 한 번만 사용됨", () => {
   assert.equal(useGame.getState().daily.round.hints, 1);
   assert.equal(useGame.getState().round.hints, 1);
 });
+
+test("제목을 맞힌 문제만 도감에 한 번씩 등록되고 초기화하면 비워짐", () => {
+  useGame.getState().reset();
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().collected, []);
+  useGame.getState().next();
+  const id = useGame.getState().round.id;
+  const q = questions.find((q) => q.id === id)!;
+  useGame.getState().solve("틀린 제목");
+  assert.deepEqual(useGame.getState().collected, []);
+  assert.ok(useGame.getState().solve(q.title));
+  assert.deepEqual(useGame.getState().collected, [id]);
+
+  const date = koreaDate(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000));
+  useGame.getState().syncDaily(date);
+  const daily = useGame.getState().daily.round.id;
+  const dq = questions.find((q) => q.id === daily)!;
+  assert.ok(useGame.getState().solve(dq.title, "daily"));
+  assert.deepEqual(useGame.getState().collected, [...new Set([id, daily])]);
+
+  useGame.getState().reset();
+  assert.deepEqual(useGame.getState().collected, []);
+});
+
+test("도감 이전 저장값은 현재 맞힌 문제로 도감을 시작", async () => {
+  useGame.getState().reset();
+  useGame.getState().syncDaily(koreaDate());
+  const q = questions.find((q) => q.id === useGame.getState().round.id)!;
+  useGame.getState().solve(q.title);
+  useGame.setState({ collected: [] });
+  const saved = JSON.parse(memory.get("chosung-lyrics-live-v1")!);
+  delete saved.state.collected;
+  memory.set("chosung-lyrics-live-v1", JSON.stringify(saved));
+  await useGame.persist.rehydrate();
+  assert.deepEqual(useGame.getState().collected, [q.id]);
+});
+
+test("오늘의 문제는 처음 끝낸 결과만 날짜별로 기록되고 초기화해도 오늘 결과는 유지", () => {
+  useGame.setState({ dailyHistory: {} });
+  const date = koreaDate(new Date(Date.now() + 5 * 24 * 60 * 60 * 1000));
+  useGame.getState().syncDaily(date);
+  const q = questions.find((q) => q.id === useGame.getState().daily.round.id)!;
+  useGame.getState().guess("없는단어없는단어", "daily");
+  useGame.getState().hint("artist", "daily");
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().dailyHistory, {});
+  assert.ok(useGame.getState().solve(q.title, "daily"));
+  const recorded = { [date]: { solved: true, guesses: 1, hints: 1 } };
+  assert.deepEqual(useGame.getState().dailyHistory, recorded);
+  useGame.getState().guess("또없는단어", "daily");
+  useGame.getState().giveUp("daily");
+  assert.deepEqual(useGame.getState().dailyHistory, recorded);
+
+  const next = koreaDate(new Date(Date.now() + 6 * 24 * 60 * 60 * 1000));
+  useGame.getState().syncDaily(next);
+  useGame.getState().giveUp("daily");
+  assert.deepEqual(useGame.getState().dailyHistory[next], {
+    solved: false,
+    guesses: 0,
+    hints: 0,
+  });
+  useGame.getState().reset();
+  assert.deepEqual(Object.keys(useGame.getState().dailyHistory), [next]);
+  assert.deepEqual(useGame.getState().stats.solved, 0);
+});
+
+test("일반 모드에서 끝낸 문제만 오늘 날짜의 플레이 수로 세고 초기화하면 비워짐", () => {
+  useGame.getState().reset();
+  const today = koreaDate();
+  const q = questions.find((q) => q.id === useGame.getState().round.id)!;
+  useGame.getState().solve("틀린 제목");
+  assert.deepEqual(useGame.getState().playLog, {});
+  useGame.getState().solve(q.title);
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().playLog, { [today]: 1 });
+  useGame.getState().next();
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().playLog, { [today]: 2 });
+
+  useGame
+    .getState()
+    .syncDaily(koreaDate(new Date(Date.now() + 8 * 24 * 60 * 60 * 1000)));
+  useGame.getState().giveUp("daily");
+  assert.deepEqual(useGame.getState().playLog, { [today]: 2 });
+  useGame.getState().reset();
+  assert.deepEqual(useGame.getState().playLog, {});
+});

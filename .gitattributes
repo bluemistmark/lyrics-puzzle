@@ -1,0 +1,2 @@
+# Prettier writes LF; keep the working tree LF on Windows too (core.autocrlf would convert to CRLF).
+* text=auto eol=lf

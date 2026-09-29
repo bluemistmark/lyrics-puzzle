@@ -1,8 +1,8 @@
-import { FileSpreadsheet, HelpCircle, Palette } from "lucide-react";
+import { FileSpreadsheet, HelpCircle, Settings } from "lucide-react";
 
-type Props = { discreet: boolean; onHelp: () => void; onTheme: () => void };
+type Props = { discreet: boolean; onHelp: () => void; onSettings: () => void };
 
-export function Header({ discreet, onHelp, onTheme }: Props) {
+export function Header({ discreet, onHelp, onSettings }: Props) {
   return (
     <header className="topbar">
       <a className="brand" href="#">
@@ -26,11 +26,11 @@ export function Header({ discreet, onHelp, onTheme }: Props) {
         </button>
         <button
           className="icon-btn theme-trigger"
-          aria-label="테마 설정"
-          onClick={onTheme}
+          aria-label="설정"
+          onClick={onSettings}
         >
-          <Palette size={19} />
-          <span>테마</span>
+          <Settings size={19} />
+          <span>설정</span>
         </button>
       </div>
     </header>

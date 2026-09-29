@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { CollectionPanel } from "./components/CollectionPanel";
 import { Footer } from "./components/Footer";
 import { GameTabs, type Tab } from "./components/GameTabs";
 import { Header } from "./components/Header";
@@ -7,7 +8,8 @@ import { NewsPanel } from "./components/NewsPanel";
 import { GiveUpModal } from "./components/modals/GiveUpModal";
 import { HelpModal } from "./components/modals/HelpModal";
 import { ResetModal } from "./components/modals/ResetModal";
-import { ThemeModal } from "./components/modals/ThemeModal";
+import { NicknameModal } from "./components/modals/NicknameModal";
+import { SettingsModal } from "./components/modals/SettingsModal";
 import { TitleModal } from "./components/modals/TitleModal";
 import { UnitModal } from "./components/modals/UnitModal";
 import { DailyPanel } from "./components/play/DailyPanel";
@@ -17,6 +19,7 @@ import { useModelContextTools } from "./hooks/useModelContextTools";
 import { useNewsSeen } from "./hooks/useNewsSeen";
 import { news } from "./game";
 import { koreaDate } from "./daily";
+import { useRanking } from "./ranking";
 import { useGame } from "./store";
 import { useTheme } from "./theme";
 
@@ -48,6 +51,11 @@ export function App() {
     if (tab === "news") markSeen();
   };
   const close = () => setModal(null);
+  // The first daily title guess asks for a ranking nickname (once, skippable).
+  const afterDailySolve = () => {
+    const { nickname, asked } = useRanking.getState();
+    setModal(nickname || asked ? null : "nickname");
+  };
   useModelContextTools();
   return (
     <>
@@ -70,7 +78,7 @@ export function App() {
         <Header
           discreet={theme === "excel"}
           onHelp={() => setModal("help")}
-          onTheme={() => setModal("theme")}
+          onSettings={() => setModal("settings")}
         />
         <main>
           {theme === "console" && (
@@ -91,6 +99,7 @@ export function App() {
             hidden={activeTab !== "record"}
             onReset={() => setModal("reset")}
           />
+          <CollectionPanel hidden={activeTab !== "collection"} />
           <NewsPanel hidden={activeTab !== "news"} />
         </main>
         {theme === "console" && (
@@ -113,11 +122,18 @@ export function App() {
       </div>
       <Modal open={modal !== null} onClose={close}>
         {modal === "title" && <TitleModal onClose={close} />}
-        {modal === "daily-title" && <TitleModal onClose={close} mode="daily" />}
-        {modal === "units" && <UnitModal onClose={close} />}
-        {modal === "theme" && (
-          <ThemeModal theme={theme} onThemeChange={setTheme} onClose={close} />
+        {modal === "daily-title" && (
+          <TitleModal onClose={afterDailySolve} mode="daily" />
         )}
+        {modal === "units" && <UnitModal onClose={close} />}
+        {modal === "settings" && (
+          <SettingsModal
+            theme={theme}
+            onThemeChange={setTheme}
+            onClose={close}
+          />
+        )}
+        {modal === "nickname" && <NicknameModal onClose={close} />}
         {modal === "help" && <HelpModal onClose={close} />}
         {modal === "giveup" && <GiveUpModal onClose={close} />}
         {modal === "daily-giveup" && (
