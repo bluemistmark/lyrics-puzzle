@@ -1,5 +1,5 @@
-import { Check, Mic2, Sparkles } from "lucide-react";
-import { songs, type Question } from "../../game";
+import { Check, Languages, Mic2, Sparkles } from "lucide-react";
+import type { Question } from "../../game";
 import type { PlayMode } from "../../modes";
 import {
   useGame,
@@ -34,49 +34,41 @@ export function HintButtons({
   const hasEnglish = question.lines.some((line) =>
     line.some((t) => t.pronunciation),
   );
-  const artist = songs.find((song) => song.id === question.songId)?.artist;
   return (
     <>
       <div className="hints">
-        <div>
-          {lyricHints && (
-            <button
-              disabled={round.english || locked || !hasEnglish}
-              onClick={() => hint("english", mode)}
-            >
-              {round.english ? (
-                <Check size={14} />
-              ) : (
-                <span className="english-a">A</span>
-              )}{" "}
-              영어 표시
-            </button>
-          )}
-          {artistHint && (
-            <button
-              disabled={round.artist || locked}
-              onClick={() => hint("artist", mode)}
-            >
-              {round.artist ? <Check size={14} /> : <Mic2 size={14} />}
-              가수명
-            </button>
-          )}
-          {lyricHints && (
-            <button
-              disabled={locked || wordsLeft <= 0}
-              onClick={() => hint("word", mode)}
-            >
-              <Sparkles size={14} /> 단어 공개
-              {wordsLeft !== Infinity && ` ${Math.max(wordsLeft, 0)}`}
-            </button>
-          )}
-        </div>
+        {lyricHints && (
+          <button
+            disabled={round.english || locked || !hasEnglish}
+            onClick={() => hint("english", mode)}
+          >
+            {round.english ? (
+              <Check size={14} />
+            ) : (
+              <Languages size={14} className="english-a" />
+            )}{" "}
+            영어 표시
+          </button>
+        )}
+        {artistHint && (
+          <button
+            disabled={round.artist || locked}
+            onClick={() => hint("artist", mode)}
+          >
+            {round.artist ? <Check size={14} /> : <Mic2 size={14} />}
+            가수명
+          </button>
+        )}
+        {lyricHints && (
+          <button
+            disabled={locked || wordsLeft <= 0}
+            onClick={() => hint("word", mode)}
+          >
+            <Sparkles size={14} /> 단어 공개
+            {wordsLeft !== Infinity && ` ${Math.max(wordsLeft, 0)}`}
+          </button>
+        )}
       </div>
-      {artistHint && round.artist && artist && (
-        <p className="artist-hint">
-          가수 <strong>{artist}</strong>
-        </p>
-      )}
     </>
   );
 }

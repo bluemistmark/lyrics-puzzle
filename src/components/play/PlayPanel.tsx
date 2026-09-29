@@ -60,7 +60,6 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
         question={question}
         round={round}
         percent={percent}
-        full={full}
         playMode={playMode}
       />
       {(round.solved || round.givenUp || full) && (

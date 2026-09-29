@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Sparkles } from "lucide-react";
 import type { Catalog, Issue } from "../data/build-catalog.ts";
 import {
   draftRelease,
@@ -180,7 +181,9 @@ function NewsPreview({
       {draft.features.length > 0 && (
         <ul>
           {draft.features.map((f, i) => (
-            <li key={i}>✨ {f}</li>
+            <li key={i}>
+              <Sparkles size={13} aria-hidden="true" /> {f}
+            </li>
           ))}
         </ul>
       )}
@@ -246,7 +249,9 @@ function ReleaseHistory() {
                 <td>{formatDate(r.created_at)}</td>
                 <td>
                   {r.features.map((f, i) => (
-                    <div key={i}>✨ {f}</div>
+                    <div key={i}>
+                      <Sparkles size={13} aria-hidden="true" /> {f}
+                    </div>
                   ))}
                   {r.added_songs.length > 0 && (
                     <div>새 곡 {r.added_songs.length}곡</div>

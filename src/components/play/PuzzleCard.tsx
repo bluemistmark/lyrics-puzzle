@@ -7,7 +7,6 @@ type Props = {
   question: Question;
   round: Round;
   percent: number;
-  full: boolean;
   playMode?: PlayMode;
 };
 
@@ -15,22 +14,21 @@ export function PuzzleCard({
   question,
   round,
   percent,
-  full,
   playMode = "classic",
 }: Props) {
   const simple = playMode === "simple";
   const artist = songs.find((song) => song.id === question.songId)?.artist;
+  // 이지 shows the song from the start; other modes keep it hidden until the question ends.
+  const known = playMode === "easy" || round.solved || round.givenUp;
   return (
     <section
       className="puzzle-card"
       aria-label={simple ? "가사 문제" : "초성 가사 문제"}
     >
-      {playMode === "easy" && (
-        <p className="song-reveal">
-          <strong>{question.title}</strong>
-          {artist && <span>{artist}</span>}
-        </p>
-      )}
+      <p className={`song-reveal${known ? "" : " unknown"}`}>
+        <strong>{known ? question.title : "???"}</strong>
+        <span>{known || round.artist ? artist : "?"}</span>
+      </p>
       <Lyrics
         question={question}
         revealed={round.revealed}
@@ -50,9 +48,6 @@ export function PuzzleCard({
             <div style={{ width: `${percent}%` }} />
           </div>
           <div className="progress-label">
-            <span>
-              {round.givenUp ? "정답 공개" : full ? "가사 완성" : "가사 복원"}
-            </span>
             <b>{round.givenUp ? "—" : `${percent}%`}</b>
           </div>
         </>

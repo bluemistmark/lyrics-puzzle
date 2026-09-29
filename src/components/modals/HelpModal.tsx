@@ -42,8 +42,9 @@ export function HelpModal({ onClose }: { onClose: () => void }) {
         </li>
       </ol>
       <div className="help-example">
-        영어는 <b>원문</b>과 <b>등록된 한글 발음</b> 모두 인정됩니다. 제목은
-        괄호 안의 영문 제목도 사용할 수 있습니다.
+        영어는 <b>원문</b>과 <b>등록된 한글 발음</b> 모두 인정됩니다.
+        <br />
+        제목은 괄호 안의 영문 제목도 사용할 수 있습니다.
       </div>
       <button className="primary" onClick={onClose}>
         확인

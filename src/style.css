@@ -1,8 +1,21 @@
-@import url("https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Jua&family=Orbitron:wght@500;700&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 @import url("https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css");
 
+/* 여기어때 잘난체 for titles and highlights (one weight only). */
+@font-face {
+  font-family: "Jalnan";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  font-family: "Noto Sans KR", sans-serif;
+  --body-font: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+  --title-font: "Jalnan", var(--body-font);
+  font-family: var(--body-font);
   color: #20241f;
   background: #f7f8f4;
   font-synthesis: none;
@@ -75,7 +88,6 @@ button:active:not(:disabled) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e3e7dd;
 }
 
 .brand {
@@ -96,10 +108,26 @@ button:active:not(:disabled) {
   flex: none;
 }
 
-.brand-icon img {
+.brand-icon svg {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* Inline brand mark (LogoMark): themes recolor it with --logo-bg / --logo-ink. */
+.logo-mark .logo-bg {
+  fill: var(--logo-bg, #1e4a35);
+}
+
+.logo-mark g {
+  fill: none;
+  stroke: var(--logo-ink, #b9ed5b);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.logo-mark .logo-doodle {
+  display: none;
 }
 
 .brand-sub {
@@ -267,7 +295,7 @@ h1 span {
 
 .progress-label {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   font-size: 12px;
   color: #7b8374;
 }
@@ -453,6 +481,7 @@ input::placeholder {
 
 .hints {
   display: flex;
+  gap: 7px;
   align-items: center;
   justify-content: space-between;
   margin: 19px 0 24px;
@@ -466,13 +495,8 @@ input::placeholder {
   gap: 5px;
 }
 
-.hints > div {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-}
-
 .hints button {
+  flex: 1 1 auto;
   background: #eef1e7;
   border: 1px solid #e3e7da;
   border-radius: 8px;
@@ -498,8 +522,6 @@ input::placeholder {
 }
 
 .english-a {
-  font-family: serif;
-  font-size: 15px;
   color: #926db1;
 }
 
@@ -841,6 +863,11 @@ h3 {
   opacity: 0.7;
 }
 
+.song-reveal.unknown strong {
+  letter-spacing: 2px;
+  opacity: 0.45;
+}
+
 @media (max-width: 380px) {
   .filter-prefix {
     display: none;
@@ -946,32 +973,6 @@ h3 {
 
   .app-shell {
     position: relative;
-  }
-
-  .app-shell:before {
-    content: "ㅊㅅ";
-    position: fixed;
-    left: calc(50% - 490px);
-    top: 47%;
-    font-size: 75px;
-    font-weight: 900;
-    color: #e9eddf;
-    letter-spacing: 12px;
-    transform: rotate(-90deg);
-    pointer-events: none;
-  }
-
-  .app-shell:after {
-    content: "ONE WORD AT A TIME";
-    position: fixed;
-    right: calc(50% - 466px);
-    top: 50%;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    color: #b9c1ab;
-    writing-mode: vertical-rl;
-    pointer-events: none;
   }
 }
 
@@ -1274,191 +1275,191 @@ h3 {
   outline-offset: 2px;
 }
 
-:root[data-theme="dark"] {
+:root:is([data-theme="dark"], [data-theme="space"]) {
   color-scheme: dark;
   background: #141a16;
   color: #e7eee1;
 }
 
-[data-theme="dark"] .topbar,
-[data-theme="dark"] footer {
+:is([data-theme="dark"], [data-theme="space"]) .topbar,
+:is([data-theme="dark"], [data-theme="space"]) footer {
   border-color: #343e33;
 }
 
-[data-theme="dark"] .brand-sub,
-[data-theme="dark"] .eyebrow,
-[data-theme="dark"] .icon-btn,
-[data-theme="dark"] h1 span,
-[data-theme="dark"] .streak,
-[data-theme="dark"] .question-label,
-[data-theme="dark"] .progress-label,
-[data-theme="dark"] .card-bottom,
-[data-theme="dark"] .feedback,
-[data-theme="dark"] .hints,
-[data-theme="dark"] .skip,
-[data-theme="dark"] .mini-stats,
-[data-theme="dark"] footer,
-[data-theme="dark"] footer small,
-[data-theme="dark"] .secondary,
-[data-theme="dark"] .reset-btn,
-[data-theme="dark"] .modal-inner > p,
-[data-theme="dark"] .instructions p,
-[data-theme="dark"] .stats-grid span {
+:is([data-theme="dark"], [data-theme="space"]) .brand-sub,
+:is([data-theme="dark"], [data-theme="space"]) .eyebrow,
+:is([data-theme="dark"], [data-theme="space"]) .icon-btn,
+:is([data-theme="dark"], [data-theme="space"]) h1 span,
+:is([data-theme="dark"], [data-theme="space"]) .streak,
+:is([data-theme="dark"], [data-theme="space"]) .question-label,
+:is([data-theme="dark"], [data-theme="space"]) .progress-label,
+:is([data-theme="dark"], [data-theme="space"]) .card-bottom,
+:is([data-theme="dark"], [data-theme="space"]) .feedback,
+:is([data-theme="dark"], [data-theme="space"]) .hints,
+:is([data-theme="dark"], [data-theme="space"]) .skip,
+:is([data-theme="dark"], [data-theme="space"]) .mini-stats,
+:is([data-theme="dark"], [data-theme="space"]) footer,
+:is([data-theme="dark"], [data-theme="space"]) footer small,
+:is([data-theme="dark"], [data-theme="space"]) .secondary,
+:is([data-theme="dark"], [data-theme="space"]) .reset-btn,
+:is([data-theme="dark"], [data-theme="space"]) .modal-inner > p,
+:is([data-theme="dark"], [data-theme="space"]) .instructions p,
+:is([data-theme="dark"], [data-theme="space"]) .stats-grid span {
   color: #adbba3;
 }
 
-[data-theme="dark"] .heading-symbol {
+:is([data-theme="dark"], [data-theme="space"]) .heading-symbol {
   color: #3c5034;
 }
 
-[data-theme="dark"] .app-shell:before {
+:is([data-theme="dark"], [data-theme="space"]) .app-shell:before {
   color: #263025;
 }
 
-[data-theme="dark"] .app-shell:after {
+:is([data-theme="dark"], [data-theme="space"]) .app-shell:after {
   color: #819078;
 }
 
-[data-theme="dark"] .puzzle-card,
-[data-theme="dark"] .filter,
-[data-theme="dark"] .input-wrap,
-[data-theme="dark"] dialog {
+:is([data-theme="dark"], [data-theme="space"]) .puzzle-card,
+:is([data-theme="dark"], [data-theme="space"]) .filter,
+:is([data-theme="dark"], [data-theme="space"]) .input-wrap,
+:is([data-theme="dark"], [data-theme="space"]) dialog {
   background: #1e2820;
   color: #e7eee1;
   border-color: #3d4b39;
   box-shadow: 0 6px 25px #00000020;
 }
 
-[data-theme="dark"] .question-label > span {
+:is([data-theme="dark"], [data-theme="space"]) .question-label > span {
   color: #abb9a1;
   border-color: #43503c;
 }
 
-[data-theme="dark"] .muted {
+:is([data-theme="dark"], [data-theme="space"]) .muted {
   color: #9aae88;
 }
 
-[data-theme="dark"] .streak b,
-[data-theme="dark"] .streak svg,
-[data-theme="dark"] .progress-label b,
-[data-theme="dark"] .mini-stats b {
+:is([data-theme="dark"], [data-theme="space"]) .streak b,
+:is([data-theme="dark"], [data-theme="space"]) .streak svg,
+:is([data-theme="dark"], [data-theme="space"]) .progress-label b,
+:is([data-theme="dark"], [data-theme="space"]) .mini-stats b {
   color: #c3e59a;
 }
 
-[data-theme="dark"] .progress-track {
+:is([data-theme="dark"], [data-theme="space"]) .progress-track {
   background: #36412f;
 }
 
-[data-theme="dark"] .progress-track > div {
+:is([data-theme="dark"], [data-theme="space"]) .progress-track > div {
   background: #afd878;
 }
 
-[data-theme="dark"] .lyrics p {
+:is([data-theme="dark"], [data-theme="space"]) .lyrics p {
   color: #bdc9b4;
 }
 
-[data-theme="dark"] .revealed {
+:is([data-theme="dark"], [data-theme="space"]) .revealed {
   color: #e1ffb0;
   background: #3b5129;
   animation-name: reveal-dark;
 }
 
-[data-theme="dark"] .english,
-[data-theme="dark"] .english-a {
+:is([data-theme="dark"], [data-theme="space"]) .english,
+:is([data-theme="dark"], [data-theme="space"]) .english-a {
   color: #d4b6f5;
   text-decoration-color: #ac82cf;
 }
 
-[data-theme="dark"] .card-bottom {
+:is([data-theme="dark"], [data-theme="space"]) .card-bottom {
   border-color: #3d4b39;
 }
 
-[data-theme="dark"] input {
+:is([data-theme="dark"], [data-theme="space"]) input {
   color: #e7eee1;
 }
 
-[data-theme="dark"] input::placeholder {
+:is([data-theme="dark"], [data-theme="space"]) input::placeholder {
   color: #a0ae95;
 }
 
-[data-theme="dark"] .input-wrap:focus-within {
+:is([data-theme="dark"], [data-theme="space"]) .input-wrap:focus-within {
   border-color: #b5da88;
   box-shadow: 0 0 0 3px #b5da881c;
 }
 
-[data-theme="dark"] .primary,
-[data-theme="dark"] .input-wrap button {
+:is([data-theme="dark"], [data-theme="space"]) .primary,
+:is([data-theme="dark"], [data-theme="space"]) .input-wrap button {
   background: #bce583;
   color: #172710;
 }
 
-[data-theme="dark"] .primary:hover:not(:disabled) {
+:is([data-theme="dark"], [data-theme="space"]) .primary:hover:not(:disabled) {
   background: #d0f69b;
 }
 
-[data-theme="dark"] .icon-btn:hover,
-[data-theme="dark"] .hints button,
-[data-theme="dark"] .stats-grid,
-[data-theme="dark"] .help-example,
-[data-theme="dark"] .modal-icon {
+:is([data-theme="dark"], [data-theme="space"]) .icon-btn:hover,
+:is([data-theme="dark"], [data-theme="space"]) .hints button,
+:is([data-theme="dark"], [data-theme="space"]) .stats-grid,
+:is([data-theme="dark"], [data-theme="space"]) .help-example,
+:is([data-theme="dark"], [data-theme="space"]) .modal-icon {
   background: #2b3827;
   color: #c6d6b6;
   border-color: #43523b;
 }
 
-[data-theme="dark"] .word-history .hit {
+:is([data-theme="dark"], [data-theme="space"]) .word-history .hit {
   background: #354b29;
   color: #d0eba9;
 }
 
-[data-theme="dark"] .word-history .miss {
+:is([data-theme="dark"], [data-theme="space"]) .word-history .miss {
   background: #30392e;
   color: #acb6a4;
 }
 
-[data-theme="dark"] .word-history .empty-history {
+:is([data-theme="dark"], [data-theme="space"]) .word-history .empty-history {
   color: #a0ad95;
 }
 
-[data-theme="dark"] .divider {
+:is([data-theme="dark"], [data-theme="space"]) .divider {
   background: #46533d;
 }
 
-[data-theme="dark"] .success-box {
+:is([data-theme="dark"], [data-theme="space"]) .success-box {
   background: #2e4325;
   border-color: #4d693a;
   color: #dff2c6;
 }
 
-[data-theme="dark"] .success-icon,
-[data-theme="dark"] .success-box p {
+:is([data-theme="dark"], [data-theme="space"]) .success-icon,
+:is([data-theme="dark"], [data-theme="space"]) .success-box p {
   color: #bbd8a0;
 }
 
-[data-theme="dark"] .modal-inner form input,
-[data-theme="dark"] .unit-options button,
-[data-theme="dark"] .theme-options label {
+:is([data-theme="dark"], [data-theme="space"]) .modal-inner form input,
+:is([data-theme="dark"], [data-theme="space"]) .unit-options button,
+:is([data-theme="dark"], [data-theme="space"]) .theme-options label {
   background: #243020;
   color: #d8e3cf;
   border-color: #45543d;
 }
 
-[data-theme="dark"] .unit-options button.chosen,
-[data-theme="dark"] .theme-options label.selected {
+:is([data-theme="dark"], [data-theme="space"]) .unit-options button.chosen,
+:is([data-theme="dark"], [data-theme="space"]) .theme-options label.selected {
   background: #38502b;
   color: #e3f8c8;
   border-color: #92b36a;
 }
 
-[data-theme="dark"] .theme-options input {
+:is([data-theme="dark"], [data-theme="space"]) .theme-options input {
   accent-color: #bce583;
 }
 
-[data-theme="dark"] .error {
+:is([data-theme="dark"], [data-theme="space"]) .error {
   color: #f3af90;
 }
 
-[data-theme="dark"] dialog::backdrop {
+:is([data-theme="dark"], [data-theme="space"]) dialog::backdrop {
   background: #00000099;
 }
 
@@ -1748,8 +1749,7 @@ main [hidden] {
 }
 
 .grass-cell.today {
-  outline: 1.5px solid currentColor;
-  outline-offset: 1px;
+  outline: 2px solid currentColor;
 }
 
 .grass-legend {
@@ -1773,7 +1773,7 @@ main [hidden] {
   margin-right: 3px;
 }
 
-[data-theme="dark"] .play-grass {
+:is([data-theme="dark"], [data-theme="space"]) .play-grass {
   --grass-on: #c6f08a;
   --grass-empty: #36412f;
 }
@@ -1926,62 +1926,64 @@ main [hidden] {
   }
 }
 
-[data-theme="dark"] .achievement-toast {
+:is([data-theme="dark"], [data-theme="space"]) .achievement-toast {
   background: #e7eee1;
   color: #1a2117;
 }
 
-[data-theme="dark"] .achievement-toast svg {
+:is([data-theme="dark"], [data-theme="space"]) .achievement-toast svg {
   color: #b7791f;
 }
 
-[data-theme="dark"] .game-tabs {
+:is([data-theme="dark"], [data-theme="space"]) .game-tabs {
   border-color: #3d4b39;
 }
 
-[data-theme="dark"] .game-tabs button {
+:is([data-theme="dark"], [data-theme="space"]) .game-tabs button {
   color: #adbba3;
 }
 
-[data-theme="dark"] .game-tabs button[aria-selected="true"] {
+:is([data-theme="dark"], [data-theme="space"])
+  .game-tabs
+  button[aria-selected="true"] {
   color: #e7eee1;
   border-color: #bce583;
 }
 
-[data-theme="dark"] .filter,
-[data-theme="dark"] .record-item {
+:is([data-theme="dark"], [data-theme="space"]) .filter,
+:is([data-theme="dark"], [data-theme="space"]) .record-item {
   background: #2b3827;
   color: #e7eee1;
 }
 
-[data-theme="dark"] .puzzle-card {
+:is([data-theme="dark"], [data-theme="space"]) .puzzle-card {
   background: #2e4325;
   border: 0;
   box-shadow: none;
 }
 
-[data-theme="dark"] .question-label,
-[data-theme="dark"] .record-item strong {
+:is([data-theme="dark"], [data-theme="space"]) .question-label,
+:is([data-theme="dark"], [data-theme="space"]) .record-item strong {
   color: #e1ffb0;
 }
 
-[data-theme="dark"] .question-label > span {
+:is([data-theme="dark"], [data-theme="space"]) .question-label > span {
   background: #3b5129;
   color: #d0eba9;
   border: 0;
 }
 
-[data-theme="dark"] .lyrics p {
+:is([data-theme="dark"], [data-theme="space"]) .lyrics p {
   color: #d8e3cf;
 }
 
-[data-theme="dark"] .progress-label,
-[data-theme="dark"] .card-bottom {
+:is([data-theme="dark"], [data-theme="space"]) .progress-label,
+:is([data-theme="dark"], [data-theme="space"]) .card-bottom {
   color: #adbba3;
 }
 
-[data-theme="dark"] .record-item span,
-[data-theme="dark"] .record-note {
+:is([data-theme="dark"], [data-theme="space"]) .record-item span,
+:is([data-theme="dark"], [data-theme="space"]) .record-note {
   color: #adbba3;
 }
 
@@ -2137,26 +2139,26 @@ main [hidden] {
   color: #354c36;
 }
 
-[data-theme="dark"] .news-item {
+:is([data-theme="dark"], [data-theme="space"]) .news-item {
   background: #2b3827;
 }
 
-[data-theme="dark"] .news-block b {
+:is([data-theme="dark"], [data-theme="space"]) .news-block b {
   color: #e1ffb0;
 }
 
-[data-theme="dark"] .news-block ul,
-[data-theme="dark"] .news-note {
+:is([data-theme="dark"], [data-theme="space"]) .news-block ul,
+:is([data-theme="dark"], [data-theme="space"]) .news-note {
   color: #d8e3cf;
 }
 
-[data-theme="dark"] .news-item time,
-[data-theme="dark"] .news-block li span,
-[data-theme="dark"] .news-stats {
+:is([data-theme="dark"], [data-theme="space"]) .news-item time,
+:is([data-theme="dark"], [data-theme="space"]) .news-block li span,
+:is([data-theme="dark"], [data-theme="space"]) .news-stats {
   color: #adbba3;
 }
 
-[data-theme="dark"] .tab-dot {
+:is([data-theme="dark"], [data-theme="space"]) .tab-dot {
   background: #ff9a73;
 }
 
@@ -2238,11 +2240,11 @@ main [hidden] {
   letter-spacing: 2px;
 }
 
-[data-theme="dark"] .collection-summary {
+:is([data-theme="dark"], [data-theme="space"]) .collection-summary {
   color: #adbba3;
 }
 
-[data-theme="dark"] .collection-summary b {
+:is([data-theme="dark"], [data-theme="space"]) .collection-summary b {
   color: #e1ffb0;
 }
 
@@ -2262,7 +2264,7 @@ main [hidden] {
   margin: 0 0 4px;
 }
 
-[data-theme="dark"] .site-footer {
+:is([data-theme="dark"], [data-theme="space"]) .site-footer {
   border-color: #3d4b39;
   color: #8f9c86;
 }
@@ -2272,7 +2274,7 @@ main [hidden] {
   color-scheme: light;
   background: #fff;
   color: #202b25;
-  font-family: Arial, "Noto Sans KR", sans-serif;
+  font-family: Arial, var(--body-font);
 }
 
 [data-theme="excel"] body {
@@ -2545,7 +2547,7 @@ main [hidden] {
   color-scheme: light;
   background: #fff6ef;
   color: #4b3c48;
-  font-family: Jua, "Noto Sans KR", sans-serif;
+  font-family: Jua, var(--body-font);
 }
 
 [data-theme="notebook"] h1,
@@ -2709,6 +2711,232 @@ main [hidden] {
   accent-color: #bd668f;
 }
 
+/* Notebook concept: a decorated diary page. Handwritten 이서윤체 body on dot-grid paper,
+   lined card with a margin rule, washi tape, highlighter marks and sticker-like controls. */
+@font-face {
+  font-family: "LeeSeoyun";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/LeeSeoyun.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root[data-theme="notebook"] {
+  font-family: "LeeSeoyun", var(--body-font);
+  background:
+    radial-gradient(#ead8df 1.1px, transparent 1.3px) 0 0 / 22px 22px,
+    #fff8f2;
+}
+
+/* Titles, tabs and main buttons stay in Jua so the handwriting reads as the page's ink. */
+[data-theme="notebook"]
+  :is(
+    .brand,
+    main h1,
+    h2,
+    .song-reveal strong,
+    .success-box strong,
+    .game-tabs button,
+    .primary
+  ) {
+  font-family: Jua, var(--body-font);
+  font-weight: normal;
+}
+
+[data-theme="notebook"] main h1 {
+  display: inline;
+  padding: 0 4px;
+  color: #6f3d58;
+  background: linear-gradient(
+    transparent 58%,
+    #ffe0ad 58%,
+    #ffe0ad 90%,
+    transparent 90%
+  );
+}
+
+/* Index tabs along the top of the page. */
+[data-theme="notebook"] .game-tabs {
+  gap: 6px;
+  border-bottom: 2px dashed #ead0da;
+}
+
+[data-theme="notebook"] .game-tabs button {
+  padding: 14px 12px 10px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 12px 12px 0 0;
+}
+
+[data-theme="notebook"] .game-tabs button[aria-selected="true"] {
+  background: #fce3ed;
+  border-color: #e9b5c9;
+  color: #9c4c75;
+}
+
+/* The question card is a lined page held down by a strip of washi tape. */
+[data-theme="notebook"] .puzzle-card {
+  margin-top: 14px;
+  padding-left: 52px;
+  overflow: visible;
+  border: 1px solid #efd9e2;
+  border-radius: 6px 18px 18px 6px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 36px,
+      #f2b4c8 36px,
+      #f2b4c8 38px,
+      transparent 38px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 31px,
+      #dfe7f1 31px,
+      #dfe7f1 32px
+    ),
+    #fffdfb;
+  box-shadow: 5px 6px 0 #f3dce6;
+}
+
+[data-theme="notebook"] .puzzle-card::before {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  width: 118px;
+  height: 26px;
+  background: repeating-linear-gradient(
+    45deg,
+    #f6c3d5d9 0 8px,
+    #fde2ebd9 8px 16px
+  );
+  box-shadow: 0 1px 2px #b9869a33;
+  transform: translateX(-50%) rotate(-3deg);
+}
+
+[data-theme="notebook"] .puzzle-card::after {
+  top: 12px;
+  right: 16px;
+  transform: rotate(12deg);
+}
+
+[data-theme="notebook"] .lyrics p {
+  color: #4d3f5a;
+  font-size: 23px;
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+
+/* Revealed lyrics look traced over with a highlighter. */
+[data-theme="notebook"] .revealed {
+  border-radius: 0;
+  color: #884465;
+  background: linear-gradient(
+    transparent 42%,
+    #ffd6a0 42%,
+    #ffd6a0 88%,
+    transparent 88%
+  );
+}
+
+[data-theme="notebook"] .song-reveal strong {
+  color: #a34f78;
+}
+
+/* Progress as a strip of striped tape. */
+[data-theme="notebook"] .progress-track {
+  height: 11px;
+  border: 1px dashed #e6b6c9;
+  border-radius: 999px;
+  background: #fbeef3;
+}
+
+[data-theme="notebook"] .progress-track > div {
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #e89bb9 0 6px,
+    #f2b7cd 6px 12px
+  );
+}
+
+/* Hint buttons and filters are stickers, each stuck on at a slight angle. */
+[data-theme="notebook"] .hints button,
+[data-theme="notebook"] .filter {
+  border: 1.5px dashed #e3aec4;
+  border-radius: 12px;
+  background: #fff3f7;
+  box-shadow: 2px 2px 0 #f3dce6;
+  transition: transform 0.15s;
+}
+
+[data-theme="notebook"] .hints button:nth-child(odd) {
+  transform: rotate(-1.2deg);
+}
+
+[data-theme="notebook"] .hints button:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+[data-theme="notebook"] .hints button:hover:not(:disabled),
+[data-theme="notebook"] .filter:hover {
+  transform: rotate(0) translateY(-1px);
+  background: #fde7ef;
+}
+
+[data-theme="notebook"] .input-wrap {
+  border: 1.5px dashed #e3b7c9;
+  border-radius: 14px;
+}
+
+[data-theme="notebook"] .input-wrap:focus-within {
+  border-style: solid;
+}
+
+/* Main buttons drawn with a marker: uneven outline and an offset shadow. */
+[data-theme="notebook"] .primary {
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  box-shadow: 3px 3px 0 #8f4a6b;
+  transition: transform 0.15s;
+}
+
+[data-theme="notebook"] .primary:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+}
+
+[data-theme="notebook"] .input-wrap button {
+  border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+}
+
+[data-theme="notebook"] dialog {
+  border: 1.5px dashed #e3b7c9;
+  box-shadow: 6px 7px 0 #f3dce6;
+}
+
+/* Brand mark as a pink sticker with hand-drawn bars and a small heart. */
+[data-theme="notebook"] .brand-icon {
+  --logo-bg: #f6c3d5;
+  --logo-ink: #8f3f66;
+  background: none;
+  filter: drop-shadow(2px 2px 0 #f0cfdc);
+}
+
+[data-theme="notebook"] .logo-mark .logo-bars {
+  display: none;
+}
+
+[data-theme="notebook"] .logo-mark .logo-doodle {
+  display: inline;
+}
+
+[data-theme="notebook"] .logo-mark .logo-heart {
+  fill: #e0689b;
+  stroke: none;
+}
+
 /* Console: dark screen, pixel edges and neon controls. */
 :root[data-theme="console"] {
   color-scheme: dark;
@@ -2716,7 +2944,7 @@ main [hidden] {
   background-color: #17132b;
   background-image: radial-gradient(#4d426b55 1px, transparent 1px);
   background-size: 18px 18px;
-  font-family: "Courier New", "Noto Sans KR", monospace;
+  font-family: "Courier New", var(--body-font);
 }
 
 [data-theme="console"] .topbar,
@@ -2726,6 +2954,8 @@ main [hidden] {
 }
 
 [data-theme="console"] .brand-icon {
+  --logo-bg: #9a72ed;
+  --logo-ink: #17132b;
   background: #9a72ed;
   color: #17132b;
   border-radius: 5px;
@@ -2985,9 +3215,7 @@ main [hidden] {
   padding: 13px;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
-  font:
-    12px/1.7 "Noto Sans KR",
-    sans-serif;
+  font: 12px/1.7 var(--body-font);
   color: #304532;
   background: white;
   border: 1px solid #d8e4d1;
@@ -3244,7 +3472,7 @@ main [hidden] {
   resize: vertical;
 }
 
-[data-theme="dark"] .report-form textarea,
+:is([data-theme="dark"], [data-theme="space"]) .report-form textarea,
 [data-theme="console"] .report-form textarea {
   border-color: #4a5a44;
   background: transparent;
@@ -3364,21 +3592,21 @@ main [hidden] {
   opacity: 0.75;
 }
 
-[data-theme="dark"] .daily-date,
-[data-theme="dark"] .share-results > p {
+:is([data-theme="dark"], [data-theme="space"]) .daily-date,
+:is([data-theme="dark"], [data-theme="space"]) .share-results > p {
   color: #adbba3;
 }
 
-[data-theme="dark"] .daily-badge,
-[data-theme="dark"] .share-results {
+:is([data-theme="dark"], [data-theme="space"]) .daily-badge,
+:is([data-theme="dark"], [data-theme="space"]) .share-results {
   background: #263528;
   color: #e7eee1;
   border-color: #46593d;
 }
 
-[data-theme="dark"] .share-results pre,
-[data-theme="dark"] .share-actions button,
-[data-theme="dark"] .share-actions a {
+:is([data-theme="dark"], [data-theme="space"]) .share-results pre,
+:is([data-theme="dark"], [data-theme="space"]) .share-actions button,
+:is([data-theme="dark"], [data-theme="space"]) .share-actions a {
   background: #1e2820;
   color: #dff2c6;
   border-color: #46593d;
@@ -3440,7 +3668,7 @@ main [hidden] {
   font-family: Galmuri11, monospace;
 }
 
-[data-theme="dark"] .artist-hint {
+:is([data-theme="dark"], [data-theme="space"]) .artist-hint {
   color: #d0eba9;
 }
 
@@ -3525,7 +3753,7 @@ main [hidden] {
     inset 0 0 32px #030c1599,
     0 4px 0 #e1d9f0;
   color: #e6f7ed;
-  font-family: Galmuri11, "Courier New", "Noto Sans KR", monospace;
+  font-family: Galmuri11, "Courier New", monospace;
 }
 
 [data-theme="console"] .console-screen-label {
@@ -3709,7 +3937,7 @@ main [hidden] {
 [data-theme="console"] dialog {
   border: 4px solid #a989f2;
   box-shadow: 7px 7px 0 #0f0b20;
-  font-family: Galmuri11, "Courier New", "Noto Sans KR", monospace;
+  font-family: Galmuri11, "Courier New", monospace;
 }
 
 @media (max-width: 600px) {
@@ -3791,4 +4019,1395 @@ main [hidden] {
 
 [data-theme="console"] .collection-summary b {
   color: #b8ffe5;
+}
+
+/* Rhythm puzzle: light and dark share this layout; each only sets the colors below. */
+:root[data-theme="light"] {
+  --rp-bg: #f7f8f4;
+  --rp-grid: #e6eddf5c;
+  --rp-glow: #e9f1dcad;
+  --rp-wave-opacity: 0.65;
+  --rp-ink: #183d2d;
+  --rp-ink-sub: #648157;
+  --rp-line: #dce5d5;
+  --rp-tabs-bg: #edf1e9;
+  --rp-tabs-border: #e1e8dc;
+  --rp-tab-text: #627463;
+  --rp-accent: #1e4a35;
+  --rp-accent-hover: #286442;
+  --rp-on-accent: #fff;
+  --rp-surface: #fff;
+  --rp-surface-border: #dfe8d9;
+  --rp-shadow: #183d2d0d;
+  --rp-lyrics-bg: #f4f8ee;
+  --rp-lyrics-border: #e3ecd9;
+  --rp-revealed-bg: #d9f2a3;
+  --rp-revealed-text: #183d2d;
+  --rp-track-bg: #e9eee3;
+  --rp-track-border: #d8e6c9;
+  --rp-input-border: #cdddc7;
+  --rp-placeholder: #879a81;
+  --rp-disabled-bg: #e8efe0;
+  --rp-disabled-text: #789070;
+  --rp-control-text: #244934;
+  --rp-control-border: #d8e6cc;
+  --rp-control-edge: #d9e5ce;
+  --rp-control-icon: #6da72f;
+  --rp-hover-bg: #ecf8d8;
+  --rp-hover-border: #b9d89c;
+}
+
+:root:is([data-theme="dark"], [data-theme="space"]) {
+  --rp-bg: #111712;
+  --rp-grid: #26312655;
+  --rp-glow: #1d2b1b99;
+  --rp-wave-opacity: 0.35;
+  --rp-ink: #e3f0da;
+  --rp-ink-sub: #9fbf86;
+  --rp-line: #2d382d;
+  --rp-tabs-bg: #1a221b;
+  --rp-tabs-border: #2c372c;
+  --rp-tab-text: #9fb096;
+  --rp-accent: #bce583;
+  --rp-accent-hover: #d0f69b;
+  --rp-on-accent: #172710;
+  --rp-surface: #1c251d;
+  --rp-surface-border: #313d30;
+  --rp-shadow: #00000040;
+  --rp-lyrics-bg: #151d16;
+  --rp-lyrics-border: #2a3529;
+  --rp-revealed-bg: #3b5129;
+  --rp-revealed-text: #e1ffb0;
+  --rp-track-bg: #26301f;
+  --rp-track-border: #34412e;
+  --rp-input-border: #3a4a37;
+  --rp-placeholder: #7f927a;
+  --rp-disabled-bg: #26301f;
+  --rp-disabled-text: #6f8468;
+  --rp-control-text: #d3e2c8;
+  --rp-control-border: #334032;
+  --rp-control-edge: #0d130e;
+  --rp-control-icon: #a6d66a;
+  --rp-hover-bg: #26351f;
+  --rp-hover-border: #5b7a44;
+}
+
+:root:is(
+  [data-theme="light"],
+  [data-theme="dark"],
+  [data-theme="space"],
+  [data-theme="exam"]
+) {
+  background:
+    linear-gradient(var(--rp-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rp-grid) 1px, transparent 1px),
+    radial-gradient(circle at 8% 23%, var(--rp-glow) 0, transparent 28%),
+    radial-gradient(circle at 92% 75%, var(--rp-glow) 0, transparent 30%),
+    var(--rp-bg);
+  background-size:
+    56px 56px,
+    56px 56px,
+    auto,
+    auto;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .topbar {
+  border-color: var(--rp-line);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .brand {
+  color: var(--rp-ink);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.9px;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .brand-icon
+  svg {
+  filter: drop-shadow(0 3px 5px #183d2d1c);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .brand-sub {
+  color: var(--rp-ink-sub);
+  font-family: var(--body-font);
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  main
+  h1 {
+  color: var(--rp-ink);
+  font-weight: 400;
+  letter-spacing: -0.8px;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .game-tabs {
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+  padding: 4px;
+  margin: 0;
+  border: 1px solid var(--rp-tabs-border);
+  border-radius: 999px;
+  background: var(--rp-tabs-bg);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .game-tabs
+  button {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 2px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--rp-tab-text);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .game-tabs
+  button[aria-selected="true"] {
+  background: var(--rp-accent);
+  box-shadow: 0 3px 9px var(--rp-shadow);
+  color: var(--rp-on-accent);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .filter {
+  border: 1px solid var(--rp-control-border);
+  background: var(--rp-surface);
+  color: var(--rp-control-text);
+  box-shadow: 0 2px 7px var(--rp-shadow);
+  font-weight: 700;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .puzzle-card {
+  border: 1px solid var(--rp-surface-border);
+  border-radius: 20px;
+  background: var(--rp-surface);
+  box-shadow: 0 12px 32px var(--rp-shadow);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .lyrics {
+  margin: 18px 0 16px;
+  padding: 20px 16px;
+  border: 1px solid var(--rp-lyrics-border);
+  border-radius: 16px;
+  background: var(--rp-lyrics-bg);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .lyrics
+  p {
+  color: var(--rp-ink);
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .revealed {
+  border-radius: 5px;
+  background: var(--rp-revealed-bg);
+  color: var(--rp-revealed-text);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .progress-track {
+  position: relative;
+  height: 10px;
+  overflow: hidden;
+  border: 1px solid var(--rp-track-border);
+  background: var(--rp-track-bg);
+  box-shadow: inset 0 1px 3px var(--rp-shadow);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .progress-track
+  > div {
+  background: linear-gradient(90deg, #83bd39, #b7eb5a);
+  box-shadow: 0 0 12px #a5da4c88;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .progress-track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent calc(10% - 2px),
+    var(--rp-surface) 10%
+  );
+  pointer-events: none;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .progress-label
+  b {
+  color: var(--rp-accent);
+  font-weight: 800;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .input-wrap {
+  padding: 5px;
+  border: 1.5px solid var(--rp-input-border);
+  border-radius: 15px;
+  background: var(--rp-surface);
+  box-shadow: 0 6px 18px var(--rp-shadow);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .input-wrap:focus-within {
+  border-color: #82b83e;
+  box-shadow:
+    0 0 0 4px #9fd34b26,
+    0 6px 18px var(--rp-shadow);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .input-wrap
+  input {
+  color: var(--rp-ink);
+  font-weight: 600;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .input-wrap
+  input::placeholder {
+  color: var(--rp-placeholder);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .input-wrap
+  button {
+  min-height: 44px;
+  border-radius: 11px;
+  background: #b9ed5b;
+  color: #183d2d;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .input-wrap
+  button:disabled {
+  background: var(--rp-disabled-bg);
+  color: var(--rp-disabled-text);
+  opacity: 1;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .hints
+  button {
+  min-height: 40px;
+  border: 1px solid var(--rp-control-border);
+  border-radius: 10px;
+  background: var(--rp-surface);
+  box-shadow: 0 2px 0 var(--rp-control-edge);
+  color: var(--rp-control-text);
+  font-weight: 700;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .hints
+  button
+  svg,
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .hints
+  .english-a {
+  color: var(--rp-control-icon);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .hints
+  button:hover:not(:disabled),
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .filter:hover {
+  background: var(--rp-hover-bg);
+  border-color: var(--rp-hover-border);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .primary {
+  background: var(--rp-accent);
+  color: var(--rp-on-accent);
+  box-shadow: 0 6px 15px var(--rp-shadow);
+  font-weight: 800;
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .primary:hover:not(:disabled) {
+  background: var(--rp-accent-hover);
+}
+
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  .input-wrap
+  button:hover:not(:disabled) {
+  background: #caef83;
+}
+
+@media (min-width: 850px) {
+  :is(
+      [data-theme="light"],
+      [data-theme="dark"],
+      [data-theme="space"],
+      [data-theme="exam"]
+    )
+    .app-shell::before,
+  :is(
+      [data-theme="light"],
+      [data-theme="dark"],
+      [data-theme="space"],
+      [data-theme="exam"]
+    )
+    .app-shell::after {
+    content: "";
+    top: 44%;
+    width: 190px;
+    height: 150px;
+    background: url("/rhythm-wave.svg") center / contain no-repeat;
+    opacity: var(--rp-wave-opacity);
+    transform: none;
+  }
+
+  :is(
+      [data-theme="light"],
+      [data-theme="dark"],
+      [data-theme="space"],
+      [data-theme="exam"]
+    )
+    .app-shell::after {
+    top: 52%;
+    transform: scaleX(-1);
+  }
+}
+
+@media (max-width: 600px) {
+  :is(
+      [data-theme="light"],
+      [data-theme="dark"],
+      [data-theme="space"],
+      [data-theme="exam"]
+    )
+    .game-tabs
+    button {
+    font-size: 12px;
+  }
+
+  :is(
+      [data-theme="light"],
+      [data-theme="dark"],
+      [data-theme="space"],
+      [data-theme="exam"]
+    )
+    .lyrics {
+    padding: 18px 13px;
+  }
+}
+
+/* Titles and highlights in 여기어때 잘난체; excel, notebook and console keep their own lettering. */
+:is(
+    [data-theme="light"],
+    [data-theme="dark"],
+    [data-theme="space"],
+    [data-theme="exam"]
+  )
+  :is(.brand, main h1, h2, .success-box strong, .song-reveal strong) {
+  font-family: var(--title-font);
+  font-weight: normal;
+}
+
+/* 우주: a night sky. Builds on the dark theme and the rhythm-puzzle layout; a quiet starfield,
+   glass panels, and revealed lyrics that twinkle into starlight. */
+:root[data-theme="space"] {
+  --rp-bg: #070a1c;
+  --rp-grid: transparent;
+  --rp-glow: transparent;
+  --rp-wave-opacity: 0;
+  --rp-ink: #eef1ff;
+  --rp-ink-sub: #9fb0e8;
+  --rp-line: #8ecbff1f;
+  --rp-tabs-bg: #0d1330b3;
+  --rp-tabs-border: #8ecbff24;
+  --rp-tab-text: #9fa9d6;
+  --rp-accent: #e8ecff;
+  --rp-accent-hover: #ffffff;
+  --rp-on-accent: #0a0e24;
+  --rp-surface: #121a3f8c;
+  --rp-surface-border: #8ecbff2e;
+  --rp-shadow: #00000066;
+  --rp-lyrics-bg: transparent;
+  --rp-lyrics-border: transparent;
+  --rp-revealed-bg: transparent;
+  --rp-revealed-text: #ffffff;
+  --rp-track-bg: #ffffff12;
+  --rp-track-border: transparent;
+  --rp-input-border: #8ecbff33;
+  --rp-placeholder: #8a93c0;
+  --rp-disabled-bg: #ffffff0f;
+  --rp-disabled-text: #6b7299;
+  --rp-control-text: #dfe5ff;
+  --rp-control-border: #8ecbff29;
+  --rp-control-edge: transparent;
+  --rp-control-icon: #8ecbff;
+  --rp-hover-bg: #8ecbff1a;
+  --rp-hover-border: #8ecbff66;
+  background:
+    radial-gradient(1px 1px at 23px 41px, #ffffffcc, transparent),
+    radial-gradient(1px 1px at 97px 13px, #ffffff99, transparent),
+    radial-gradient(1.5px 1.5px at 151px 88px, #ffffffe6, transparent),
+    radial-gradient(1px 1px at 61px 143px, #ffffff80, transparent),
+    radial-gradient(1px 1px at 187px 171px, #cfe3ffb3, transparent),
+    radial-gradient(1px 1px at 131px 199px, #ffffff66, transparent),
+    radial-gradient(
+      circle at 88% 7%,
+      #f3ead6 0 17px,
+      #f3ead633 18px,
+      transparent 46px
+    ),
+    radial-gradient(ellipse 70% 50% at 10% 20%, #3b2a8a4d 0, transparent 70%),
+    radial-gradient(ellipse 60% 45% at 95% 85%, #1d4f8a40 0, transparent 70%),
+    linear-gradient(#0a0f2a, #05071a);
+  background-size:
+    220px 220px,
+    220px 220px,
+    220px 220px,
+    220px 220px,
+    220px 220px,
+    220px 220px,
+    auto,
+    auto,
+    auto,
+    auto;
+  background-attachment: fixed;
+  color: #dfe5ff;
+}
+
+[data-theme="space"] .brand-icon {
+  --logo-bg: #1a2255;
+  --logo-ink: #8ecbff;
+}
+
+[data-theme="space"] .brand-icon svg {
+  filter: drop-shadow(0 0 8px #8ecbff55);
+}
+
+[data-theme="space"]
+  :is(.brand, main h1, h2, .song-reveal strong, .success-box strong) {
+  font-family: var(--body-font);
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+[data-theme="space"] .brand-sub {
+  color: #8ecbff99;
+}
+
+/* Glass panels over the sky. */
+[data-theme="space"] .puzzle-card,
+[data-theme="space"] .game-tabs,
+[data-theme="space"] .filter,
+[data-theme="space"] .hints button,
+[data-theme="space"] .input-wrap {
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+[data-theme="space"] .puzzle-card {
+  box-shadow:
+    inset 0 1px 0 #ffffff14,
+    0 16px 40px #00000066;
+}
+
+[data-theme="space"] .song-reveal strong {
+  font-size: 18px;
+}
+
+[data-theme="space"] .song-reveal span {
+  color: #9fb0e8;
+  opacity: 1;
+}
+
+[data-theme="space"] .lyrics {
+  margin: 8px 0 12px;
+  padding: 18px 0;
+}
+
+/* Initials wait as faint starlight... */
+[data-theme="space"] .lyrics p {
+  color: #7f89bd;
+  font-weight: 800;
+  font-size: 25px;
+  letter-spacing: 1px;
+}
+
+/* ...and revealed letters shine. */
+[data-theme="space"] .revealed {
+  border-radius: 0;
+  color: #fff;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 12px #8ecbffb3;
+  animation: space-twinkle 0.8s ease-out;
+}
+
+@keyframes space-twinkle {
+  0% {
+    opacity: 0;
+    text-shadow: 0 0 24px #fff;
+  }
+
+  40% {
+    opacity: 1;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 22px #8ecbff;
+  }
+}
+
+[data-theme="space"] .english {
+  color: #c4b5ff;
+  text-decoration-color: #c4b5ff66;
+}
+
+[data-theme="space"] .progress-track {
+  height: 4px;
+  box-shadow: none;
+}
+
+[data-theme="space"] .progress-track::after {
+  display: none;
+}
+
+[data-theme="space"] .progress-track > div {
+  background: linear-gradient(90deg, #6c7dff, #8ecbff, #e8ecff);
+  box-shadow: 0 0 10px #8ecbffb3;
+}
+
+[data-theme="space"] .progress-label b {
+  color: #cfe3ff;
+  font-weight: 600;
+}
+
+[data-theme="space"] .primary {
+  box-shadow: 0 0 28px #8ecbff33;
+}
+
+[data-theme="space"] .input-wrap:focus-within {
+  border-color: #8ecbff99;
+  box-shadow: 0 0 0 4px #8ecbff1f;
+}
+
+[data-theme="space"] .input-wrap button {
+  background: #8ecbff;
+  color: #0a0e24;
+}
+
+[data-theme="space"] .input-wrap button:hover:not(:disabled) {
+  background: #b5dcff;
+}
+
+[data-theme="space"] .game-tabs button[aria-selected="true"] {
+  box-shadow: 0 0 16px #8ecbff40;
+}
+
+/* Replace the dark theme's green surfaces with the night palette. */
+[data-theme="space"] dialog {
+  background: #0e1433;
+  color: #dfe5ff;
+  border-color: #8ecbff29;
+}
+
+[data-theme="space"] .modal-inner form input,
+[data-theme="space"] .unit-options button,
+[data-theme="space"] .theme-options label,
+[data-theme="space"] .record-item,
+[data-theme="space"] .news-item,
+[data-theme="space"] .stats-grid,
+[data-theme="space"] .help-example,
+[data-theme="space"] .modal-icon,
+[data-theme="space"] .success-box,
+[data-theme="space"] .share-results,
+[data-theme="space"] .icon-btn:hover {
+  background: #8ecbff0f;
+  color: #dfe5ff;
+  border-color: #8ecbff24;
+}
+
+[data-theme="space"] .unit-options button.chosen,
+[data-theme="space"] .theme-options label.selected,
+[data-theme="space"] .word-history .hit {
+  background: #8ecbff26;
+  color: #fff;
+  border-color: #8ecbff80;
+}
+
+[data-theme="space"] .success-icon,
+[data-theme="space"] .success-box p {
+  color: #8ecbff;
+}
+
+[data-theme="space"] .empty-history,
+[data-theme="space"] .feedback,
+[data-theme="space"] .progress-label,
+[data-theme="space"] .skip,
+[data-theme="space"] .report-link,
+[data-theme="space"] footer,
+[data-theme="space"] footer small {
+  color: #8a93c0;
+}
+
+[data-theme="space"] .topbar,
+[data-theme="space"] footer {
+  border-color: #8ecbff1f;
+}
+
+/* Mission-control HUD: Orbitron for Latin labels, bracketed card, comet progress,
+   a ringed planet and the occasional shooting star. */
+[data-theme="space"] .brand-sub,
+[data-theme="space"] .progress-label b {
+  font-family: Orbitron, var(--body-font);
+  letter-spacing: 3px;
+}
+
+[data-theme="space"] .puzzle-card {
+  --hud: #8ecbffb3;
+  padding-top: 30px;
+  background:
+    linear-gradient(var(--hud), var(--hud)) top 10px left 10px / 16px 1.5px
+      no-repeat,
+    linear-gradient(var(--hud), var(--hud)) top 10px left 10px / 1.5px 16px
+      no-repeat,
+    linear-gradient(var(--hud), var(--hud)) top 10px right 10px / 16px 1.5px
+      no-repeat,
+    linear-gradient(var(--hud), var(--hud)) top 10px right 10px / 1.5px 16px
+      no-repeat,
+    linear-gradient(var(--hud), var(--hud)) bottom 10px left 10px / 16px 1.5px
+      no-repeat,
+    linear-gradient(var(--hud), var(--hud)) bottom 10px left 10px / 1.5px 16px
+      no-repeat,
+    linear-gradient(var(--hud), var(--hud)) bottom 10px right 10px / 16px 1.5px
+      no-repeat,
+    linear-gradient(var(--hud), var(--hud)) bottom 10px right 10px / 1.5px 16px
+      no-repeat,
+    var(--rp-surface);
+}
+
+[data-theme="space"] .puzzle-card::before {
+  content: "● TRANSMISSION";
+  position: absolute;
+  top: 12px;
+  right: 34px;
+  color: #8ecbff99;
+  font-family: Orbitron, var(--body-font);
+  font-size: 9px;
+  letter-spacing: 3px;
+  animation: space-blink 2.4s steps(1) infinite;
+}
+
+@keyframes space-blink {
+  50% {
+    color: #8ecbff4d;
+  }
+}
+
+[data-theme="space"] .song-reveal.unknown strong {
+  color: #8ecbff;
+  opacity: 0.8;
+  letter-spacing: 4px;
+}
+
+[data-theme="space"] .song-reveal.unknown strong::before {
+  content: "UNKNOWN SIGNAL ";
+  font-family: Orbitron, var(--body-font);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
+/* Progress is a comet: the bar is its tail, a glowing dot its head. */
+[data-theme="space"] .progress-track {
+  overflow: visible;
+}
+
+[data-theme="space"] .progress-track > div {
+  position: relative;
+}
+
+[data-theme="space"] .progress-track > div::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 6px 2px #ffffffb3,
+    0 0 16px 4px #8ecbff99;
+  transform: translateY(-50%);
+}
+
+[data-theme="space"] .input-wrap::before {
+  content: "›";
+  align-self: center;
+  padding: 0 2px 0 10px;
+  color: #8ecbff;
+  font-size: 22px;
+  line-height: 1;
+}
+
+[data-theme="space"] .primary {
+  border: 1px solid #ffffff;
+  box-shadow:
+    0 0 0 4px #8ecbff1f,
+    0 0 28px #8ecbff40;
+}
+
+/* A ringed planet low on the left of the sky. */
+[data-theme="space"] body {
+  background:
+    radial-gradient(
+      ellipse 120px 22px at 5% 86%,
+      transparent 58%,
+      #c4b5ff59 61%,
+      #c4b5ff26 68%,
+      transparent 71%
+    ),
+    radial-gradient(
+      circle at 5% 86%,
+      #b9a4ff 0,
+      #6b55d6 26px,
+      #3a2b8a 44px,
+      transparent 45px
+    );
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Shooting star. */
+[data-theme="space"] body::before {
+  content: "";
+  position: fixed;
+  top: 12%;
+  left: -20%;
+  z-index: -1;
+  width: 140px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #ffffffd9);
+  border-radius: 999px;
+  opacity: 0;
+  transform: rotate(18deg);
+  pointer-events: none;
+  animation: space-shoot 11s ease-in infinite;
+}
+
+@keyframes space-shoot {
+  0%,
+  86% {
+    opacity: 0;
+    translate: 0 0;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    translate: 90vw 30vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="space"] .revealed,
+  [data-theme="space"] .puzzle-card::before,
+  [data-theme="space"] body::before {
+    animation: none;
+  }
+}
+
+/* 시험지: a printed exam paper, all in Myeongjo with ruled boxes; the player's answers are
+   printed in blue and the score is marked in red. */
+:root[data-theme="exam"] {
+  --rp-bg: #fbfbf8;
+  --rp-grid: transparent;
+  --rp-glow: transparent;
+  --rp-wave-opacity: 0;
+  --rp-ink: #111111;
+  --rp-ink-sub: #555555;
+  --rp-line: #111111;
+  --rp-tabs-bg: transparent;
+  --rp-tabs-border: transparent;
+  --rp-tab-text: #333333;
+  --rp-accent: #111111;
+  --rp-accent-hover: #333333;
+  --rp-on-accent: #ffffff;
+  --rp-surface: #ffffff;
+  --rp-surface-border: #111111;
+  --rp-shadow: transparent;
+  --rp-lyrics-bg: #ffffff;
+  --rp-lyrics-border: #111111;
+  --rp-revealed-bg: transparent;
+  --rp-revealed-text: #1f3fbf;
+  --rp-track-bg: #ffffff;
+  --rp-track-border: #111111;
+  --rp-input-border: #111111;
+  --rp-placeholder: #9a9a9a;
+  --rp-disabled-bg: #eeeeee;
+  --rp-disabled-text: #999999;
+  --rp-control-text: #111111;
+  --rp-control-border: #111111;
+  --rp-control-edge: transparent;
+  --rp-control-icon: #111111;
+  --rp-hover-bg: #f1f1ec;
+  --rp-hover-border: #111111;
+  --exam-pen: #1d7a45;
+  --exam-red: #d7262e;
+  font-family: "Nanum Myeongjo", serif;
+  color: #111;
+}
+
+[data-theme="exam"] button,
+[data-theme="exam"] input {
+  font-family: inherit;
+}
+
+[data-theme="exam"] .brand-icon {
+  --logo-bg: #111111;
+  --logo-ink: #ffffff;
+}
+
+[data-theme="exam"] .brand-icon svg {
+  filter: none;
+}
+
+[data-theme="exam"]
+  :is(.brand, main h1, h2, .song-reveal strong, .success-box strong) {
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* Exam header: a thick rule over a thin one. */
+[data-theme="exam"] .topbar {
+  margin-bottom: 20px;
+  border-bottom: 3px double #111;
+}
+
+[data-theme="exam"] .brand-sub {
+  color: #555;
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+/* Tabs as the boxed subject labels on a test booklet. */
+[data-theme="exam"] .game-tabs {
+  gap: 0;
+  padding: 0;
+  border: 1px solid #111;
+  border-radius: 0;
+}
+
+[data-theme="exam"] .game-tabs button {
+  border-radius: 0;
+  border-right: 1px solid #111;
+  font-weight: 700;
+}
+
+[data-theme="exam"] .game-tabs button:last-child {
+  border-right: 0;
+}
+
+[data-theme="exam"] .game-tabs button[aria-selected="true"] {
+  box-shadow: none;
+}
+
+[data-theme="exam"] .filter,
+[data-theme="exam"] .hints button,
+[data-theme="exam"] .input-wrap,
+[data-theme="exam"] .input-wrap button,
+[data-theme="exam"] .primary,
+[data-theme="exam"] .puzzle-card,
+[data-theme="exam"] .lyrics,
+[data-theme="exam"] .success-box,
+[data-theme="exam"] dialog,
+[data-theme="exam"] .unit-options button,
+[data-theme="exam"] .theme-options label,
+[data-theme="exam"] .record-item,
+[data-theme="exam"] .stats-grid,
+[data-theme="exam"] .modal-icon {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+[data-theme="exam"] .filter,
+[data-theme="exam"] .hints button {
+  font-weight: 700;
+}
+
+/* The card is one question: number, instruction and point value. */
+[data-theme="exam"] .puzzle-card {
+  padding-top: 20px;
+  border: 0;
+  background: transparent;
+}
+
+[data-theme="exam"] .puzzle-card::before {
+  content: "1. 다음 초성을 보고 알맞은 가사를 쓰시오. [3점]";
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Title slot is the answer blank for the song. */
+[data-theme="exam"] .song-reveal {
+  font-size: 13px;
+}
+
+[data-theme="exam"] .song-reveal::before {
+  content: "곡명 :";
+  font-weight: 700;
+}
+
+[data-theme="exam"] .song-reveal strong {
+  min-width: 90px;
+  padding: 0 6px;
+  border-bottom: 1px solid #111;
+  font-size: 17px;
+  text-align: center;
+}
+
+[data-theme="exam"] .song-reveal.unknown strong {
+  color: transparent;
+  opacity: 1;
+}
+
+[data-theme="exam"] .song-reveal:not(.unknown) strong {
+  color: var(--exam-pen);
+  font-size: 17px;
+}
+
+[data-theme="exam"] .song-reveal span {
+  opacity: 1;
+  color: #555;
+}
+
+/* Lyrics sit in a <보기> box. */
+[data-theme="exam"] .lyrics {
+  position: relative;
+  margin: 22px 0 14px;
+  padding: 22px 16px 16px;
+  overflow: visible;
+}
+
+[data-theme="exam"] .lyrics::before {
+  content: "< 보 기 >";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  padding: 0 10px;
+  transform: translateX(-50%);
+  background: var(--rp-bg);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+[data-theme="exam"] .lyrics p {
+  font-family: "Nanum Myeongjo", serif;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+/* Answers the player filled in, in blue. */
+[data-theme="exam"] .revealed {
+  border-radius: 0;
+  color: var(--exam-pen);
+  font-weight: 800;
+  animation: exam-write 0.4s ease-out;
+}
+
+@keyframes exam-write {
+  from {
+    opacity: 0;
+    transform: translateY(-2px) rotate(-4deg);
+  }
+}
+
+[data-theme="exam"] .english {
+  color: #111;
+  text-decoration-style: dotted;
+  text-decoration-color: #111;
+}
+
+/* Progress is the score, marked in red pen. */
+[data-theme="exam"] .progress-track {
+  height: 6px;
+  border: 1px solid #111;
+  border-radius: 0;
+}
+
+[data-theme="exam"] .progress-track::after {
+  display: none;
+}
+
+[data-theme="exam"] .progress-track > div {
+  border-radius: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    #111 0 2px,
+    transparent 2px 5px
+  );
+  box-shadow: none;
+}
+
+[data-theme="exam"] .progress-label b {
+  color: var(--exam-red);
+  font-weight: 800;
+  font-size: 15px;
+}
+
+[data-theme="exam"] .progress-label b::before {
+  content: "점수 ";
+}
+
+/* The word field is the answer line. */
+[data-theme="exam"] .input-wrap {
+  align-items: center;
+  border-width: 0 0 1.5px;
+  background: transparent;
+}
+
+[data-theme="exam"] .input-wrap::before {
+  content: "답 :";
+  flex: none;
+  padding: 0 4px 0 2px;
+  font-weight: 800;
+}
+
+[data-theme="exam"] .input-wrap:focus-within {
+  border-color: var(--exam-pen);
+  box-shadow: none;
+}
+
+[data-theme="exam"] .input-wrap input {
+  color: var(--exam-pen);
+  font-weight: 700;
+}
+
+[data-theme="exam"] .input-wrap input::placeholder {
+  font-weight: 400;
+}
+
+[data-theme="exam"] .input-wrap button {
+  background: #111;
+  color: #fff;
+}
+
+[data-theme="exam"] .input-wrap button:hover:not(:disabled) {
+  background: #333;
+}
+
+[data-theme="exam"] .primary {
+  letter-spacing: 2px;
+}
+
+/* Result: graded in red pen. */
+[data-theme="exam"] .success-box {
+  border: 1px solid #111;
+  background: #fff;
+}
+
+[data-theme="exam"] .success-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border: 2.5px solid var(--exam-red);
+  border-radius: 50%;
+  color: var(--exam-red);
+  transform: rotate(-8deg);
+}
+
+/* Entered words: monochrome chips; misses are crossed out. */
+[data-theme="exam"] .word-history > span {
+  border-radius: 0;
+}
+
+[data-theme="exam"] .word-history .hit {
+  background: #fff;
+  border: 1px solid #111;
+  color: #111;
+}
+
+[data-theme="exam"] .word-history .miss {
+  background: #fff;
+  border: 1px dashed #aaa;
+  color: #888;
+  text-decoration: line-through;
+}
+
+[data-theme="exam"] .unit-options button.chosen,
+[data-theme="exam"] .theme-options label.selected {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* 시험지 기록·도감·소식: monochrome instead of the default greens. */
+[data-theme="exam"] .record-item,
+[data-theme="exam"] .news-item,
+[data-theme="exam"] .stats-grid {
+  background: #fff;
+  border: 1px solid #111;
+}
+
+[data-theme="exam"] :is(.record-item, .news-item, .stats-grid) span,
+[data-theme="exam"] .stats-grid span,
+[data-theme="exam"] .mini-stats,
+[data-theme="exam"] .record-note,
+[data-theme="exam"] .record-subtitle,
+[data-theme="exam"] .reset-btn,
+[data-theme="exam"] .news-item time,
+[data-theme="exam"] .news-block li span,
+[data-theme="exam"] .news-stats,
+[data-theme="exam"] .collection-summary,
+[data-theme="exam"] .collection-songs small,
+[data-theme="exam"] .achievement-count {
+  color: #666;
+}
+
+[data-theme="exam"] .record-item strong,
+[data-theme="exam"] .mini-stats b,
+[data-theme="exam"] .news-block b,
+[data-theme="exam"] .news-block ul,
+[data-theme="exam"] .news-note,
+[data-theme="exam"] .collection-summary b,
+[data-theme="exam"] .collection-head,
+[data-theme="exam"] .achievement-group h3 {
+  color: #111;
+}
+
+[data-theme="exam"] .collection-songs .locked {
+  color: #aaa;
+}
+
+[data-theme="exam"] .record-item.play-grass {
+  --grass-on: #111;
+  --grass-empty: #e2e2e2;
+}
+
+[data-theme="exam"] .record-item.achievement svg {
+  color: #111;
+}
+
+[data-theme="exam"] .record-item.achievement.earned {
+  border-width: 1.5px;
+}
+
+[data-theme="exam"] .record-item.achievement.earned strong {
+  color: var(--exam-red);
+}
+/* Modal icon, options and radios in each concept theme's own colors. */
+[data-theme="exam"] .modal-icon {
+  background: #fff;
+  border: 1.5px solid #111;
+  color: #111;
+}
+
+[data-theme="exam"] .unit-options button,
+[data-theme="exam"] .theme-options label,
+[data-theme="exam"] .modal-inner form input {
+  background: #fff;
+  border-color: #111;
+  color: #111;
+}
+
+[data-theme="exam"] .theme-options input {
+  accent-color: #111;
+}
+
+[data-theme="exam"] .theme-options label.selected input {
+  accent-color: #fff;
+}
+
+[data-theme="space"] .modal-icon {
+  color: #8ecbff;
+  box-shadow: 0 0 18px #8ecbff33;
+}
+
+[data-theme="space"] .theme-options input {
+  accent-color: #8ecbff;
 }

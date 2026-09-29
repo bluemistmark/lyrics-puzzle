@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="네오 노래 퀴즈 로고">
+  <rect width="64" height="64" rx="17" fill="#1e4a35"/>
+  <g fill="none" stroke="#b9ed5b" stroke-width="5" stroke-linecap="round">
+    <path d="M16 27v10"/>
+    <path d="M24 20v24"/>
+    <path d="M32 25v14"/>
+    <path d="M40 16v32"/>
+    <path d="M48 26v12"/>
+  </g>
+</svg>

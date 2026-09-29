@@ -229,7 +229,14 @@ tr.inactive td {
   text-align: left;
 }
 .order-cell button {
-  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 6px;
+}
+/* lucide icons sitting in a line of text */
+.admin-main li > svg,
+.admin-main td > div > svg {
+  vertical-align: -2px;
 }
 
 .form-dialog {

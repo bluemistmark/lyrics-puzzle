@@ -34,12 +34,7 @@ export function DailyPanel({ hidden, onOpenModal }: Props) {
         </div>
         <span className="daily-badge">하루 한 곡</span>
       </div>
-      <PuzzleCard
-        question={question}
-        round={round}
-        percent={percent}
-        full={full}
-      />
+      <PuzzleCard question={question} round={round} percent={percent} />
       {(finished || full) && (
         <ResultBox question={question} round={round} full={full} daily />
       )}

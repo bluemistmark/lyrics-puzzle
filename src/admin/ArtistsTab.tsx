@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import {
   isPrefix,
   sortArtists,
@@ -73,14 +74,14 @@ export function ArtistsTab() {
                       disabled={busy || i === 0}
                       onClick={() => run(() => moveArtist(a.name, -1))}
                     >
-                      ▲
+                      <ChevronUp size={14} aria-hidden="true" />
                     </button>
                     <button
                       aria-label={`${a.name} 아래로`}
                       disabled={busy || i === ordered.length - 1}
                       onClick={() => run(() => moveArtist(a.name, 1))}
                     >
-                      ▼
+                      <ChevronDown size={14} aria-hidden="true" />
                     </button>
                   </td>
                   <td>{a.name}</td>
