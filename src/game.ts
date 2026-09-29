@@ -140,15 +140,19 @@ export function progress(q: Question, revealed: string[]) {
     total: keys.length,
   };
 }
+/** Unseen questions first, then ones not in `collected` (곡 도감), then a different song. */
 export function pickQuestion(
   selected: string[],
   seen: string[],
   current?: string,
+  collected: readonly string[] = [],
 ) {
   const filtered = questions.filter((q) => selected.includes(q.unit));
   const pool = filtered.length ? filtered : questions;
   const fresh = pool.filter((q) => !seen.includes(q.id));
-  const choices = fresh.length ? fresh : pool.filter((q) => q.id !== current);
+  const unseen = fresh.length ? fresh : pool.filter((q) => q.id !== current);
+  const missing = unseen.filter((q) => !collected.includes(q.id));
+  const choices = missing.length ? missing : unseen;
   const currentSong = questions.find((q) => q.id === current)?.songId;
   const different = choices.filter((q) => q.songId !== currentSong);
   const actual = different.length ? different : choices.length ? choices : pool;

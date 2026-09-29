@@ -1,0 +1,330 @@
+/* 다크 (also the base of 우주): dark surfaces over the default layout. */
+
+@keyframes reveal-dark {
+  from {
+    background: #698842;
+  }
+
+  to {
+    background: #3b5129;
+  }
+}
+
+:is([data-theme="dark"], [data-theme="space"]) {
+  &:root {
+    color-scheme: dark;
+    background: #141a16;
+    color: #e7eee1;
+  }
+
+  .topbar,
+  footer {
+    border-color: #343e33;
+  }
+
+  .brand-sub,
+  .icon-btn,
+  h1 span,
+  .streak,
+  .progress-label,
+  .feedback,
+  .hints,
+  .skip,
+  footer,
+  footer small,
+  .secondary,
+  .reset-btn,
+  .modal-inner > p,
+  .instructions p {
+    color: #adbba3;
+  }
+
+  .puzzle-card,
+  .filter,
+  .input-wrap,
+  dialog {
+    background: #1e2820;
+    color: #e7eee1;
+    border-color: #3d4b39;
+    box-shadow: 0 6px 25px #00000020;
+  }
+
+  .streak b,
+  .streak svg,
+  .progress-label b {
+    color: #c3e59a;
+  }
+
+  .progress-track {
+    background: #36412f;
+  }
+
+  .progress-track > div {
+    background: #afd878;
+  }
+
+  .lyrics p {
+    color: #bdc9b4;
+  }
+
+  .revealed {
+    color: #e1ffb0;
+    background: #3b5129;
+    animation-name: reveal-dark;
+  }
+
+  .english,
+  .english-a {
+    color: #d4b6f5;
+    text-decoration-color: #ac82cf;
+  }
+
+  input {
+    color: #e7eee1;
+  }
+
+  input::placeholder {
+    color: #a0ae95;
+  }
+
+  .input-wrap:focus-within {
+    border-color: #b5da88;
+    box-shadow: 0 0 0 3px #b5da881c;
+  }
+
+  .primary,
+  .input-wrap button {
+    background: #bce583;
+    color: #172710;
+  }
+
+  .primary:hover:not(:disabled) {
+    background: #d0f69b;
+  }
+
+  .icon-btn:hover,
+  .hints button,
+  .help-example,
+  .modal-icon {
+    background: #2b3827;
+    color: #c6d6b6;
+    border-color: #43523b;
+  }
+
+  .word-history .hit {
+    background: #354b29;
+    color: #d0eba9;
+  }
+
+  .word-history .miss {
+    background: #30392e;
+    color: #acb6a4;
+  }
+
+  .word-history .empty-history {
+    color: #a0ad95;
+  }
+
+  .success-box {
+    background: #2e4325;
+    border-color: #4d693a;
+    color: #dff2c6;
+  }
+
+  .success-icon,
+  .success-box p {
+    color: #bbd8a0;
+  }
+
+  .modal-inner form input,
+  .unit-options button,
+  .theme-options label {
+    background: #243020;
+    color: #d8e3cf;
+    border-color: #45543d;
+  }
+
+  .unit-options button.chosen,
+  .theme-options label.selected {
+    background: #38502b;
+    color: #e3f8c8;
+    border-color: #92b36a;
+  }
+
+  .theme-options input {
+    accent-color: #bce583;
+  }
+
+  .error {
+    color: #f3af90;
+  }
+
+  dialog::backdrop {
+    background: #00000099;
+  }
+
+  .play-grass {
+    --grass-on: #c6f08a;
+    --grass-empty: #36412f;
+  }
+
+  .achievement-toast {
+    background: #e7eee1;
+    color: #1a2117;
+  }
+
+  .achievement-toast svg {
+    color: #b7791f;
+  }
+
+  .game-tabs {
+    border-color: #3d4b39;
+  }
+
+  .game-tabs button {
+    color: #adbba3;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    color: #e7eee1;
+    border-color: #bce583;
+  }
+
+  .filter,
+  .record-item {
+    background: #2b3827;
+    color: #e7eee1;
+  }
+
+  .puzzle-card {
+    background: #2e4325;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .record-item strong {
+    color: #e1ffb0;
+  }
+
+  .lyrics p {
+    color: #d8e3cf;
+  }
+
+  .progress-label {
+    color: #adbba3;
+  }
+
+  .record-item span,
+  .record-note {
+    color: #adbba3;
+  }
+
+  .news-item {
+    background: #2b3827;
+  }
+
+  .news-block b {
+    color: #e1ffb0;
+  }
+
+  .news-block ul,
+  .news-note {
+    color: #d8e3cf;
+  }
+
+  .news-item time,
+  .news-block li span,
+  .news-stats {
+    color: #adbba3;
+  }
+
+  .tab-dot {
+    background: #ff9a73;
+  }
+
+  .collection-summary {
+    color: #adbba3;
+  }
+
+  .collection-summary b {
+    color: #e1ffb0;
+  }
+
+  .site-footer {
+    border-color: #3d4b39;
+    color: #8f9c86;
+  }
+
+  .report-form textarea {
+    border-color: #4a5a44;
+    background: transparent;
+  }
+
+  .daily-date,
+  .share-results > p {
+    color: #adbba3;
+  }
+
+  .daily-badge,
+  .share-results {
+    background: #263528;
+    color: #e7eee1;
+    border-color: #46593d;
+  }
+
+  .share-results pre,
+  .share-actions button,
+  .share-actions a {
+    background: #1e2820;
+    color: #dff2c6;
+    border-color: #46593d;
+  }
+
+  &:root {
+    --rp-bg: #111712;
+    --rp-grid: #26312655;
+    --rp-glow: #1d2b1b99;
+    --rp-ink: #e3f0da;
+    --rp-ink-sub: #9fbf86;
+    --rp-line: #2d382d;
+    --rp-tabs-bg: #1a221b;
+    --rp-tabs-border: #2c372c;
+    --rp-tab-text: #9fb096;
+    --rp-accent: #bce583;
+    --rp-accent-hover: #d0f69b;
+    --rp-on-accent: #172710;
+    --rp-surface: #1c251d;
+    --rp-surface-border: #313d30;
+    --rp-shadow: #00000040;
+    --rp-lyrics-bg: #151d16;
+    --rp-lyrics-border: #2a3529;
+    --rp-revealed-bg: #3b5129;
+    --rp-revealed-text: #e1ffb0;
+    --rp-track-bg: #26301f;
+    --rp-track-border: #34412e;
+    --rp-input-border: #3a4a37;
+    --rp-placeholder: #7f927a;
+    --rp-disabled-bg: #26301f;
+    --rp-disabled-text: #6f8468;
+    --rp-control-text: #d3e2c8;
+    --rp-control-border: #334032;
+    --rp-control-edge: #0d130e;
+    --rp-control-icon: #a6d66a;
+    --rp-hover-bg: #26351f;
+    --rp-hover-border: #5b7a44;
+  }
+
+  & {
+    background:
+      linear-gradient(var(--rp-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rp-grid) 1px, transparent 1px),
+      radial-gradient(circle at 8% 23%, var(--rp-glow) 0, transparent 28%),
+      radial-gradient(circle at 92% 75%, var(--rp-glow) 0, transparent 30%),
+      var(--rp-bg);
+    background-size:
+      56px 56px,
+      56px 56px,
+      auto,
+      auto;
+  }
+}

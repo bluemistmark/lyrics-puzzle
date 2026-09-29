@@ -71,7 +71,7 @@ export function DailyRanking({ date, result, onOpenModal }: Props) {
   return (
     <section className="share-results daily-ranking" aria-live="polite">
       <h2>
-        <Trophy size={17} aria-hidden="true" /> 오늘의 랭킹
+        <Trophy size={17} aria-hidden="true" /> 데일리 랭킹
       </h2>
       {board && (
         <p>

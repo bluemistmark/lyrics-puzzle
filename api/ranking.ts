@@ -118,7 +118,7 @@ export async function POST(request: Request) {
     date === koreaDate(now - DAY) &&
     now - Date.parse(`${today}T00:00:00+09:00`) < GRACE;
   if (date !== today && !late)
-    return json(400, { error: "오늘의 문제 결과만 등록할 수 있어요." });
+    return json(400, { error: "데일리 결과만 등록할 수 있어요." });
   if (
     typeof solved !== "boolean" ||
     !count(guesses, 1000) ||

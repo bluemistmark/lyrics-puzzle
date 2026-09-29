@@ -4,7 +4,8 @@ import { memory } from "./testing/fake-storage.ts";
 import { questions, allKeys } from "./game.ts";
 import { koreaDate } from "./daily.ts";
 import { emptyFeats } from "./achievements.ts";
-const { useGame, WORD_HINT_LIMIT } = await import("./store.ts");
+const { useGame, WORD_HINT_LIMIT, replacesProgress } =
+  await import("./store.ts");
 
 test("첫 문제를 아무 입력 전에 저장하고 재수화해도 유지", async () => {
   const firstId = useGame.getState().round.id;
@@ -349,4 +350,92 @@ test("클래식 규칙에서는 단어 공개 힌트를 문제당 5번까지만 
   for (let i = 0; i < 7; i++) useGame.getState().hint("word");
   assert.equal(useGame.getState().modes.easy.round.wordHints, 7);
   useGame.getState().setPlayMode("classic");
+});
+
+test("공유받은 문제는 지정한 모드의 현재 문제로 열리고, 없는 문제는 무시", () => {
+  useGame.getState().reset();
+  const classic = useGame.getState().round.id;
+  const target = questions.find((q) => q.id !== classic)!;
+  assert.equal(useGame.getState().openQuestion("없는-문제", "easy"), false);
+  assert.equal(useGame.getState().playMode, "classic");
+  assert.ok(useGame.getState().openQuestion(target.id, "easy"));
+  const s = useGame.getState();
+  assert.equal(s.playMode, "easy");
+  assert.equal(s.modes.easy.round.id, target.id);
+  assert.ok(s.modes.easy.seen.includes(target.id));
+  assert.equal(s.round.id, classic);
+  useGame.getState().setPlayMode("classic");
+});
+
+test("심플·이지 모드는 끝낸 문제를 모드별로 따로 세고, 가사 완성은 한 번만 셈", () => {
+  useGame.getState().reset();
+  useGame.getState().setPlayMode("simple");
+  const simple = questions.find(
+    (q) => q.id === useGame.getState().modes.simple.round.id,
+  )!;
+  useGame.getState().solve(simple.title);
+  useGame.getState().next();
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().modeStats.simple, {
+    solved: 1,
+    givenUp: 1,
+  });
+
+  useGame.getState().setPlayMode("easy");
+  const easy = questions.find(
+    (q) => q.id === useGame.getState().modes.easy.round.id,
+  )!;
+  for (const line of easy.lines)
+    for (const t of line) useGame.getState().guess(t.text);
+  for (const line of easy.lines)
+    for (const t of line) useGame.getState().guess(t.text);
+  assert.deepEqual(useGame.getState().modeStats.easy, {
+    solved: 1,
+    givenUp: 0,
+  });
+  assert.equal(useGame.getState().stats.solved, 0);
+
+  useGame.getState().reset();
+  assert.deepEqual(useGame.getState().modeStats.simple, {
+    solved: 0,
+    givenUp: 0,
+  });
+  useGame.getState().setPlayMode("classic");
+});
+
+test("공유받은 문제가 풀던 문제를 바꿀 때만 확인이 필요함", () => {
+  useGame.getState().reset();
+  const s = useGame.getState();
+  const other = questions.find((q) => q.id !== s.round.id)!;
+  assert.equal(replacesProgress(s, other.id, "classic"), false);
+  useGame.getState().guess("가");
+  useGame.getState().guess("나다라마바사");
+  const started = useGame.getState();
+  assert.equal(replacesProgress(started, other.id, "classic"), true);
+  assert.equal(replacesProgress(started, started.round.id, "classic"), false);
+  assert.equal(replacesProgress(started, other.id, "easy"), false);
+});
+
+test("선택 범위를 한 바퀴 다 보면 알려 주고 다시 처음부터 나옴", () => {
+  useGame.getState().reset();
+  const unit = questions[0].unit;
+  const pool = questions.filter((q) => q.unit === unit).map((q) => q.id);
+  useGame.setState({
+    selected: [unit],
+    seen: pool,
+    round: { ...useGame.getState().round, id: pool[0], solved: true },
+  });
+  useGame.getState().next();
+  const s = useGame.getState();
+  assert.ok(s.notice.includes("한 바퀴"));
+  assert.deepEqual(s.seen, [s.round.id]);
+  useGame.getState().next();
+  useGame.getState().giveUp();
+  useGame.getState().next();
+  // Right after a lap only a one-question range is used up again.
+  assert.equal(
+    useGame.getState().notice.includes("한 바퀴"),
+    pool.length === 1,
+  );
+  useGame.getState().reset();
 });

@@ -6,5 +6,7 @@ export const THEMES = [
   ["excel", "엑셀"],
   ["notebook", "노트"],
   ["console", "게임기"],
+  ["space", "우주"],
+  ["exam", "시험지"],
 ] as const;
 export type Theme = (typeof THEMES)[number][0];

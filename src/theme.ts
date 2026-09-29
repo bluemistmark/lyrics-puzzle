@@ -23,7 +23,11 @@ export function useTheme() {
         theme === "system" ? (dark ? "dark" : "light") : theme;
       document.documentElement.dataset.theme = activeTheme;
       document.documentElement.style.colorScheme =
-        activeTheme === "dark" || activeTheme === "console" ? "dark" : "light";
+        activeTheme === "dark" ||
+        activeTheme === "console" ||
+        activeTheme === "space"
+          ? "dark"
+          : "light";
       document.querySelector('meta[name="theme-color"]')?.setAttribute(
         "content",
         {
@@ -32,14 +36,18 @@ export function useTheme() {
           excel: "#e8ede9",
           notebook: "#fff6ef",
           console: "#17132b",
+          space: "#070a1c",
+          exam: "#fbfbf8",
         }[activeTheme],
       );
-      document.title = theme === "excel" ? "Sheet1 - 문서" : "NCT 노래 퀴즈";
+      document.title = theme === "excel" ? "Sheet1 - 문서" : "네오 노래 퀴즈";
       document
         .querySelector('link[rel="icon"]')
         ?.setAttribute(
           "href",
-          theme === "excel" ? "/favicon-excel.svg" : "/favicon.svg",
+          theme === "excel" || theme === "notebook"
+            ? `/favicon-${theme}.svg`
+            : "/favicon.svg",
         );
     };
     apply();

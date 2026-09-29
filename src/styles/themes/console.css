@@ -1,0 +1,572 @@
+/* 게임기: a handheld console around a dark pixel screen. */
+
+[data-theme="console"] {
+  .play-grass {
+    --grass-on: #7cf5d8;
+    --grass-empty: #3d3558;
+  }
+
+  .grass-cell {
+    border-radius: 0;
+  }
+
+  /* Console: dark screen, pixel edges and neon controls. */
+  &:root {
+    color-scheme: dark;
+    color: #e9e5ff;
+    background-color: #17132b;
+    background-image: radial-gradient(#4d426b55 1px, transparent 1px);
+    background-size: 18px 18px;
+    font-family: "Courier New", var(--body-font);
+  }
+
+  .topbar,
+  .game-tabs,
+  .site-footer {
+    border-color: #5a4b81;
+  }
+
+  .brand-icon {
+    --logo-bg: #9a72ed;
+    --logo-ink: #17132b;
+    background: #9a72ed;
+    color: #17132b;
+    border-radius: 5px;
+    box-shadow: 3px 3px 0 #5ae6c8;
+  }
+
+  .brand-sub,
+  .game-tabs button,
+  .site-footer,
+  .record-note {
+    color: #b8abd8;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    color: #7cf5d8;
+    border-color: #7cf5d8;
+  }
+
+  .puzzle-card {
+    background: #24203e;
+    border: 3px solid #a989f2;
+    border-radius: 6px;
+    box-shadow:
+      5px 5px 0 #0e0b1d,
+      9px 9px 0 #5a438a;
+  }
+
+  .puzzle-card::before {
+    content: "●  ●  ●";
+    display: block;
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    color: #7cf5d8;
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  .record-item strong,
+  .news-block b {
+    color: #7cf5d8;
+  }
+
+  .word-history .hit,
+  .unit-options button.chosen,
+  .theme-options label.selected {
+    background: #395069;
+    color: #91ffe4;
+    border-color: #69ddc8;
+  }
+
+  .lyrics p,
+  .news-block ul,
+  .news-note {
+    color: #e7ddff;
+  }
+
+  .revealed {
+    color: #151228;
+    background: #7cf5d8;
+    animation-name: none;
+  }
+
+  .english,
+  .english-a {
+    color: #ffc789;
+    text-decoration-color: #f0a964;
+  }
+
+  .progress-track {
+    background: #51446f;
+    border-radius: 0;
+  }
+
+  .progress-track > div {
+    background: #7cf5d8;
+    border-radius: 0;
+  }
+
+  .progress-label,
+  .feedback,
+  .hints,
+  .modal-inner > p,
+  .news-item time,
+  .news-block li span,
+  .news-stats {
+    color: #baacd9;
+  }
+
+  .progress-label b {
+    color: #7cf5d8;
+  }
+
+  .filter,
+  .hints button,
+  .record-item,
+  .news-item,
+  .help-example,
+  .modal-icon,
+  .word-history .miss {
+    background: #302a50;
+    color: #ddd2f5;
+    border-color: #655288;
+    border-radius: 5px;
+  }
+
+  .input-wrap,
+  dialog {
+    background: #24203e;
+    color: #e9e5ff;
+    border-color: #9a72ed;
+    border-radius: 5px;
+  }
+
+  input {
+    color: #f4edff;
+  }
+
+  input::placeholder {
+    color: #aba0c6;
+  }
+
+  .input-wrap:focus-within {
+    border-color: #7cf5d8;
+    box-shadow: 0 0 0 3px #7cf5d833;
+  }
+
+  .primary,
+  .input-wrap button {
+    background: #9a72ed;
+    color: #17132b;
+    border-radius: 4px;
+    font-weight: 800;
+  }
+
+  .primary:hover:not(:disabled) {
+    background: #b391fa;
+  }
+
+  .theme-options label,
+  .unit-options button,
+  .modal-inner form input {
+    background: #302a50;
+    color: #e9e5ff;
+    border-color: #655288;
+    border-radius: 4px;
+  }
+
+  .theme-options input {
+    accent-color: #7cf5d8;
+  }
+
+  .icon-btn,
+  .secondary,
+  .reset-btn {
+    color: #cbbcf0;
+  }
+
+  .icon-btn:hover {
+    background: #3a305f;
+  }
+
+  .record-item span,
+  .skip,
+  .streak,
+  .word-history .empty-history,
+  .instructions p,
+  .success-box p {
+    color: #baacd9;
+  }
+
+  .streak b,
+  .streak svg,
+  .success-icon {
+    color: #7cf5d8;
+  }
+
+  .success-box {
+    background: #263b46;
+    color: #e5fff7;
+    border-color: #65c8b7;
+  }
+
+  .tab-dot {
+    background: #7cf5d8;
+  }
+
+  dialog::backdrop {
+    background: #090715c4;
+  }
+
+  .report-form textarea {
+    border-color: #4a5a44;
+    background: transparent;
+  }
+
+  .daily-date,
+  .share-results > p {
+    color: #9fc9ba;
+  }
+
+  .daily-badge,
+  .share-results {
+    background: #204047;
+    color: #b8ffe5;
+    border-color: #72bfae;
+    border-radius: 4px;
+  }
+
+  .share-results pre,
+  .share-actions button,
+  .share-actions a {
+    background: #132e35;
+    color: #b8ffe5;
+    border-color: #72bfae;
+    border-radius: 3px;
+    font-family: Galmuri11, monospace;
+  }
+
+  /* Handheld shell around the console screen. */
+  body {
+    padding: 18px 10px 36px;
+  }
+
+  .app-shell {
+    position: relative;
+    max-width: 640px;
+    padding: 16px 28px 18px;
+    background: #aaa1ca;
+    border: 4px solid #d7d0e7;
+    border-right-color: #777096;
+    border-bottom-color: #655d85;
+    border-radius: 30px 30px 58px 30px;
+    box-shadow:
+      0 18px 0 #100d20,
+      0 28px 45px #05040d9c,
+      inset 3px 3px 0 #ebe6f4;
+  }
+
+  .topbar {
+    height: 64px;
+    border: 0;
+  }
+
+  .brand {
+    color: #30274b;
+    font-family: Galmuri11, "Courier New", monospace;
+    font-size: 16px;
+    letter-spacing: 0;
+  }
+
+  .brand-sub {
+    color: #50466b;
+    letter-spacing: 1px;
+  }
+
+  .topbar .icon-btn {
+    color: #352d52;
+  }
+
+  .topbar .icon-btn:hover {
+    background: #c9c0dd;
+  }
+
+  main {
+    max-width: none;
+    margin: 8px 0 0;
+    padding: 18px 22px 25px;
+    background-color: #152d32;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      #ffffff06 0,
+      #ffffff06 1px,
+      transparent 1px,
+      transparent 4px
+    );
+    border: 14px solid #353148;
+    border-radius: 20px 20px 44px 20px;
+    box-shadow:
+      inset 0 0 0 3px #0b1d24,
+      inset 0 0 32px #030c1599,
+      0 4px 0 #e1d9f0;
+    color: #e6f7ed;
+    font-family: Galmuri11, "Courier New", monospace;
+  }
+
+  .console-screen-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: #8ff6d9;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 0 2px 13px;
+    white-space: nowrap;
+  }
+
+  .console-power {
+    color: #ff9eab;
+  }
+
+  .game-tabs {
+    border-color: #4c807e;
+    gap: 24px;
+  }
+
+  .game-tabs button {
+    color: #9dbdb8;
+    font-family: inherit;
+    font-size: 12px;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    color: #b8ffe5;
+    border-color: #7cf5d8;
+    text-shadow: 0 0 8px #7cf5d8;
+  }
+
+  .game-toolbar h1,
+  .record-panel h1,
+  .news-panel h1 {
+    color: #b8ffe5;
+    font-family: inherit;
+  }
+
+  .puzzle-card {
+    background-color: #204047;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      #ffffff05 0,
+      #ffffff05 1px,
+      transparent 1px,
+      transparent 4px
+    );
+    border: 3px solid #72bfae;
+    box-shadow: 4px 4px 0 #0a1d25;
+  }
+
+  .lyrics p,
+  .news-block ul,
+  .news-note {
+    color: #dcf1dd;
+  }
+
+  .filter,
+  .hints button,
+  .record-item,
+  .news-item,
+  .help-example {
+    background: #24464b;
+    color: #d5f4df;
+    border: 1px solid #4a807d;
+  }
+
+  .input-wrap {
+    background: #0e262e;
+    border: 2px solid #5a9b93;
+    box-shadow: inset 2px 2px 0 #09181e;
+  }
+
+  .primary,
+  .input-wrap button {
+    background: #85f1cf;
+    color: #133333;
+    box-shadow: 0 4px 0 #438d80;
+    font-family: inherit;
+  }
+
+  .primary:hover:not(:disabled) {
+    background: #b5ffe5;
+  }
+
+  .console-controls {
+    min-height: 143px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px 2px;
+  }
+
+  .console-dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 34px);
+    grid-template-rows: repeat(3, 34px);
+    filter: drop-shadow(3px 4px 0 #5a5278);
+  }
+
+  .console-dpad span {
+    display: block;
+    background: #302b46;
+  }
+
+  .console-dpad-up {
+    grid-column: 2;
+    grid-row: 1;
+    border-radius: 5px 5px 0 0;
+  }
+
+  .console-dpad-left {
+    grid-column: 1;
+    grid-row: 2;
+    border-radius: 5px 0 0 5px;
+  }
+
+  .console-dpad .console-dpad-center {
+    grid-column: 2;
+    grid-row: 2;
+    background: radial-gradient(circle, #51496a 0 6px, #302b46 7px);
+  }
+
+  .console-dpad-right {
+    grid-column: 3;
+    grid-row: 2;
+    border-radius: 0 5px 5px 0;
+  }
+
+  .console-dpad-down {
+    grid-column: 2;
+    grid-row: 3;
+    border-radius: 0 0 5px 5px;
+  }
+
+  .console-start {
+    align-self: flex-end;
+    margin-bottom: 18px;
+    color: #514968;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .console-ab {
+    display: flex;
+    gap: 14px;
+    transform: rotate(-17deg);
+  }
+
+  .console-ab span {
+    display: grid;
+    place-items: center;
+    width: 49px;
+    height: 49px;
+    border-radius: 50%;
+    background: #933f72;
+    color: #fff5fb;
+    border: 3px solid #b65e91;
+    box-shadow: 3px 5px 0 #654366;
+    font:
+      bold 17px Galmuri11,
+      monospace;
+  }
+
+  .site-footer {
+    max-width: none;
+    margin: 0 12px;
+    padding: 10px 0 14px;
+    color: #514968;
+    border-color: #877da7;
+  }
+
+  dialog {
+    border: 4px solid #a989f2;
+    box-shadow: 7px 7px 0 #0f0b20;
+    font-family: Galmuri11, "Courier New", monospace;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 7px 6px 28px;
+    }
+
+    .app-shell {
+      padding: 10px 11px 13px;
+      border-width: 3px;
+      border-radius: 23px 23px 39px 23px;
+    }
+
+    .topbar {
+      height: 58px;
+    }
+
+    .brand {
+      font-size: 13px;
+    }
+
+    main {
+      margin-top: 6px;
+      padding: 11px 12px 18px;
+      border-width: 8px;
+      border-radius: 15px 15px 27px 15px;
+    }
+
+    .console-screen-label {
+      font-size: 9px;
+      letter-spacing: 0;
+      padding-bottom: 8px;
+    }
+
+    .game-tabs {
+      margin: 0 -12px;
+      padding: 0 12px;
+      gap: 18px;
+    }
+
+    .console-controls {
+      min-height: 116px;
+      padding: 12px 4px 2px;
+    }
+
+    .console-dpad {
+      grid-template-columns: repeat(3, 27px);
+      grid-template-rows: repeat(3, 27px);
+    }
+
+    .console-ab {
+      gap: 8px;
+    }
+
+    .console-ab span {
+      width: 39px;
+      height: 39px;
+    }
+
+    .console-start {
+      font-size: 8px;
+      margin-bottom: 10px;
+      letter-spacing: 0;
+    }
+  }
+
+  .collection-summary {
+    color: #9dbdb8;
+  }
+
+  .collection-summary b {
+    color: #b8ffe5;
+  }
+}

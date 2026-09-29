@@ -1,0 +1,509 @@
+/* 노트: a decorated diary page. */
+
+/* Notebook concept: a decorated diary page. Handwritten 이서윤체 body on dot-grid paper,
+   lined card with a margin rule, washi tape, highlighter marks and sticker-like controls. */
+@font-face {
+  font-family: "LeeSeoyun";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/LeeSeoyun.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@keyframes notebook-highlight {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+[data-theme="notebook"] {
+  .play-grass {
+    --grass-on: #c2517f;
+    --grass-empty: #f1dce5;
+  }
+
+  /* Notebook: lined paper, soft ink and small sticker-like accents. */
+  &:root {
+    color-scheme: light;
+    background: #fff6ef;
+    color: #4b3c48;
+    font-family: Jua, var(--body-font);
+  }
+
+  h1,
+  h2,
+  .brand {
+    letter-spacing: 0;
+  }
+
+  .daily-heading h1 {
+    letter-spacing: -0.6px;
+  }
+
+  .lyrics p {
+    font-size: 19px;
+    letter-spacing: 0.2px;
+  }
+
+  button,
+  input {
+    font-family: inherit;
+  }
+
+  .topbar,
+  .game-tabs,
+  .site-footer {
+    border-color: #ead8de;
+  }
+
+  .brand-icon {
+    background: #eeabc2;
+    color: #803e61;
+    border-radius: 15px;
+    transform: rotate(-6deg);
+  }
+
+  .brand-sub,
+  .game-tabs button,
+  .site-footer,
+  .record-note {
+    color: #967787;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    color: #9c4c75;
+    border-color: #dd86ad;
+  }
+
+  .puzzle-card {
+    background: repeating-linear-gradient(
+      to bottom,
+      #fffdfb 0,
+      #fffdfb 30px,
+      #e7edf5 31px,
+      #fffdfb 32px
+    );
+    border: 1px solid #f0dce4;
+    border-radius: 19px;
+    box-shadow: 5px 6px 0 #f3dce6;
+  }
+
+  .puzzle-card::after {
+    content: "✿";
+    position: absolute;
+    top: 11px;
+    right: 15px;
+    color: #e59dba;
+    font-size: 23px;
+    line-height: 1;
+  }
+
+  .record-item strong,
+  .news-block b {
+    color: #a34f78;
+  }
+
+  .word-history .hit,
+  .unit-options button.chosen,
+  .theme-options label.selected {
+    color: #9b4c72;
+    background: #fce3ed;
+    border-color: #e9adc4;
+  }
+
+  .lyrics p {
+    color: #584a60;
+  }
+
+  .revealed {
+    color: #884465;
+    background: #ffe0ad;
+  }
+
+  .english,
+  .english-a {
+    color: #9a6bb5;
+    text-decoration-color: #ceaddd;
+  }
+
+  .progress-track {
+    background: #f1dce5;
+  }
+
+  .progress-track > div {
+    background: #e89bb9;
+  }
+
+  .progress-label,
+  .feedback,
+  .hints,
+  .modal-inner > p {
+    color: #8f7281;
+  }
+
+  .progress-label b {
+    color: #a34f78;
+  }
+
+  .filter,
+  .hints button,
+  .record-item,
+  .news-item,
+  .help-example,
+  .modal-icon {
+    background: #fce8ef;
+    color: #88516e;
+    border-color: #edc8d8;
+  }
+
+  .input-wrap,
+  dialog {
+    background: #fffdfb;
+    border-color: #ebcad8;
+  }
+
+  .input-wrap:focus-within {
+    border-color: #cf79a1;
+    box-shadow: 0 0 0 3px #e89bb933;
+  }
+
+  .primary,
+  .input-wrap button {
+    background: #bd668f;
+    color: white;
+  }
+
+  .primary:hover:not(:disabled) {
+    background: #a9527b;
+  }
+
+  .theme-options label,
+  .unit-options button,
+  .modal-inner form input {
+    background: #fffaf8;
+    border-color: #eed4df;
+  }
+
+  .theme-options input {
+    accent-color: #bd668f;
+  }
+
+  &:root {
+    font-family: "LeeSeoyun", var(--body-font);
+    background:
+      radial-gradient(#ead8df 1.1px, transparent 1.3px) 0 0 / 22px 22px,
+      #fff8f2;
+  }
+
+  /* Titles, tabs and main buttons stay in Jua so the handwriting reads as the page's ink. */
+  :is(
+    .brand,
+    main h1,
+    h2,
+    .song-reveal strong,
+    .success-box strong,
+    .game-tabs button,
+    .primary
+  ) {
+    font-family: Jua, var(--body-font);
+    font-weight: normal;
+  }
+
+  main h1 {
+    display: inline;
+    padding: 0 4px;
+    color: #6f3d58;
+    background: linear-gradient(
+      transparent 58%,
+      #ffe0ad 58%,
+      #ffe0ad 90%,
+      transparent 90%
+    );
+  }
+
+  /* Index tabs along the top of the page. */
+  .game-tabs {
+    gap: 6px;
+    border-bottom: 2px dashed #ead0da;
+  }
+
+  .game-tabs button {
+    padding: 14px 12px 10px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    background: #fce3ed;
+    border-color: #e9b5c9;
+    color: #9c4c75;
+  }
+
+  /* The question card is a lined page held down by a strip of washi tape. */
+  .puzzle-card {
+    margin-top: 14px;
+    padding-left: 52px;
+    overflow: visible;
+    border: 1px solid #efd9e2;
+    border-radius: 6px 18px 18px 6px;
+    background:
+      linear-gradient(
+        90deg,
+        transparent 36px,
+        #f2b4c8 36px,
+        #f2b4c8 38px,
+        transparent 38px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 31px,
+        #dfe7f1 31px,
+        #dfe7f1 32px
+      ),
+      #fffdfb;
+    box-shadow: 5px 6px 0 #f3dce6;
+  }
+
+  .puzzle-card::before {
+    content: "";
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    width: 118px;
+    height: 26px;
+    background: repeating-linear-gradient(
+      45deg,
+      #f6c3d5d9 0 8px,
+      #fde2ebd9 8px 16px
+    );
+    box-shadow: 0 1px 2px #b9869a33;
+    transform: translateX(-50%) rotate(-3deg);
+  }
+
+  .puzzle-card::after {
+    top: 12px;
+    right: 16px;
+    transform: rotate(12deg);
+  }
+
+  .lyrics p {
+    color: #4d3f5a;
+    font-size: 23px;
+    font-weight: normal;
+    letter-spacing: 1px;
+  }
+
+  /* Revealed lyrics look traced over with a highlighter. */
+  .revealed {
+    border-radius: 0;
+    color: #884465;
+    background: linear-gradient(
+      transparent 42%,
+      #ffd6a0 42%,
+      #ffd6a0 88%,
+      transparent 88%
+    );
+  }
+
+  .song-reveal strong {
+    color: #a34f78;
+  }
+
+  /* Progress as a strip of striped tape. */
+  .progress-track {
+    height: 11px;
+    border: 1px dashed #e6b6c9;
+    border-radius: 999px;
+    background: #fbeef3;
+  }
+
+  .progress-track > div {
+    border-radius: 999px;
+    background: repeating-linear-gradient(
+      -45deg,
+      #e89bb9 0 6px,
+      #f2b7cd 6px 12px
+    );
+  }
+
+  /* Hint buttons and filters are stickers, each stuck on at a slight angle. */
+  .hints button,
+  .filter {
+    border: 1.5px dashed #e3aec4;
+    border-radius: 12px;
+    background: #fff3f7;
+    box-shadow: 2px 2px 0 #f3dce6;
+    transition: transform 0.15s;
+  }
+
+  .hints button:nth-child(odd) {
+    transform: rotate(-1.2deg);
+  }
+
+  .hints button:nth-child(even) {
+    transform: rotate(1deg);
+  }
+
+  .hints button:hover:not(:disabled),
+  .filter:hover {
+    transform: rotate(0) translateY(-1px);
+    background: #fde7ef;
+  }
+
+  .input-wrap {
+    border: 1.5px dashed #e3b7c9;
+    border-radius: 14px;
+  }
+
+  .input-wrap:focus-within {
+    border-style: solid;
+  }
+
+  /* Main buttons drawn with a marker: uneven outline and an offset shadow. */
+  .primary {
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    box-shadow: 3px 3px 0 #8f4a6b;
+    transition: transform 0.15s;
+  }
+
+  .primary:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+  }
+
+  .input-wrap button {
+    border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+  }
+
+  dialog {
+    border: 1.5px dashed #e3b7c9;
+    box-shadow: 6px 7px 0 #f3dce6;
+  }
+
+  /* Brand mark as a pink sticker with hand-drawn bars and a small heart. */
+  .brand-icon {
+    --logo-bg: #f6c3d5;
+    --logo-ink: #8f3f66;
+    background: none;
+    filter: drop-shadow(2px 2px 0 #f0cfdc);
+  }
+
+  .logo-mark .logo-bars {
+    display: none;
+  }
+
+  .logo-mark .logo-doodle {
+    display: inline;
+  }
+
+  .logo-mark .logo-heart {
+    fill: #e0689b;
+    stroke: none;
+  }
+
+  .daily-date,
+  .share-results > p {
+    color: #9b6980;
+  }
+
+  .daily-badge,
+  .share-results {
+    background: #fff1f5;
+    color: #884465;
+    border-color: #edc8d8;
+  }
+
+  .share-results pre,
+  .share-actions button,
+  .share-actions a {
+    background: #fffdfb;
+    color: #884465;
+    border-color: #edc8d8;
+  }
+
+  /* 도감 summary per theme */
+  .collection-summary {
+    color: #8f7281;
+  }
+
+  .collection-summary b {
+    color: #a34f78;
+  }
+
+  /* 노트: pink/plum in place of the default greens that the notebook rules didn't cover. */
+  .success-box {
+    background: #fce8ef;
+    border: 1.5px dashed #e3aec4;
+    color: #6f3d58;
+    box-shadow: 3px 3px 0 #f3dce6;
+  }
+
+  .success-icon {
+    color: #bd668f;
+  }
+
+  .success-box p,
+  .record-item span,
+  .news-stats,
+  .news-note {
+    color: #8f7281;
+  }
+
+  .news-block ul,
+  .streak b {
+    color: #6f3d58;
+  }
+
+  .streak svg,
+  .instructions li::marker {
+    color: #d07fa3;
+  }
+
+  .word-history .miss {
+    background: #f7eef1;
+    color: #a08a95;
+  }
+
+  .icon-btn:hover,
+  .share-actions button:hover,
+  .share-actions a:hover {
+    background: #fce3ed;
+  }
+
+  .record-item.play-grass {
+    --grass-on: #d0628f;
+    --grass-empty: #f6e3ea;
+  }
+
+  .report-form textarea {
+    background: #fffaf8;
+    border-color: #eed4df;
+  }
+
+  footer {
+    border-color: #ead8de;
+  }
+
+  :is(button, a, summary):focus-visible,
+  .theme-options label:focus-within {
+    outline-color: #cf79a1;
+  }
+
+  dialog::backdrop {
+    background: #5a2f4566;
+  }
+
+  /* Revealed words flash like a fresh highlighter stroke instead of the green pulse. */
+  .revealed {
+    animation: notebook-highlight 0.45s ease;
+  }
+
+  .revealed {
+    background-repeat: no-repeat;
+  }
+}

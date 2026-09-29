@@ -1,0 +1,234 @@
+/* Rhythm puzzle layout shared by 라이트·다크·우주·시험지; each theme sets the --rp-* colors. */
+
+:is(
+  [data-theme="light"],
+  [data-theme="dark"],
+  [data-theme="space"],
+  [data-theme="exam"]
+) {
+  &:root {
+    background:
+      linear-gradient(var(--rp-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rp-grid) 1px, transparent 1px),
+      radial-gradient(circle at 8% 23%, var(--rp-glow) 0, transparent 28%),
+      radial-gradient(circle at 92% 75%, var(--rp-glow) 0, transparent 30%),
+      var(--rp-bg);
+    background-size:
+      56px 56px,
+      56px 56px,
+      auto,
+      auto;
+  }
+
+  .topbar {
+    border-color: var(--rp-line);
+  }
+
+  .brand {
+    color: var(--rp-ink);
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: -0.9px;
+  }
+
+  .brand-icon svg {
+    filter: drop-shadow(0 3px 5px #183d2d1c);
+  }
+
+  .brand-sub {
+    color: var(--rp-ink-sub);
+    font-family: var(--body-font);
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  main h1 {
+    color: var(--rp-ink);
+    font-weight: 400;
+    letter-spacing: -0.8px;
+  }
+
+  .game-tabs {
+    align-items: center;
+    justify-content: space-between;
+    gap: 3px;
+    padding: 4px;
+    margin: 0;
+    border: 1px solid var(--rp-tabs-border);
+    border-radius: 999px;
+    background: var(--rp-tabs-bg);
+  }
+
+  .game-tabs button {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 2px;
+    border: 0;
+    border-radius: 999px;
+    color: var(--rp-tab-text);
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    background: var(--rp-accent);
+    box-shadow: 0 3px 9px var(--rp-shadow);
+    color: var(--rp-on-accent);
+  }
+
+  .filter {
+    border: 1px solid var(--rp-control-border);
+    background: var(--rp-surface);
+    color: var(--rp-control-text);
+    box-shadow: 0 2px 7px var(--rp-shadow);
+    font-weight: 700;
+  }
+
+  .puzzle-card {
+    border: 1px solid var(--rp-surface-border);
+    border-radius: 20px;
+    background: var(--rp-surface);
+    box-shadow: 0 12px 32px var(--rp-shadow);
+  }
+
+  .lyrics {
+    margin: 18px 0 16px;
+    padding: 20px 16px;
+    border: 1px solid var(--rp-lyrics-border);
+    border-radius: 16px;
+    background: var(--rp-lyrics-bg);
+  }
+
+  .lyrics p {
+    color: var(--rp-ink);
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .revealed {
+    border-radius: 5px;
+    background: var(--rp-revealed-bg);
+    color: var(--rp-revealed-text);
+  }
+
+  .progress-track {
+    position: relative;
+    height: 10px;
+    overflow: hidden;
+    border: 1px solid var(--rp-track-border);
+    background: var(--rp-track-bg);
+    box-shadow: inset 0 1px 3px var(--rp-shadow);
+  }
+
+  .progress-track > div {
+    background: linear-gradient(90deg, #83bd39, #b7eb5a);
+    box-shadow: 0 0 12px #a5da4c88;
+  }
+
+  .progress-track::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(10% - 2px),
+      var(--rp-surface) 10%
+    );
+    pointer-events: none;
+  }
+
+  .progress-label b {
+    color: var(--rp-accent);
+    font-weight: 700;
+  }
+
+  .input-wrap {
+    padding: 5px;
+    border: 1.5px solid var(--rp-input-border);
+    border-radius: 15px;
+    background: var(--rp-surface);
+    box-shadow: 0 6px 18px var(--rp-shadow);
+  }
+
+  .input-wrap:focus-within {
+    border-color: #82b83e;
+    box-shadow:
+      0 0 0 4px #9fd34b26,
+      0 6px 18px var(--rp-shadow);
+  }
+
+  .input-wrap input {
+    color: var(--rp-ink);
+    font-weight: 600;
+  }
+
+  .input-wrap input::placeholder {
+    color: var(--rp-placeholder);
+  }
+
+  .input-wrap button {
+    min-height: 44px;
+    border-radius: 11px;
+    background: #b9ed5b;
+    color: #183d2d;
+  }
+
+  .input-wrap button:disabled {
+    background: var(--rp-disabled-bg);
+    color: var(--rp-disabled-text);
+    opacity: 1;
+  }
+
+  .hints button {
+    min-height: 40px;
+    border: 1px solid var(--rp-control-border);
+    border-radius: 10px;
+    background: var(--rp-surface);
+    box-shadow: 0 2px 0 var(--rp-control-edge);
+    color: var(--rp-control-text);
+    font-weight: 700;
+  }
+
+  .hints button svg,
+  .hints .english-a {
+    color: var(--rp-control-icon);
+  }
+
+  .hints button:hover:not(:disabled),
+  .filter:hover {
+    background: var(--rp-hover-bg);
+    border-color: var(--rp-hover-border);
+  }
+
+  .primary {
+    background: var(--rp-accent);
+    color: var(--rp-on-accent);
+    box-shadow: 0 6px 15px var(--rp-shadow);
+    font-weight: 700;
+  }
+
+  .primary:hover:not(:disabled) {
+    background: var(--rp-accent-hover);
+  }
+
+  .input-wrap button:hover:not(:disabled) {
+    background: #caef83;
+  }
+
+  @media (max-width: 600px) {
+    .game-tabs button {
+      font-size: 12px;
+    }
+
+    .lyrics {
+      padding: 18px 13px;
+    }
+  }
+
+  /* Titles and highlights in 여기어때 잘난체; excel, notebook and console keep their own lettering. */
+  :is(.brand, main h1, h2, .success-box strong, .song-reveal strong) {
+    font-family: var(--title-font);
+    font-weight: normal;
+  }
+}

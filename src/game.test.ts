@@ -140,3 +140,23 @@ test("일부 공개된 단어의 남은 한 글자만 열고 미공개 단어는
   ]);
   assert.deepEqual(matches(q, "을", love), []);
 });
+
+test("아직 안 나온 문제 중에서 도감에 없는 문제를 먼저 고름", () => {
+  const target = questions[0];
+  const pool = questions.filter((q) => q.unit === target.unit);
+  const others = pool.filter((q) => q.id !== target.id).map((q) => q.id);
+  for (let i = 0; i < 20; i++)
+    assert.equal(
+      pickQuestion([target.unit], [], undefined, others).id,
+      target.id,
+    );
+  // Everything collected: any unseen question is still fine.
+  assert.ok(
+    pickQuestion(
+      [target.unit],
+      [],
+      undefined,
+      pool.map((q) => q.id),
+    ),
+  );
+});

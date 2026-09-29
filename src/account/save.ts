@@ -1,7 +1,7 @@
 import type { Feats } from "../achievements.ts";
 import type { DailyHistory } from "../daily.ts";
 import type { Rating } from "../difficulty.ts";
-import type { Stats } from "../store.ts";
+import type { ModeStats, Stats } from "../store.ts";
 
 // 계정에 저장하는 기록(player_saves.data)과 두 기기의 기록을 합치는 규칙.
 // Merging is idempotent (max / union / earliest), so syncing the same data again changes nothing.
@@ -26,11 +26,31 @@ export type SaveData = {
   themes: string[];
   votes: Record<string, Rating>;
   ranking: RankingSave;
+  /** 심플·이지 results; missing in saves made before play modes. */
+  modeStats?: ModeStats;
 };
 type Records = Pick<
   SaveData,
-  "stats" | "collected" | "dailyHistory" | "playLog" | "feats" | "achievements"
+  | "stats"
+  | "collected"
+  | "dailyHistory"
+  | "playLog"
+  | "feats"
+  | "achievements"
+  | "modeStats"
 >;
+
+const noModeStats: ModeStats = {
+  simple: { solved: 0, givenUp: 0 },
+  easy: { solved: 0, givenUp: 0 },
+};
+const mergeModeStats = (
+  local: ModeStats = noModeStats,
+  remote: ModeStats = noModeStats,
+): ModeStats => ({
+  simple: maxEach(local.simple, remote.simple),
+  easy: maxEach(local.easy, remote.easy),
+});
 
 const union = (a: readonly string[], b: readonly string[]) => [
   ...new Set([...a, ...b]),
@@ -65,6 +85,7 @@ function mergeRecords(local: Records, remote: Records): Records {
     playLog: maxEach(local.playLog, remote.playLog),
     feats: mergeFeats(local.feats, remote.feats),
     achievements,
+    modeStats: mergeModeStats(local.modeStats, remote.modeStats),
   };
 }
 
@@ -90,6 +111,7 @@ export function mergeSaves(local: SaveData, remote: SaveData | null): SaveData {
     playLog: records.playLog,
     feats: records.feats,
     achievements: records.achievements,
+    modeStats: records.modeStats ?? noModeStats,
     themes: union(remote.themes, local.themes),
     // This device's latest answer wins.
     votes: { ...remote.votes, ...local.votes },

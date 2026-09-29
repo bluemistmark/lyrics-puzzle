@@ -1,4 +1,4 @@
-# NCT 노래 퀴즈
+# 네오 노래 퀴즈
 
 React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 

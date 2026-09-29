@@ -1,0 +1,457 @@
+/* 시험지: a printed exam paper in Gowun Batang with ruled boxes; answers are marked in
+   green and the score in red. */
+
+@keyframes exam-write {
+  from {
+    opacity: 0;
+    transform: translateY(-2px) rotate(-4deg);
+  }
+}
+
+[data-theme="exam"] {
+  &:root {
+    --rp-bg: #fbfbf8;
+    --rp-grid: transparent;
+    --rp-glow: transparent;
+    --rp-ink: #111111;
+    --rp-ink-sub: #555555;
+    --rp-line: #111111;
+    --rp-tabs-bg: transparent;
+    --rp-tabs-border: transparent;
+    --rp-tab-text: #333333;
+    --rp-accent: #111111;
+    --rp-accent-hover: #333333;
+    --rp-on-accent: #ffffff;
+    --rp-surface: #ffffff;
+    --rp-surface-border: #111111;
+    --rp-shadow: transparent;
+    --rp-lyrics-bg: #ffffff;
+    --rp-lyrics-border: #111111;
+    --rp-revealed-bg: transparent;
+    --rp-revealed-text: #1f3fbf;
+    --rp-track-bg: #ffffff;
+    --rp-track-border: #111111;
+    --rp-input-border: #111111;
+    --rp-placeholder: #9a9a9a;
+    --rp-disabled-bg: #eeeeee;
+    --rp-disabled-text: #999999;
+    --rp-control-text: #111111;
+    --rp-control-border: #111111;
+    --rp-control-edge: transparent;
+    --rp-control-icon: #111111;
+    --rp-hover-bg: #f1f1ec;
+    --rp-hover-border: #111111;
+    --exam-pen: #1d7a45;
+    --exam-red: #d7262e;
+    font-family: "Gowun Batang", serif;
+    color: #111;
+  }
+
+  button,
+  input {
+    font-family: inherit;
+  }
+
+  .brand-icon {
+    --logo-bg: #111111;
+    --logo-ink: #ffffff;
+  }
+
+  .brand-icon svg {
+    filter: none;
+  }
+
+  :is(.brand, main h1, h2, .song-reveal strong, .success-box strong) {
+    font-family: "Gowun Batang", serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  /* Exam header: a thick rule over a thin one. */
+  .topbar {
+    margin-bottom: 20px;
+    border-bottom: 3px double #111;
+  }
+
+  .brand-sub {
+    color: #555;
+    font-family: "Gowun Batang", serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+  }
+
+  /* Tabs as the boxed subject labels on a test booklet. */
+  .game-tabs {
+    gap: 0;
+    padding: 0;
+    border: 1px solid #111;
+    border-radius: 0;
+  }
+
+  .game-tabs button {
+    border-radius: 0;
+    border-right: 1px solid #111;
+    font-weight: 700;
+  }
+
+  .game-tabs button:last-child {
+    border-right: 0;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    box-shadow: none;
+  }
+
+  .filter,
+  .hints button,
+  .input-wrap,
+  .input-wrap button,
+  .primary,
+  .puzzle-card,
+  .lyrics,
+  .success-box,
+  dialog,
+  .unit-options button,
+  .theme-options label,
+  .record-item,
+  .modal-icon {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .filter,
+  .hints button {
+    font-weight: 700;
+  }
+
+  /* The card is one question: number, instruction and point value. */
+  .puzzle-card {
+    padding-top: 20px;
+    border: 0;
+    background: transparent;
+  }
+
+  .puzzle-card::before {
+    content: "1. 다음 초성을 보고 알맞은 가사를 쓰시오. [3점]";
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* Title slot is the answer blank for the song. */
+  .song-reveal {
+    font-size: 13px;
+  }
+
+  .song-reveal::before {
+    content: "곡명 :";
+    font-weight: 700;
+  }
+
+  .song-reveal strong {
+    min-width: 90px;
+    padding: 0 6px;
+    border-bottom: 1px solid #111;
+    font-size: 17px;
+    text-align: center;
+  }
+
+  .song-reveal.unknown strong {
+    color: transparent;
+    opacity: 1;
+  }
+
+  .song-reveal:not(.unknown) strong {
+    color: var(--exam-pen);
+    font-size: 17px;
+  }
+
+  .song-reveal span {
+    opacity: 1;
+    color: #555;
+  }
+
+  /* Lyrics sit in a <보기> box. */
+  .lyrics {
+    position: relative;
+    margin: 22px 0 14px;
+    padding: 22px 16px 16px;
+    overflow: visible;
+  }
+
+  .lyrics::before {
+    content: "< 보 기 >";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    padding: 0 10px;
+    transform: translateX(-50%);
+    background: var(--rp-bg);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .lyrics p {
+    font-family: "Gowun Batang", serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+  }
+
+  /* Answers the player filled in, in blue. */
+  .revealed {
+    border-radius: 0;
+    color: var(--exam-pen);
+    font-weight: 700;
+    animation: exam-write 0.4s ease-out;
+  }
+
+  .english {
+    color: #111;
+    text-decoration-style: dotted;
+    text-decoration-color: #111;
+  }
+
+  /* Progress is the score, marked in red pen. */
+  .progress-track {
+    height: 6px;
+    border: 1px solid #111;
+    border-radius: 0;
+  }
+
+  .progress-track::after {
+    display: none;
+  }
+
+  .progress-track > div {
+    border-radius: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      #111 0 2px,
+      transparent 2px 5px
+    );
+    box-shadow: none;
+  }
+
+  .progress-label b {
+    color: var(--exam-red);
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .progress-label b::before {
+    content: "점수 ";
+  }
+
+  /* The word field is the answer line. */
+  .input-wrap {
+    align-items: center;
+    border-width: 0 0 1.5px;
+    background: transparent;
+  }
+
+  .input-wrap::before {
+    content: "답 :";
+    flex: none;
+    padding: 0 4px 0 2px;
+    font-weight: 700;
+  }
+
+  .input-wrap:focus-within {
+    border-color: var(--exam-pen);
+    box-shadow: none;
+  }
+
+  .input-wrap input {
+    color: var(--exam-pen);
+    font-weight: 700;
+  }
+
+  .input-wrap input::placeholder {
+    font-weight: 400;
+  }
+
+  .input-wrap button {
+    background: #111;
+    color: #fff;
+  }
+
+  .input-wrap button:hover:not(:disabled) {
+    background: #333;
+  }
+
+  .primary {
+    letter-spacing: 2px;
+  }
+
+  /* Result: graded in red pen. */
+  .success-box {
+    border: 1px solid #111;
+    background: #fff;
+  }
+
+  .success-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex: none;
+    border: 2.5px solid var(--exam-red);
+    border-radius: 50%;
+    color: var(--exam-red);
+    transform: rotate(-8deg);
+  }
+
+  /* Entered words: monochrome chips; misses are crossed out. */
+  .word-history > span {
+    border-radius: 0;
+  }
+
+  .word-history .hit {
+    background: #fff;
+    border: 1px solid #111;
+    color: #111;
+  }
+
+  .word-history .miss {
+    background: #fff;
+    border: 1px dashed #aaa;
+    color: #888;
+    text-decoration: line-through;
+  }
+
+  .unit-options button.chosen,
+  .theme-options label.selected {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+
+  /* 시험지 기록·도감·소식: monochrome instead of the default greens. */
+  .record-item,
+  .news-item {
+    background: #fff;
+    border: 1px solid #111;
+  }
+
+  :is(.record-item, .news-item) span,
+  .record-note,
+  .record-subtitle,
+  .reset-btn,
+  .news-item time,
+  .news-block li span,
+  .news-stats,
+  .collection-summary,
+  .collection-songs small,
+  .achievement-count {
+    color: #666;
+  }
+
+  .record-item strong,
+  .news-block b,
+  .news-block ul,
+  .news-note,
+  .collection-summary b,
+  .collection-head,
+  .achievement-group h3 {
+    color: #111;
+  }
+
+  .collection-songs .locked {
+    color: #aaa;
+  }
+
+  .record-item.play-grass {
+    --grass-on: #111;
+    --grass-empty: #e2e2e2;
+  }
+
+  .record-item.achievement svg {
+    color: #111;
+  }
+
+  .record-item.achievement.earned {
+    border-width: 1.5px;
+  }
+
+  .record-item.achievement.earned strong {
+    color: var(--exam-red);
+  }
+
+  /* Modal icon, options and radios in each concept theme's own colors. */
+  .modal-icon {
+    background: #fff;
+    border: 1.5px solid #111;
+    color: #111;
+  }
+
+  .unit-options button,
+  .theme-options label,
+  .modal-inner form input {
+    background: #fff;
+    border-color: #111;
+    color: #111;
+  }
+
+  .theme-options input {
+    accent-color: #111;
+  }
+
+  .theme-options label.selected input {
+    accent-color: #fff;
+  }
+
+  /* Monochrome for everything the base styles color green (results, share, daily, help). */
+  .success-box p,
+  .progress-label,
+  .daily-date,
+  .share-results > p,
+  .help-example {
+    color: #555;
+  }
+
+  .streak svg,
+  .streak b,
+  .instructions li::marker {
+    color: #111;
+  }
+
+  .help-example,
+  .daily-badge,
+  .share-results,
+  .share-results pre,
+  .share-actions button,
+  .share-actions a,
+  .report-form textarea {
+    background: #fff;
+    color: #111;
+    border: 1px solid #111;
+    border-radius: 0;
+  }
+
+  .share-results pre {
+    border-style: dashed;
+  }
+
+  .icon-btn:hover,
+  .share-actions button:hover,
+  .share-actions a:hover {
+    background: #f1f1ec;
+  }
+
+  footer,
+  .site-footer {
+    border-color: #111;
+  }
+
+  :is(button, a, summary):focus-visible,
+  .theme-options label:focus-within {
+    outline-color: #111;
+  }
+
+  dialog::backdrop {
+    background: #11111166;
+  }
+}

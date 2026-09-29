@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { startAccount } from "./account";
 import { App } from "./App";
-import "./style.css";
+import "./styles/index.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
 startAccount();

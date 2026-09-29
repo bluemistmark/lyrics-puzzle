@@ -1,0 +1,38 @@
+/* 라이트: colors for the rhythm-puzzle layout (rhythm.css). */
+
+[data-theme="light"] {
+  /* Rhythm puzzle: light and dark share this layout; each only sets the colors below. */
+  &:root {
+    --rp-bg: #f7f8f4;
+    --rp-grid: #e6eddf5c;
+    --rp-glow: #e9f1dcad;
+    --rp-ink: #183d2d;
+    --rp-ink-sub: #648157;
+    --rp-line: #dce5d5;
+    --rp-tabs-bg: #edf1e9;
+    --rp-tabs-border: #e1e8dc;
+    --rp-tab-text: #627463;
+    --rp-accent: #1e4a35;
+    --rp-accent-hover: #286442;
+    --rp-on-accent: #fff;
+    --rp-surface: #fff;
+    --rp-surface-border: #dfe8d9;
+    --rp-shadow: #183d2d0d;
+    --rp-lyrics-bg: #f4f8ee;
+    --rp-lyrics-border: #e3ecd9;
+    --rp-revealed-bg: #d9f2a3;
+    --rp-revealed-text: #183d2d;
+    --rp-track-bg: #e9eee3;
+    --rp-track-border: #d8e6c9;
+    --rp-input-border: #cdddc7;
+    --rp-placeholder: #879a81;
+    --rp-disabled-bg: #e8efe0;
+    --rp-disabled-text: #789070;
+    --rp-control-text: #244934;
+    --rp-control-border: #d8e6cc;
+    --rp-control-edge: #d9e5ce;
+    --rp-control-icon: #6da72f;
+    --rp-hover-bg: #ecf8d8;
+    --rp-hover-border: #b9d89c;
+  }
+}

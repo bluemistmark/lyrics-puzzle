@@ -103,7 +103,7 @@ export type AchievementIcon =
 export const ACHIEVEMENT_GROUPS = [
   "정답",
   "가사",
-  "오늘의 문제",
+  "데일리 퀴즈",
   "도감",
   "플레이",
   "숨은 업적",
@@ -182,7 +182,7 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     });
   const solve = make("정답");
   const lyrics = make("가사");
-  const day = make("오늘의 문제");
+  const day = make("데일리 퀴즈");
   const book = make("도감");
   const play = make("플레이");
   const secret = make("숨은 업적", true);
@@ -305,7 +305,7 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     day(
       "daily-first",
       "오늘의 도전자",
-      "오늘의 문제를 처음 끝내요.",
+      "데일리 퀴즈를 처음 끝내요.",
       "calendar",
       1,
       (i) => daily(i).played,
@@ -313,7 +313,7 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     day(
       "daily-streak-3",
       "3일 연속",
-      "오늘의 문제를 3일 연속으로 맞혀요.",
+      "데일리 퀴즈를 3일 연속으로 맞혀요.",
       "calendar",
       3,
       (i) => daily(i).best,
@@ -321,7 +321,7 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     day(
       "daily-streak-7",
       "일주일 개근",
-      "오늘의 문제를 7일 연속으로 맞혀요.",
+      "데일리 퀴즈를 7일 연속으로 맞혀요.",
       "calendar",
       7,
       (i) => daily(i).best,
@@ -329,7 +329,7 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     day(
       "daily-streak-30",
       "한 달 개근",
-      "오늘의 문제를 30일 연속으로 맞혀요.",
+      "데일리 퀴즈를 30일 연속으로 맞혀요.",
       "calendar",
       30,
       (i) => daily(i).best,
@@ -337,7 +337,7 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     day(
       "daily-solved-30",
       "오늘의 단골",
-      "오늘의 문제를 모두 30일 맞혀요. (연속이 아니어도 돼요)",
+      "데일리 퀴즈를 모두 30일 맞혀요. (연속이 아니어도 돼요)",
       "calendar",
       30,
       (i) => daily(i).solved,
@@ -345,7 +345,7 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     day(
       "daily-perfect",
       "완벽한 하루",
-      "오늘의 문제를 힌트 없이 단어 3개 이하로 맞혀요.",
+      "데일리 퀴즈를 힌트 없이 단어 3개 이하로 맞혀요.",
       "sparkles",
       1,
       (i) =>
@@ -439,7 +439,7 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     play(
       "nickname",
       "랭커 데뷔",
-      "오늘의 랭킹에 닉네임을 등록해요.",
+      "데일리 랭킹에 닉네임을 등록해요.",
       "trophy",
       1,
       (i) => (i.hasNickname ? 1 : 0),

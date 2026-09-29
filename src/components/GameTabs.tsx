@@ -2,7 +2,7 @@ export type Tab = "play" | "daily" | "record" | "collection" | "news";
 
 const tabs: [Tab, string][] = [
   ["play", "플레이"],
-  ["daily", "오늘"],
+  ["daily", "데일리"],
   ["record", "기록"],
   ["collection", "도감"],
   ["news", "소식"],

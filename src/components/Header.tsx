@@ -1,4 +1,5 @@
 import { FileSpreadsheet, HelpCircle, Palette, UserRound } from "lucide-react";
+import { LogoMark } from "./LogoMark";
 
 type Props = {
   discreet: boolean;
@@ -12,14 +13,10 @@ export function Header({ discreet, onHelp, onTheme, onAccount }: Props) {
     <header className="topbar">
       <a className="brand" href="#">
         <span className="brand-icon">
-          {discreet ? (
-            <FileSpreadsheet size={23} />
-          ) : (
-            <img src="/favicon.svg" alt="" width="42" height="42" />
-          )}
+          {discreet ? <FileSpreadsheet size={23} /> : <LogoMark />}
         </span>
         <span>
-          {discreet ? "문서 정리" : "NCT 노래 퀴즈"}
+          {discreet ? "문서 정리" : "네오 노래 퀴즈"}
           <span className="brand-sub">
             {discreet ? "SHEET1 · PERSONAL" : "LYRICS PUZZLE"}
           </span>
