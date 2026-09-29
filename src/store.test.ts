@@ -201,3 +201,65 @@ test("일반 모드에서 끝낸 문제만 오늘 날짜의 플레이 수로 세
   useGame.getState().reset();
   assert.deepEqual(useGame.getState().playLog, {});
 });
+
+test("업적은 달성 순간 한 번만 알림 목록에 오르고, 닫으면 비워지며 초기화하면 조용히 다시 계산", async () => {
+  useGame.getState().reset();
+  assert.deepEqual(useGame.getState().justUnlocked, []);
+  const earnedBefore = { ...useGame.getState().achievements };
+  const q = questions.find((q) => q.id === useGame.getState().round.id)!;
+  useGame.getState().solve(q.title);
+  const { achievements, justUnlocked } = useGame.getState();
+  assert.equal(achievements["first-solve"], koreaDate());
+  assert.ok(justUnlocked.includes("first-solve"));
+  assert.ok(!justUnlocked.some((id) => earnedBefore[id]));
+
+  useGame.getState().next();
+  assert.equal(
+    useGame.getState().justUnlocked.filter((id) => id === "first-solve").length,
+    1,
+  );
+  useGame.getState().dismissUnlocked();
+  assert.deepEqual(useGame.getState().justUnlocked, []);
+
+  await useGame.persist.rehydrate();
+  assert.equal(useGame.getState().achievements["first-solve"], koreaDate());
+  assert.deepEqual(useGame.getState().justUnlocked, []);
+
+  useGame.getState().reset();
+  assert.equal(useGame.getState().achievements["first-solve"], undefined);
+  assert.deepEqual(useGame.getState().justUnlocked, []);
+});
+
+test("정답 순간의 기록과 테마 사용을 업적용으로 남기고, 닉네임 등록 같은 다른 스토어 변화에도 업적을 다시 판정", async () => {
+  // Other test files share the ranking store in this process.
+  const { useRanking } = await import("./ranking.ts");
+  useRanking.setState({ nickname: "" });
+  useGame.getState().reset();
+  const q = questions.find((q) => q.id === useGame.getState().round.id)!;
+  useGame.getState().solve(q.title);
+  const feats = useGame.getState().feats;
+  assert.equal(feats.noWord, 1, "단어 입력 없이 맞힘");
+  assert.equal(feats.unit, q.unit);
+  assert.equal(feats.unitRun, 1);
+  assert.ok(useGame.getState().achievements["no-word"]);
+  useGame.getState().next();
+  useGame.getState().giveUp();
+  assert.equal(useGame.getState().feats.unitRun, 0);
+
+  useGame.getState().noteTheme("dark");
+  useGame.getState().noteTheme("dark");
+  assert.deepEqual(
+    useGame.getState().themes.filter((t) => t === "dark"),
+    ["dark"],
+  );
+
+  assert.equal(useGame.getState().achievements.nickname, undefined);
+  useRanking.setState({ nickname: "시즈니" });
+  assert.equal(useGame.getState().achievements.nickname, koreaDate());
+  assert.ok(useGame.getState().justUnlocked.includes("nickname"));
+  useRanking.setState({ nickname: "" });
+
+  useGame.getState().reset();
+  assert.equal(useGame.getState().feats.noWord, 0);
+  assert.ok(useGame.getState().themes.includes("dark"), "테마 기록은 유지");
+});

@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
+import { THEMES, type Theme } from "./themes.ts";
 
-export type Theme =
-  "system" | "light" | "dark" | "excel" | "notebook" | "console";
+export type { Theme };
 const key = "lyrics-theme";
 function readTheme(): Theme {
   try {
     const value = localStorage.getItem(key);
-    if (
-      value === "light" ||
-      value === "dark" ||
-      value === "excel" ||
-      value === "notebook" ||
-      value === "console"
-    )
-      return value;
+    const theme = THEMES.find(([id]) => id === value)?.[0];
+    if (theme) return theme;
   } catch {
     /* Storage may be disabled; theme still works for this session. */
   }

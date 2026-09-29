@@ -1428,6 +1428,122 @@ main [hidden] {
 [data-theme="console"] .grass-cell {
   border-radius: 0;
 }
+/* 업적: cards reuse .record-item so every theme applies */
+.achievement-count {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+.achievement-group h3 {
+  margin: 16px 2px 0;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.7;
+}
+.record-item.achievement.secret {
+  border-style: dashed;
+}
+.achievement-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.record-item.achievement {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px;
+  min-width: 0;
+}
+.record-item.achievement:not(.earned) {
+  opacity: 0.6;
+}
+.record-item.achievement:not(.earned) svg {
+  filter: grayscale(1);
+}
+.record-item.achievement strong {
+  margin-top: 4px;
+  font-size: 14px;
+}
+.record-item.achievement span {
+  font-size: 11px;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+.record-item.achievement small {
+  margin-top: auto;
+  padding-top: 4px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+.record-item.achievement .progress-track {
+  width: 100%;
+  height: 5px;
+  margin: 6px 0 0;
+}
+.achievement-toast-region {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+  z-index: 10;
+}
+.achievement-toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 14px;
+  background: #20241f;
+  color: #fff;
+  box-shadow: 0 10px 30px #0004;
+  text-align: left;
+  pointer-events: auto;
+  animation: toast-in 0.25s ease-out;
+}
+.achievement-toast svg {
+  color: #ffd66b;
+  flex: none;
+}
+.achievement-toast span {
+  display: flex;
+  flex-direction: column;
+}
+.achievement-toast small {
+  font-size: 11px;
+  opacity: 0.75;
+}
+.achievement-toast strong {
+  font-size: 14px;
+}
+@keyframes toast-in {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .achievement-toast {
+    animation: none;
+  }
+}
+[data-theme="dark"] .achievement-toast {
+  background: #e7eee1;
+  color: #1a2117;
+}
+[data-theme="dark"] .achievement-toast svg {
+  color: #b7791f;
+}
 [data-theme="dark"] .game-tabs {
   border-color: #3d4b39;
 }

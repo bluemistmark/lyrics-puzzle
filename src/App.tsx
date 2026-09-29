@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AchievementToast } from "./components/AchievementToast";
 import { CollectionPanel } from "./components/CollectionPanel";
 import { Footer } from "./components/Footer";
 import { GameTabs, type Tab } from "./components/GameTabs";
@@ -45,6 +46,9 @@ export function App() {
     };
   }, []);
   useEffect(() => syncDaily(today), [syncDaily, today]);
+  // Remember every theme choice for the 업적 "패셔니스타".
+  const noteTheme = useGame((s) => s.noteTheme);
+  useEffect(() => noteTheme(theme), [noteTheme, theme]);
   const { unread, markSeen } = useNewsSeen(news[0]?.id ?? 0);
   const changeTab = (tab: Tab) => {
     setActiveTab(tab);
@@ -119,6 +123,7 @@ export function App() {
           </div>
         )}
         <Footer />
+        <AchievementToast />
       </div>
       <Modal open={modal !== null} onClose={close}>
         {modal === "title" && <TitleModal onClose={close} />}
