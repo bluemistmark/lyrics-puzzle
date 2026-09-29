@@ -21,7 +21,7 @@ export function WordForm({
   };
   return (
     <form className="word-form" onSubmit={submit}>
-      <label htmlFor={`${mode}-word`}>단어 입력</label>
+      {/* <label htmlFor={`${mode}-word`}>단어 입력</label> */}
       <div className="input-wrap">
         <input
           ref={input}

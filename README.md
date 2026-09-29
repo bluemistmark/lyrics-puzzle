@@ -1,4 +1,4 @@
-# NCT 초성 가사 맞히기
+# NCT 노래 퀴즈
 
 React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 

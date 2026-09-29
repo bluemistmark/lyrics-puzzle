@@ -9,6 +9,7 @@ export function GiveUpModal({
   mode?: GameMode;
 }) {
   const giveUp = useGame((s) => s.giveUp);
+  const playMode = useGame((s) => (mode === "daily" ? "classic" : s.playMode));
   return (
     <>
       <span className="modal-icon">
@@ -16,11 +17,17 @@ export function GiveUpModal({
       </span>
       <h2>정답 확인</h2>
       <p>
-        제목과 가사 전체가 공개됩니다.
+        {playMode === "simple"
+          ? "제목이 공개됩니다."
+          : playMode === "easy"
+            ? "가사 전체가 공개됩니다."
+            : "제목과 가사 전체가 공개됩니다."}
         <br />
         {mode === "daily"
           ? "오늘의 문제는 여기서 종료됩니다."
-          : "연속 정답 기록은 초기화됩니다."}
+          : playMode === "classic"
+            ? "연속 정답 기록은 초기화됩니다."
+            : "이 모드는 기록에 남지 않아요."}
       </p>
       <button
         className="primary"

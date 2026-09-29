@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { units } from "../../game";
 import { useRound } from "../../hooks/useRound";
+import { playModeName } from "../../modes";
 import { useGame } from "../../store";
 import type { ModalName } from "../Modal";
 import { BottomActions } from "./BottomActions";
@@ -23,7 +24,9 @@ type Props = { hidden: boolean; onOpenModal: (name: ModalName) => void };
 export function PlayPanel({ hidden, onOpenModal }: Props) {
   const { round, question, percent, full } = useRound();
   const selected = useGame((s) => s.selected);
+  const playMode = useGame((s) => s.playMode);
   const notice = useGame((s) => s.notice);
+  const modeName = playModeName(playMode);
   return (
     <div
       id="play-panel"
@@ -33,34 +36,62 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
     >
       <div className="game-toolbar">
         <h1>가사 맞히기</h1>
-        <button
-          className="filter"
-          aria-label={`유닛 선택, 현재 ${unitLabel(selected)}`}
-          onClick={() => onOpenModal("units")}
-        >
-          유닛 · {unitLabel(selected)}
-          <ChevronDown size={15} />
-        </button>
+        <div className="toolbar-filters">
+          <button
+            className="filter"
+            aria-label={`모드 선택, 현재 ${modeName}`}
+            onClick={() => onOpenModal("modes")}
+          >
+            <span className="filter-prefix">모드 · </span>
+            {modeName}
+            <ChevronDown size={15} />
+          </button>
+          <button
+            className="filter"
+            aria-label={`유닛 선택, 현재 ${unitLabel(selected)}`}
+            onClick={() => onOpenModal("units")}
+          >
+            <span className="filter-prefix">유닛 · </span>
+            {unitLabel(selected)}
+            <ChevronDown size={15} />
+          </button>
+        </div>
       </div>
       <PuzzleCard
         question={question}
         round={round}
         percent={percent}
         full={full}
+        playMode={playMode}
       />
       {(round.solved || round.givenUp || full) && (
-        <ResultBox question={question} round={round} full={full} />
+        <ResultBox
+          question={question}
+          round={round}
+          full={full}
+          playMode={playMode}
+        />
       )}
-      {/* Remount per question so the draft word is cleared. */}
-      <WordForm key={round.id} disabled={round.givenUp || full} />
+      {/* Remount per mode and question so the draft word is cleared. */}
+      {playMode !== "simple" && (
+        <WordForm
+          key={`${playMode}-${round.id}`}
+          disabled={round.givenUp || full}
+        />
+      )}
       <div className="feedback" role="status">
         {notice}
       </div>
-      <WordHistory words={round.words} />
-      <HintButtons question={question} round={round} full={full} />
+      {playMode !== "simple" && <WordHistory words={round.words} />}
+      <HintButtons
+        question={question}
+        round={round}
+        full={full}
+        playMode={playMode}
+      />
       <BottomActions
         finished={round.solved || round.givenUp}
-        onTitle={() => onOpenModal("title")}
+        onTitle={playMode === "easy" ? undefined : () => onOpenModal("title")}
         onGiveUp={() => onOpenModal("giveup")}
       />
       <ReportLink onClick={() => onOpenModal("report")} />

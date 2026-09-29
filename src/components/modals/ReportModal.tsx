@@ -8,7 +8,7 @@ import {
   sendReport,
   type ReportKind,
 } from "../../report";
-import { useGame, type GameMode } from "../../store";
+import { playRound, useGame, type GameMode } from "../../store";
 
 type Props = {
   /** Set when opened from a question screen: that question is attached. */
@@ -19,7 +19,7 @@ type Props = {
 /** 오류 제보. Asks for no contact details; replies go out through the 소식 tab. */
 export function ReportModal({ mode, onClose }: Props) {
   const questionId = useGame((s) =>
-    mode === "daily" ? s.daily.round.id : mode ? s.round.id : undefined,
+    mode === "daily" ? s.daily.round.id : mode ? playRound(s).id : undefined,
   );
   const kinds = REPORT_KINDS.filter(([kind]) =>
     (mode ? QUESTION_KINDS : GENERAL_KINDS).includes(kind),

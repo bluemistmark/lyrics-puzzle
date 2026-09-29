@@ -1,5 +1,5 @@
-import { Check } from "lucide-react";
-import type { Question } from "../../game";
+import { songs, type Question } from "../../game";
+import type { PlayMode } from "../../modes";
 import type { Round } from "../../store";
 import { Lyrics } from "./Lyrics";
 
@@ -8,57 +8,55 @@ type Props = {
   round: Round;
   percent: number;
   full: boolean;
+  playMode?: PlayMode;
 };
 
-export function PuzzleCard({ question, round, percent, full }: Props) {
+export function PuzzleCard({
+  question,
+  round,
+  percent,
+  full,
+  playMode = "classic",
+}: Props) {
+  const simple = playMode === "simple";
+  const artist = songs.find((song) => song.id === question.songId)?.artist;
   return (
-    <section className="puzzle-card" aria-label="초성 가사 문제">
-      <div className="card-top">
-        <span className="question-label">
-          초성 가사 <span>{question.lines.length}줄 문제</span>
-        </span>
-      </div>
+    <section
+      className="puzzle-card"
+      aria-label={simple ? "가사 문제" : "초성 가사 문제"}
+    >
+      {playMode === "easy" && (
+        <p className="song-reveal">
+          <strong>{question.title}</strong>
+          {artist && <span>{artist}</span>}
+        </p>
+      )}
       <Lyrics
         question={question}
         revealed={round.revealed}
-        showAll={round.givenUp}
+        showAll={round.givenUp || simple}
         markEnglish={round.english}
       />
-      <div
-        className="progress-track"
-        role="progressbar"
-        aria-label="가사 복원율"
-        aria-valuenow={percent}
-        aria-valuemin={0}
-        aria-valuemax={100}
-      >
-        <div style={{ width: `${percent}%` }} />
-      </div>
-      <div className="progress-label">
-        <span>
-          {round.givenUp ? "정답 공개" : full ? "가사 완성" : "가사 복원"}
-        </span>
-        <b>{round.givenUp ? "—" : `${percent}%`}</b>
-      </div>
-      <div className="card-bottom">
-        <span className="small-status">
-          {round.solved ? (
-            <>
-              <Check size={15} /> 제목 정답
-            </>
-          ) : (
-            <>
-              <span className="status-dot" />
-              {round.givenUp
-                ? "문제 종료"
-                : full
-                  ? "제목만 남았어요"
-                  : "진행 중"}
-            </>
-          )}
-        </span>
-        <span>힌트 {round.hints}회</span>
-      </div>
+      {!simple && (
+        <>
+          <div
+            className="progress-track"
+            role="progressbar"
+            aria-label="가사 복원율"
+            aria-valuenow={percent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div style={{ width: `${percent}%` }} />
+          </div>
+          <div className="progress-label">
+            <span>
+              {round.givenUp ? "정답 공개" : full ? "가사 완성" : "가사 복원"}
+            </span>
+            <b>{round.givenUp ? "—" : `${percent}%`}</b>
+          </div>
+        </>
+      )}
     </section>
   );
 }
