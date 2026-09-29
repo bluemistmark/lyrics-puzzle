@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { beforeSend } from "./analytics";
 import { AchievementToast } from "./components/AchievementToast";
 import { CollectionPanel } from "./components/CollectionPanel";
 import { Footer } from "./components/Footer";
@@ -127,6 +129,8 @@ export function App() {
         )}
         <Footer />
         <AchievementToast />
+        {/* Page-view statistics; the admin page doesn't include this. */}
+        <Analytics beforeSend={beforeSend} />
       </div>
       <Modal open={modal !== null} onClose={close}>
         {modal === "title" && <TitleModal onClose={close} />}
