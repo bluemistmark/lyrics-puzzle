@@ -217,6 +217,8 @@ type Store = {
   syncDaily: (date: string) => void;
   next: () => void;
   setPlayMode: (mode: PlayMode) => void;
+  /** Opens a shared question (?q=…&mode=…) as the current round of that mode; false if unknown. */
+  openQuestion: (id: string, mode: PlayMode) => boolean;
   select: (selected: string[]) => void;
   reset: () => void;
   /** Clears the toast (it shows every achievement reached so far at once). */
@@ -476,6 +478,25 @@ export const useGame = create<Store>()(
         },
         setPlayMode: (playMode) => {
           if (playMode !== get().playMode) set({ playMode, notice: "" });
+        },
+        openQuestion: (id, playMode) => {
+          if (!questions.some((q) => q.id === id)) return false;
+          const target = { ...get(), playMode };
+          if (playRound(target).id === id) {
+            set({ playMode, notice: "" });
+            return true;
+          }
+          const seen = playSeen(target);
+          set({
+            playMode,
+            ...playPatch(
+              target,
+              newRound(id),
+              seen.includes(id) ? seen : [...seen, id],
+            ),
+            notice: "공유받은 문제예요. 같은 문제에 도전해 보세요!",
+          });
+          return true;
         },
         select: (selected) => {
           if (selected.length)

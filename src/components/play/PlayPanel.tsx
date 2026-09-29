@@ -5,6 +5,7 @@ import { playModeName } from "../../modes";
 import { useGame } from "../../store";
 import type { ModalName } from "../Modal";
 import { BottomActions } from "./BottomActions";
+import { PlayShare } from "./PlayShare";
 import { HintButtons } from "./HintButtons";
 import { PuzzleCard } from "./PuzzleCard";
 import { ReportLink } from "./ReportLink";
@@ -92,6 +93,14 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
         onTitle={playMode === "easy" ? undefined : () => onOpenModal("title")}
         onGiveUp={() => onOpenModal("giveup")}
       />
+      {(round.solved || round.givenUp) && (
+        <PlayShare
+          question={question}
+          round={round}
+          percent={percent}
+          playMode={playMode}
+        />
+      )}
       <ReportLink onClick={() => onOpenModal("report")} />
     </div>
   );

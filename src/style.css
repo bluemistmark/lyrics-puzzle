@@ -3224,6 +3224,7 @@ main [hidden] {
 }
 
 .share-actions {
+  margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -5380,6 +5381,7 @@ main [hidden] {
 [data-theme="exam"] .record-item.achievement.earned strong {
   color: var(--exam-red);
 }
+
 /* Modal icon, options and radios in each concept theme's own colors. */
 [data-theme="exam"] .modal-icon {
   background: #fff;
@@ -5410,4 +5412,91 @@ main [hidden] {
 
 [data-theme="space"] .theme-options input {
   accent-color: #8ecbff;
+}
+/* 노트: pink/plum in place of the default greens that the notebook rules didn't cover. */
+[data-theme="notebook"] .success-box {
+  background: #fce8ef;
+  border: 1.5px dashed #e3aec4;
+  color: #6f3d58;
+  box-shadow: 3px 3px 0 #f3dce6;
+}
+
+[data-theme="notebook"] .success-icon {
+  color: #bd668f;
+}
+
+[data-theme="notebook"] .success-box p,
+[data-theme="notebook"] .record-item span,
+[data-theme="notebook"] .news-stats,
+[data-theme="notebook"] .news-note,
+[data-theme="notebook"] .muted,
+[data-theme="notebook"] .eyebrow {
+  color: #8f7281;
+}
+
+[data-theme="notebook"] .news-block ul,
+[data-theme="notebook"] .streak b {
+  color: #6f3d58;
+}
+
+[data-theme="notebook"] .streak svg,
+[data-theme="notebook"] .instructions li::marker {
+  color: #d07fa3;
+}
+
+[data-theme="notebook"] .status-dot {
+  background: #e89bb9;
+}
+
+[data-theme="notebook"] .word-history .miss {
+  background: #f7eef1;
+  color: #a08a95;
+}
+
+[data-theme="notebook"] .icon-btn:hover,
+[data-theme="notebook"] .share-actions button:hover,
+[data-theme="notebook"] .share-actions a:hover {
+  background: #fce3ed;
+}
+
+[data-theme="notebook"] .record-item.play-grass {
+  --grass-on: #d0628f;
+  --grass-empty: #f6e3ea;
+}
+
+[data-theme="notebook"] .report-form textarea {
+  background: #fffaf8;
+  border-color: #eed4df;
+}
+
+[data-theme="notebook"] footer,
+[data-theme="notebook"] .divider {
+  border-color: #ead8de;
+}
+
+[data-theme="notebook"] :is(button, a, summary):focus-visible,
+[data-theme="notebook"] .theme-options label:focus-within {
+  outline-color: #cf79a1;
+}
+
+[data-theme="notebook"] dialog::backdrop {
+  background: #5a2f4566;
+}
+
+/* Revealed words flash like a fresh highlighter stroke instead of the green pulse. */
+[data-theme="notebook"] .revealed {
+  animation: notebook-highlight 0.45s ease;
+}
+
+@keyframes notebook-highlight {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+[data-theme="notebook"] .revealed {
+  background-repeat: no-repeat;
 }

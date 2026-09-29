@@ -350,3 +350,18 @@ test("클래식 규칙에서는 단어 공개 힌트를 문제당 5번까지만 
   assert.equal(useGame.getState().modes.easy.round.wordHints, 7);
   useGame.getState().setPlayMode("classic");
 });
+
+test("공유받은 문제는 지정한 모드의 현재 문제로 열리고, 없는 문제는 무시", () => {
+  useGame.getState().reset();
+  const classic = useGame.getState().round.id;
+  const target = questions.find((q) => q.id !== classic)!;
+  assert.equal(useGame.getState().openQuestion("없는-문제", "easy"), false);
+  assert.equal(useGame.getState().playMode, "classic");
+  assert.ok(useGame.getState().openQuestion(target.id, "easy"));
+  const s = useGame.getState();
+  assert.equal(s.playMode, "easy");
+  assert.equal(s.modes.easy.round.id, target.id);
+  assert.ok(s.modes.easy.seen.includes(target.id));
+  assert.equal(s.round.id, classic);
+  useGame.getState().setPlayMode("classic");
+});

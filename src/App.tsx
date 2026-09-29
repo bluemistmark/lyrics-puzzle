@@ -26,6 +26,7 @@ import { useNewsSeen } from "./hooks/useNewsSeen";
 import { news } from "./game";
 import { koreaDate } from "./daily";
 import { useRanking } from "./ranking";
+import { isPlayMode } from "./modes";
 import { useGame } from "./store";
 import { useTheme } from "./theme";
 
@@ -65,6 +66,17 @@ export function App() {
     const { nickname, asked } = useRanking.getState();
     setModal(nickname || asked ? null : "nickname");
   };
+  // A shared result link (?q=문제ID&mode=모드) opens that question once, then leaves the URL clean.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const id = url.searchParams.get("q");
+    if (!id) return;
+    const mode = url.searchParams.get("mode");
+    useGame.getState().openQuestion(id, isPlayMode(mode) ? mode : "classic");
+    url.searchParams.delete("q");
+    url.searchParams.delete("mode");
+    window.history.replaceState(null, "", url.href);
+  }, []);
   useModelContextTools();
   return (
     <>
