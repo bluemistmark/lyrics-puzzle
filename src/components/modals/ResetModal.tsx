@@ -7,7 +7,7 @@ export function ResetModal({ onClose, onCancel }: Props) {
   return (
     <>
       <h2>플레이 기록을 지울까요?</h2>
-      <p>진행 중인 문제와 누적 기록이 초기화돼요.</p>
+      <p>진행 중인 문제와 누적 기록, 곡 도감이 초기화돼요.</p>
       <button
         className="primary"
         onClick={() => {

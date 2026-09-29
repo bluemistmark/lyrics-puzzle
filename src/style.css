@@ -1490,6 +1490,78 @@ main [hidden] {
   background: #ff9a73;
 }
 
+/* 도감 tab: reuses record styles so every theme applies; colors below inherit. */
+.collection-summary {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #627050;
+}
+.collection-summary b {
+  font-size: 15px;
+  color: #286442;
+}
+.record-item.collection-unit {
+  display: block;
+}
+.collection-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  cursor: pointer;
+}
+.collection-head::-webkit-details-marker {
+  display: none;
+}
+.collection-head span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.collection-head svg {
+  transition: transform 0.2s;
+}
+.collection-unit[open] .collection-head svg {
+  transform: rotate(180deg);
+}
+.collection-unit .progress-track {
+  margin: 10px 0 0;
+}
+.collection-songs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.collection-songs li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.collection-songs small {
+  flex: none;
+  font-size: 12px;
+  opacity: 0.7;
+}
+.collection-songs .locked {
+  opacity: 0.45;
+  letter-spacing: 2px;
+}
+[data-theme="dark"] .collection-summary {
+  color: #adbba3;
+}
+[data-theme="dark"] .collection-summary b {
+  color: #e1ffb0;
+}
+
 /* Rights notice under every tab */
 .site-footer {
   max-width: 440px;
@@ -2515,4 +2587,17 @@ main [hidden] {
     margin-bottom: 10px;
     letter-spacing: 0;
   }
+}
+/* 도감 summary per theme */
+[data-theme="notebook"] .collection-summary {
+  color: #8f7281;
+}
+[data-theme="notebook"] .collection-summary b {
+  color: #a34f78;
+}
+[data-theme="console"] .collection-summary {
+  color: #9dbdb8;
+}
+[data-theme="console"] .collection-summary b {
+  color: #b8ffe5;
 }

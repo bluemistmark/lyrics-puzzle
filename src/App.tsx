@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { CollectionPanel } from "./components/CollectionPanel";
 import { Footer } from "./components/Footer";
 import { GameTabs, type Tab } from "./components/GameTabs";
 import { Header } from "./components/Header";
@@ -91,6 +92,7 @@ export function App() {
             hidden={activeTab !== "record"}
             onReset={() => setModal("reset")}
           />
+          <CollectionPanel hidden={activeTab !== "collection"} />
           <NewsPanel hidden={activeTab !== "news"} />
         </main>
         {theme === "console" && (

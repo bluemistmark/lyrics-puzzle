@@ -78,6 +78,8 @@ type Store = {
   round: Round;
   daily: DailyState;
   stats: Stats;
+  /** Question ids whose title was guessed in either mode (곡 도감). */
+  collected: string[];
   notice: string;
   guess: (word: string, mode?: GameMode) => void;
   solve: (title: string, mode?: GameMode) => boolean;
@@ -97,6 +99,7 @@ export const useGame = create<Store>()(
       round: newRound(firstQuestion.id),
       daily: newDailyState(koreaDate()),
       stats: emptyStats(),
+      collected: [],
       notice: "",
       guess: (word, mode = "play") => {
         const s = get();
@@ -149,8 +152,12 @@ export const useGame = create<Store>()(
           );
           return false;
         }
+        const collected = s.collected.includes(q.id)
+          ? s.collected
+          : [...s.collected, q.id];
         if (mode === "daily") {
           set({
+            collected,
             daily: {
               ...s.daily,
               round: { ...current, solved: true },
@@ -161,6 +168,7 @@ export const useGame = create<Store>()(
         }
         const streak = s.stats.streak + 1;
         set({
+          collected,
           round: { ...current, solved: true },
           stats: {
             ...s.stats,
@@ -251,6 +259,7 @@ export const useGame = create<Store>()(
         const q = pickQuestion(units, []);
         set({
           stats: emptyStats(),
+          collected: [],
           round: newRound(q.id),
           selected: units,
           seen: [q.id],
@@ -272,15 +281,25 @@ export const useGame = create<Store>()(
         const selected = Array.isArray(p.selected)
           ? p.selected.filter((u) => units.includes(u))
           : units;
+        const daily =
+          p.daily?.date === koreaDate() &&
+          questions.some((q) => q.id === p.daily?.round?.id)
+            ? { ...p.daily, notice: "" }
+            : current.daily;
+        // Saves from before 곡 도감 start with whatever is solved right now.
+        const collected = Array.isArray(p.collected)
+          ? p.collected
+          : [
+              ...new Set(
+                [p.round, daily.round].filter((r) => r.solved).map((r) => r.id),
+              ),
+            ];
         return {
           ...current,
           ...p,
           selected: selected.length ? selected : units,
-          daily:
-            p.daily?.date === koreaDate() &&
-            questions.some((q) => q.id === p.daily?.round?.id)
-              ? { ...p.daily, notice: "" }
-              : current.daily,
+          daily,
+          collected,
           notice: "",
         };
       },

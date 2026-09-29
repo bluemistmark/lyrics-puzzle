@@ -114,3 +114,39 @@ test("가수명 힌트는 각 모드에서 한 번만 사용됨", () => {
   assert.equal(useGame.getState().daily.round.hints, 1);
   assert.equal(useGame.getState().round.hints, 1);
 });
+
+test("제목을 맞힌 문제만 도감에 한 번씩 등록되고 초기화하면 비워짐", () => {
+  useGame.getState().reset();
+  useGame.getState().giveUp();
+  assert.deepEqual(useGame.getState().collected, []);
+  useGame.getState().next();
+  const id = useGame.getState().round.id;
+  const q = questions.find((q) => q.id === id)!;
+  useGame.getState().solve("틀린 제목");
+  assert.deepEqual(useGame.getState().collected, []);
+  assert.ok(useGame.getState().solve(q.title));
+  assert.deepEqual(useGame.getState().collected, [id]);
+
+  const date = koreaDate(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000));
+  useGame.getState().syncDaily(date);
+  const daily = useGame.getState().daily.round.id;
+  const dq = questions.find((q) => q.id === daily)!;
+  assert.ok(useGame.getState().solve(dq.title, "daily"));
+  assert.deepEqual(useGame.getState().collected, [...new Set([id, daily])]);
+
+  useGame.getState().reset();
+  assert.deepEqual(useGame.getState().collected, []);
+});
+
+test("도감 이전 저장값은 현재 맞힌 문제로 도감을 시작", async () => {
+  useGame.getState().reset();
+  useGame.getState().syncDaily(koreaDate());
+  const q = questions.find((q) => q.id === useGame.getState().round.id)!;
+  useGame.getState().solve(q.title);
+  useGame.setState({ collected: [] });
+  const saved = JSON.parse(memory.get("chosung-lyrics-live-v1")!);
+  delete saved.state.collected;
+  memory.set("chosung-lyrics-live-v1", JSON.stringify(saved));
+  await useGame.persist.rehydrate();
+  assert.deepEqual(useGame.getState().collected, [q.id]);
+});

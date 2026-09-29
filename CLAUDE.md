@@ -34,7 +34,7 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
 - **공개 키 형식**: `"${줄}:${토큰}:${글자인덱스}"` (한글), `"${줄}:${토큰}:en"` (영어 토큰 전체). `matches`, `allKeys`, `progress`, 스토어의 `revealed`, 힌트 로직이 모두 이 형식에 의존한다. 공백·문장부호 토큰은 키가 없어 완성률에서 제외된다.
 - `matches` 규칙: 영어는 원문/표시발음/대체발음과 전체 일치해야 공개. 한글은 입력과 토큰 사이 연속 2글자 이상 공통 부분을 공개하고, 1글자 입력은 토큰 전체가 그 글자이거나 해당 토큰이 이미 일부 공개된 경우에만 인정.
 - `pickQuestion`: 선택 유닛 안에서 `seen`에 없는 문제 우선, 가능하면 직전과 다른 곡. 풀을 한 바퀴 돌면 `store.next`가 `seen`을 리셋.
-- **`store.ts`** — Zustand + `persist`. localStorage 키 `chosung-lyrics-live-v1` (`notice`는 저장 제외). `merge`는 저장된 `round.id`가 현재 catalog에 없으면 저장값을 버리고, 없어진 유닛은 `selected`에서 걸러낸다. 모듈 하단에서 첫 문제를 즉시 저장해 새로고침해도 같은 문제가 유지되게 한다. 예전 키 `chosung-lyrics-v1`은 삭제하지 말고 보존한다.
+- **`store.ts`** — Zustand + `persist`. localStorage 키 `chosung-lyrics-live-v1` (`notice`는 저장 제외). `merge`는 저장된 `round.id`가 현재 catalog에 없으면 저장값을 버리고, 없어진 유닛은 `selected`에서 걸러낸다. 모듈 하단에서 첫 문제를 즉시 저장해 새로고침해도 같은 문제가 유지되게 한다. 예전 키 `chosung-lyrics-v1`은 삭제하지 말고 보존한다. `collected`(곡 도감)는 두 모드에서 제목을 맞힌 문제 ID 목록이고, 화면용 집계는 순수 함수 `src/collection.ts`의 `buildCollection`이 한다.
 - **UI** — `main.tsx`는 마운트만 한다. `App.tsx`가 탭(`activeTab`)과 열린 모달(`ModalName`) 상태를 갖고 `components/` 아래를 조립한다.
   - `components/play/*`: 플레이 화면. `PlayPanel`이 `hooks/useRound`(현재 문제·진행률)를 한 번 호출해 하위에 props로 넘기고, 하위 컴포넌트는 스토어 액션만 `useGame((s) => s.xxx)` 셀렉터로 직접 가져온다. 데이터 표시 쪽은 props, 액션은 셀렉터라는 구분을 유지한다.
   - `components/modals/*`: 모달 내용만 담당하고, 공용 `components/Modal.tsx`가 네이티브 `<dialog>` 하나를 열고 닫는다. 모달은 열릴 때마다 새로 마운트되므로 입력 초안 같은 로컬 state는 닫으면 사라진다.
