@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 개요
 
-NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
+NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 대상). 게임은 번들된 데이터로만 동작(네트워크 없음. 예외는 오늘의 랭킹뿐이며 실패해도 게임은 동작해야 함)하고, 데이터는 Supabase에 두고 어드민(`/admin`)에서 관리한다. Vercel에 `dist/`로 배포된다.
 
 ## 명령어
 
@@ -40,7 +40,7 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
   - `components/modals/*`: 모달 내용만 담당하고, 공용 `components/Modal.tsx`가 네이티브 `<dialog>` 하나를 열고 닫는다. 모달은 열릴 때마다 새로 마운트되므로 입력 초안 같은 로컬 state는 닫으면 사라진다.
   - 문제별 로컬 state 초기화는 `key={round.id}`로 리마운트해서 처리한다(`WordForm` 참고).
   - `hooks/useModelContextTools`: `document.modelContext`가 있으면 WebMCP 도구(`guess_lyric_word`)를 등록한다.
-  - 테마는 `theme.ts`(`lyrics-theme` 키, `data-theme` 속성)에서 관리하며, `useTheme`은 `App`에서만 호출하고 설정 모달에는 props로 넘긴다(여러 곳에서 호출하면 상태가 따로 논다).
+  - 테마는 `theme.ts`(`lyrics-theme` 키, `data-theme` 속성)에서 관리하며, `useTheme`은 `App`에서만 호출하고 설정 모달(`SettingsModal`: 테마 + 랭킹 닉네임)에는 props로 넘긴다(여러 곳에서 호출하면 상태가 따로 논다).
   - 한글 IME 조합 중 Enter 제출 방지는 `utils/ime.ts`의 `blockComposingEnter`를 쓴다.
 - **어드민** (`admin.html` → `src/admin/`) — 별도 Vite 엔트리(`vite.config.ts`)라 supabase-js는 어드민 번들에만 들어간다. 게임 코드(`src/components`, `game.ts` 등)에서 `src/admin/`이나 supabase-js를 import하지 말 것.
   - `admin/store.ts`(zustand)가 데이터 테이블 전체를 메모리에 들고, 각 액션은 Supabase에 먼저 쓰고 성공하면 로컬 상태를 갱신한다. 에러는 `describeError`로 한국어 메시지로 바꿔 throw한다.
@@ -49,6 +49,7 @@ NCT 가사 초성 퍼즐 (React 19 · TypeScript · Vite · Zustand, 모바일 �
   - 문제 대량 등록: `admin/bulk.ts`의 `parseBulkQuestions`(탭이 있으면 엑셀 행 모드, 아니면 빈 줄 구분)로 나누고 `BulkQuestionForm`이 미리보기(연속 ID, 줄 수 오류, 기존·입력 내 중복, 사전 누락)를 보여 준다. `addQuestions`는 한 번의 insert라 전부 저장되거나 전부 실패한다.
   - 게시·소식: `PublishTab`이 `draftRelease`(`src/data/releases.ts`)로 직전 release의 `song_ids`/`question_ids` 스냅샷과 현재 catalog를 비교해 새 곡·문제를 계산하고, 새 기능·메모와 함께 `/api/publish`에 보낸다. API는 release를 insert한 뒤 Deploy Hook을 호출하고, 훅이 실패하면 그 release를 지운다. 빌드(`pull-catalog`)는 `toNews`로 최근 소식을 `catalog.news`에 넣고, 게임은 `NewsPanel`로 보여 준다. 소식 확인 여부는 `hooks/useNewsSeen`(localStorage `lyrics-news-seen`). 어드민의 releases 로딩 실패는 치명적이지 않게(`releasesError`) 처리한다.
   - 환경 변수가 없으면 `supabase`가 `null`이고 설정 안내 화면만 보인다.
+- **오늘의 랭킹** — `api/ranking.ts`(GET 조회·POST 결과 제출·PUT 닉네임, service role로 `players`/`daily_scores`와 `daily_ranking()` RPC 사용) ↔ `src/ranking.ts`(zustand persist `lyrics-ranking-v1`: 토큰·닉네임·제출한 날짜·닉네임 질문 여부). 플레이어 ID는 브라우저 토큰의 SHA-256이고 서버는 토큰을 저장하지 않는다. 제출값은 `dailyHistory[오늘]`(처음 끝낸 순간의 값)이고, `DailyRanking`이 오늘 탭에서 제출 후 조회한다. 첫 정답 뒤 닉네임 질문은 `App`의 `afterDailySolve`가 띄운다(effect 아님). 닉네임 규칙은 `src/nickname.ts`이고 `api/ranking.ts`가 복사해 쓰며 `api/ranking.test.ts`가 둘이 같은지 검사한다. 어드민 `RankingTab`은 supabase-js로 직접 읽고 `players.hidden`만 바꾼다(컬럼 권한으로 제한).
 
 ## 주의 사항
 

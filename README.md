@@ -26,7 +26,7 @@ React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 
 ### 최초 설정
 
-1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/](supabase/migrations/)의 파일을 이름 순서대로 실행합니다(`20260928000000_init.sql` → `20260929000000_artists.sql` → `20260930000000_releases.sql`). 이미 실행한 파일은 건너뛰고 새 파일만 실행하면 됩니다. 기존 곡에서 가수 목록과 접두어를 자동으로 채웁니다.
+1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/](supabase/migrations/)의 파일을 이름 순서대로 실행합니다(`20260928000000_init.sql` → `20260929000000_artists.sql` → `20260930000000_releases.sql` → `20261001000000_ranking.sql`). 이미 실행한 파일은 건너뛰고 새 파일만 실행하면 됩니다. 기존 곡에서 가수 목록과 접두어를 자동으로 채웁니다.
 2. **관리자 계정**: Authentication > Users > Add user로 이메일·비밀번호 계정을 만들고, SQL Editor에서 `insert into public.admins (email) values ('이메일');`을 실행합니다. Authentication 설정에서 새 가입(Allow new users to sign up)은 꺼 두는 것을 권장합니다. 가입하더라도 `admins`에 없으면 데이터에 접근할 수 없습니다.
 3. **환경 변수**: [.env.example](.env.example)을 `.env.local`로 복사해 값을 채우고, Vercel > Project Settings > Environment Variables에도 같은 이름으로 등록합니다(Production, Preview).
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`: 어드민 화면용. 공개돼도 되는 값이며, Vite가 `VITE_`로 시작하는 변수만 브라우저에 넘겨주므로 **이 두 개는 접두사가 반드시 있어야** 합니다.
@@ -54,6 +54,12 @@ React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 ### 오늘의 문제와 결과 공유
 
 "오늘" 탭은 한국 시간 날짜와 번들된 문제 ID로 하루에 한 문제를 고릅니다. 일반 플레이의 문제와 기록은 그대로 두고, 오늘의 진행은 브라우저에 별도로 저장합니다. 결과에는 제목이나 가사를 넣지 않고 복원율·입력 횟수·힌트 횟수만 표시합니다. 결과 복사, X 게시 작성, 기기 공유 메뉴를 지원하며, 기기에 카카오톡이 공유 대상으로 나타나면 그 메뉴에서 선택할 수 있습니다. 카카오톡 전용 공유 버튼은 카카오 앱 키와 등록된 서비스 도메인이 필요합니다.
+
+### 오늘의 랭킹
+
+오늘의 문제를 끝내면(정답 또는 포기) 결과가 `/api/ranking`으로 한 번 전송되고, 오늘 탭 아래에 그날의 랭킹이 보입니다. 순위는 제목 정답자 중 힌트를 적게 쓴 순 → 입력한 단어가 적은 순 → 먼저 제출한 순이며, 포기한 사람은 참여자 수에만 들어갑니다. 로그인은 없고, 브라우저가 무작위 토큰을 만들어 보관하며 서버는 그 해시만 저장합니다. 첫 정답 때 닉네임(2~12자, 공개)을 한 번 묻고, 건너뛰면 순위 목록에는 나오지 않습니다. 닉네임은 헤더의 "설정"에서 바꿀 수 있습니다. 부적절한 닉네임은 어드민 "랭킹" 탭에서 숨깁니다.
+
+랭킹은 게임에서 유일하게 네트워크를 쓰는 기능이라, 서버에 연결할 수 없어도 게임은 그대로 동작하고 랭킹 영역에만 안내가 나옵니다. `/api`는 `npm run dev`에서 동작하지 않으므로 로컬에서는 랭킹을 불러올 수 없다는 안내가 보이는 것이 정상입니다(`vercel dev` 또는 배포 환경에서 확인). 서버는 `SUPABASE_SERVICE_ROLE_KEY`를 사용하며, `ranking` 마이그레이션을 실행하기 전에는 오류 안내가 나옵니다. 정답 데이터가 번들에 들어 있는 구조라 조작을 완전히 막을 수는 없고, 서버는 날짜·값 범위·하루 1회만 검사합니다.
 
 공유 링크에는 Open Graph 및 X 카드 메타 태그와 `public/og-image.png`를 사용합니다. Vercel 빌드에서는 `VERCEL_PROJECT_PRODUCTION_URL`로 이미지와 오늘의 문제 주소를 절대 URL로 만듭니다. 이 변수를 제공하지 않는 환경에서는 `SITE_URL`에 공개 사이트 주소를 설정할 수 있습니다.
 

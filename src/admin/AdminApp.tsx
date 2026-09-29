@@ -6,6 +6,7 @@ import { DictionaryTab } from "./DictionaryTab";
 import { Login } from "./Login";
 import { PublishTab } from "./PublishTab";
 import { QuestionsTab } from "./QuestionsTab";
+import { RankingTab } from "./RankingTab";
 import { SongsTab } from "./SongsTab";
 import { useAdmin } from "./store";
 import { supabase } from "./supabase";
@@ -70,7 +71,8 @@ function AuthGate({ client }: { client: SupabaseClient }) {
   return <AdminShell email={session.user.email ?? ""} onSignOut={signOut} />;
 }
 
-type Tab = "artists" | "songs" | "questions" | "dictionary" | "publish";
+type Tab =
+  "artists" | "songs" | "questions" | "dictionary" | "publish" | "ranking";
 
 function AdminShell({
   email,
@@ -95,12 +97,13 @@ function AdminShell({
     () => buildCatalog({ artists, songs, questions, dictionary }),
     [artists, songs, questions, dictionary],
   );
-  const tabs: [Tab, string, number][] = [
+  const tabs: [Tab, string, number | null][] = [
     ["questions", "문제", questions.length],
     ["songs", "곡", songs.length],
     ["artists", "가수", artists.length],
     ["dictionary", "영어 사전", dictionary.length],
     ["publish", "게시", issues.length],
+    ["ranking", "랭킹", null],
   ];
 
   return (
@@ -126,11 +129,17 @@ function AdminShell({
             onClick={() => setTab(key)}
           >
             {label}
-            <span
-              className={key === "publish" && count ? "badge warn" : "badge"}
-            >
-              {key === "publish" ? (count ? `오류 ${count}` : "준비됨") : count}
-            </span>
+            {count !== null && (
+              <span
+                className={key === "publish" && count ? "badge warn" : "badge"}
+              >
+                {key === "publish"
+                  ? count
+                    ? `오류 ${count}`
+                    : "준비됨"
+                  : count}
+              </span>
+            )}
           </button>
         ))}
       </nav>
@@ -150,6 +159,8 @@ function AdminShell({
             <QuestionsTab issues={issues} />
           ) : tab === "dictionary" ? (
             <DictionaryTab />
+          ) : tab === "ranking" ? (
+            <RankingTab />
           ) : (
             <PublishTab catalog={catalog} issues={issues} />
           ))}

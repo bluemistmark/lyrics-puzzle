@@ -2318,6 +2318,90 @@ main [hidden] {
   margin-top: 11px;
   line-height: 1.5;
 }
+/* 오늘의 랭킹 (reuses the share box so every theme styles it) */
+.share-results h2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ranking-me {
+  margin-top: 12px !important;
+  font-size: 13px !important;
+}
+.ranking-me b {
+  font-size: 15px;
+}
+.ranking-me button,
+.ranking-error button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 11px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ranking-error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ranking-list {
+  display: grid;
+  gap: 2px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+.ranking-list li {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 8px;
+}
+.ranking-list li.me {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  font-weight: 700;
+}
+.ranking-rank {
+  font-weight: 700;
+  text-align: center;
+}
+.ranking-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ranking-score {
+  font-size: 12px;
+  opacity: 0.75;
+}
+.ranking-rule {
+  margin-top: 12px !important;
+  line-height: 1.6;
+}
+.nickname-form {
+  margin-top: 0 !important;
+}
+.nickname-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.error.saved {
+  color: inherit;
+  opacity: 0.75;
+}
 [data-theme="dark"] .daily-date,
 [data-theme="dark"] .share-results > p {
   color: #adbba3;
