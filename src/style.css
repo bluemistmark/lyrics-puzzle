@@ -2371,6 +2371,25 @@ main [hidden] {
   background: color-mix(in srgb, currentColor 10%, transparent);
   font-weight: 700;
 }
+.ranking-list li.ranking-gap {
+  display: block;
+  padding: 0;
+  text-align: center;
+  opacity: 0.5;
+}
+.ranking-more {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.8;
+}
 .ranking-rank {
   font-weight: 700;
   text-align: center;

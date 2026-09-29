@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { RotateCw, Trophy } from "lucide-react";
 import type { DailyResult } from "../../daily";
-import { useRanking, type RankingBoard } from "../../ranking";
+import {
+  useRanking,
+  type RankingBoard,
+  type RankingEntry,
+} from "../../ranking";
 import type { ModalName } from "../Modal";
 
 type Props = {
@@ -13,6 +17,21 @@ type Props = {
 
 type View = { board?: RankingBoard; error?: string };
 
+/** Rows shown before "더 보기"; the server sends up to 50. */
+const COLLAPSED = 10;
+
+function Row({ entry }: { entry: RankingEntry }) {
+  return (
+    <li className={entry.me ? "me" : undefined} value={entry.rank}>
+      <span className="ranking-rank">{entry.rank}</span>
+      <span className="ranking-name">{entry.nickname}</span>
+      <span className="ranking-score">
+        힌트 {entry.hints} · 단어 {entry.guesses}
+      </span>
+    </li>
+  );
+}
+
 export function DailyRanking({ date, result, onOpenModal }: Props) {
   const submit = useRanking((s) => s.submit);
   const load = useRanking((s) => s.load);
@@ -20,6 +39,7 @@ export function DailyRanking({ date, result, onOpenModal }: Props) {
   const version = useRanking((s) => s.version);
   const [view, setView] = useState<View>({});
   const [retry, setRetry] = useState(0);
+  const [expanded, setExpanded] = useState(false);
   useEffect(() => {
     let live = true;
     (async () => {
@@ -41,6 +61,13 @@ export function DailyRanking({ date, result, onOpenModal }: Props) {
   }, [date, result, submit, load, version, retry]);
 
   const { board, error } = view;
+  const entries = board?.entries ?? [];
+  const shown = expanded ? entries : entries.slice(0, COLLAPSED);
+  // My row when it is below the visible rows (or beyond the 50 the server sends).
+  const mine =
+    entries.find((e) => e.me) ??
+    (board?.me && nickname ? { ...board.me, nickname, me: true } : undefined);
+  const extra = mine && !shown.some((e) => e.me) ? mine : undefined;
   return (
     <section className="share-results daily-ranking" aria-live="polite">
       <h2>
@@ -75,18 +102,32 @@ export function DailyRanking({ date, result, onOpenModal }: Props) {
               "포기한 날은 순위에 오르지 않아요."
             ) : null}
           </p>
-          {board.entries.length ? (
-            <ol className="ranking-list">
-              {board.entries.map((entry) => (
-                <li key={entry.rank} className={entry.me ? "me" : undefined}>
-                  <span className="ranking-rank">{entry.rank}</span>
-                  <span className="ranking-name">{entry.nickname}</span>
-                  <span className="ranking-score">
-                    힌트 {entry.hints} · 단어 {entry.guesses}
-                  </span>
-                </li>
-              ))}
-            </ol>
+          {entries.length ? (
+            <>
+              <ol className="ranking-list">
+                {shown.map((entry) => (
+                  <Row key={entry.rank} entry={entry} />
+                ))}
+                {extra && (
+                  <>
+                    <li className="ranking-gap" aria-hidden="true">
+                      ⋯
+                    </li>
+                    <Row entry={extra} />
+                  </>
+                )}
+              </ol>
+              {entries.length > COLLAPSED && (
+                <button
+                  type="button"
+                  className="ranking-more"
+                  aria-expanded={expanded}
+                  onClick={() => setExpanded((v) => !v)}
+                >
+                  {expanded ? "접기" : `더 보기 (${entries.length}위까지)`}
+                </button>
+              )}
+            </>
           ) : (
             <p>아직 순위에 오른 사람이 없어요.</p>
           )}
