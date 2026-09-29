@@ -1,7 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="네오 노래 퀴즈">
-  <rect width="64" height="64" rx="17" fill="#e9edde"/>
-  <path d="M37 16v29" fill="none" stroke="#286442" stroke-width="5" stroke-linecap="round"/>
-  <path d="M37 16l13 4v10l-13-4z" fill="#86ab4e"/>
-  <ellipse cx="28" cy="46" rx="11" ry="7" transform="rotate(-20 28 46)" fill="#286442"/>
-  <path d="M18 17v8m-4-4h8" stroke="#86ab4e" stroke-width="2.5" stroke-linecap="round"/>
+  <rect width="64" height="64" rx="17" fill="#1e4a35"/>
+  <g fill="none" stroke="#b9ed5b" stroke-width="5" stroke-linecap="round">
+    <path d="M16 27v10"/>
+    <path d="M24 20v24"/>
+    <path d="M32 25v14"/>
+    <path d="M40 16v32"/>
+    <path d="M48 26v12"/>
+  </g>
 </svg>

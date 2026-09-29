@@ -52,6 +52,18 @@ export type DailyState = { date: string; round: Round; notice: string };
 /** Progress of one non-classic play mode (classic keeps `round`/`seen` from older saves). */
 export type ModeState = { round: Round; seen: string[] };
 type SideMode = Exclude<PlayMode, "classic">;
+/** 심플·이지 results, kept apart from classic records (기록 탭 "다른 모드"). */
+export type ModeTally = { solved: number; givenUp: number };
+export type ModeStats = Record<SideMode, ModeTally>;
+export const emptyModeStats = (): ModeStats => ({
+  simple: { solved: 0, givenUp: 0 },
+  easy: { solved: 0, givenUp: 0 },
+});
+const tally = (
+  m: ModeStats,
+  mode: SideMode,
+  key: keyof ModeTally,
+): ModeStats => ({ ...m, [mode]: { ...m[mode], [key]: m[mode][key] + 1 } });
 const newRound = (id: string): Round => ({
   id,
   revealed: [],
@@ -84,6 +96,14 @@ const newModes = (): Record<SideMode, ModeState> => ({
   easy: newModeState(),
 });
 type PlayRounds = Pick<Store, "playMode" | "round" | "seen" | "modes">;
+/** Started (something entered or revealed) but not finished yet. */
+export const inProgress = (r: Round) =>
+  !r.solved && !r.givenUp && (r.words.length > 0 || r.hints > 0);
+/** A shared question would replace a round the player is still working on. */
+export const replacesProgress = (s: PlayRounds, id: string, mode: PlayMode) => {
+  const round = playRound({ ...s, playMode: mode });
+  return round.id !== id && inProgress(round);
+};
 /** The play tab's current round in the chosen mode. */
 export const playRound = (s: PlayRounds) =>
   s.playMode === "classic" ? s.round : s.modes[s.playMode].round;
@@ -164,6 +184,7 @@ export type SyncedRecords = Pick<
   | "themes"
   | "achievements"
   | "resetAt"
+  | "modeStats"
 >;
 type Records = Pick<
   Store,
@@ -191,6 +212,8 @@ type Store = {
   /** Mode of the play tab; only classic adds to records, 도감 and achievements. */
   playMode: PlayMode;
   modes: Record<SideMode, ModeState>;
+  /** Finished 심플·이지 questions (classic ones count in `stats`). */
+  modeStats: ModeStats;
   daily: DailyState;
   stats: Stats;
   /** Question ids whose title was guessed in classic or the daily challenge (곡 도감). */
@@ -254,6 +277,7 @@ export const useGame = create<Store>()(
         round: newRound(firstQuestion.id),
         playMode: "classic",
         modes: newModes(),
+        modeStats: emptyModeStats(),
         daily: newDailyState(koreaDate()),
         stats: emptyStats(),
         collected: [],
@@ -311,6 +335,9 @@ export const useGame = create<Store>()(
             round.solved = filled(round);
             set({
               ...playPatch(s, round),
+              ...(round.solved && !current.solved
+                ? { modeStats: tally(s.modeStats, "easy", "solved") }
+                : {}),
               notice: round.solved ? "가사를 모두 채웠어요." : notice,
             });
           }
@@ -332,6 +359,7 @@ export const useGame = create<Store>()(
           if (style === "simple") {
             set({
               ...playPatch(s, { ...current, solved: true }),
+              modeStats: tally(s.modeStats, "simple", "solved"),
               notice: "제목 정답. 다음 문제로 넘어갈 수 있어요.",
             });
             return true;
@@ -426,6 +454,9 @@ export const useGame = create<Store>()(
             if (style === "easy") round.solved = filled(round);
             set({
               ...playPatch(s, round),
+              ...(round.solved && !current.solved
+                ? { modeStats: tally(s.modeStats, "easy", "solved") }
+                : {}),
               notice: round.solved ? "가사를 모두 채웠어요." : notice,
             });
           }
@@ -449,6 +480,7 @@ export const useGame = create<Store>()(
           if (s.playMode !== "classic") {
             set({
               ...playPatch(s, { ...current, givenUp: true }),
+              modeStats: tally(s.modeStats, s.playMode, "givenUp"),
               notice: "정답을 확인했어요.",
             });
             return;
@@ -513,6 +545,7 @@ export const useGame = create<Store>()(
             // Theme use is a preference history, not a play record, so it survives a reset.
             themes: get().themes,
             resetAt: Date.now(),
+            modeStats: emptyModeStats(),
           };
           rawSet({
             ...records,
@@ -587,6 +620,10 @@ export const useGame = create<Store>()(
           feats: { ...emptyFeats(), ...p.feats },
           themes: Array.isArray(p.themes) ? p.themes : [],
           resetAt: typeof p.resetAt === "number" ? p.resetAt : 0,
+          modeStats: {
+            simple: { ...emptyModeStats().simple, ...p.modeStats?.simple },
+            easy: { ...emptyModeStats().easy, ...p.modeStats?.easy },
+          },
         };
         return {
           ...current,

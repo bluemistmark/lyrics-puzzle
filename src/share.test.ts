@@ -1,7 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Question } from "./game.ts";
-import { playResultText, questionLink, shareGrid } from "./share.ts";
+import {
+  parseSharedLink,
+  playResultText,
+  questionLink,
+  shareGrid,
+} from "./share.ts";
 
 const q: Question = {
   id: "Q1",
@@ -54,4 +59,16 @@ test("같은 문제 링크는 기존 쿼리·해시를 지우고 문제와 모�
     questionLink("https://example.com/?today=1&code=x#a", "Q1", "easy"),
     "https://example.com/?q=Q1&mode=easy",
   );
+});
+
+test("같은 문제 링크를 읽고, 모르는 모드는 클래식으로 봄", () => {
+  assert.deepEqual(parseSharedLink("https://example.com/?q=Q1&mode=easy"), {
+    id: "Q1",
+    mode: "easy",
+  });
+  assert.deepEqual(parseSharedLink("https://example.com/?q=Q1&mode=hard"), {
+    id: "Q1",
+    mode: "classic",
+  });
+  assert.equal(parseSharedLink("https://example.com/?today=1"), null);
 });

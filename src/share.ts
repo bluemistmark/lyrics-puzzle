@@ -1,5 +1,5 @@
 import type { Question } from "./game.ts";
-import { playModeName, type PlayMode } from "./modes.ts";
+import { isPlayMode, playModeName, type PlayMode } from "./modes.ts";
 
 /** One cell per reveal key: `hit` once revealed, `miss` otherwise. Lines keep their words apart. */
 export type ShareCell = "hit" | "miss";
@@ -48,6 +48,17 @@ export function playResultText(r: PlayResult): string {
     stats,
     "같은 문제에 도전해 보세요!",
   ].join("\n");
+}
+
+export type SharedLink = { id: string; mode: PlayMode };
+
+/** Reads a same-question link (`questionLink`); an unknown mode falls back to classic. */
+export function parseSharedLink(href: string): SharedLink | null {
+  const params = new URL(href).searchParams;
+  const id = params.get("q");
+  if (!id) return null;
+  const mode = params.get("mode");
+  return { id, mode: isPlayMode(mode) ? mode : "classic" };
 }
 
 /** Link that opens the same question in the same mode (see `openQuestion` in the store). */

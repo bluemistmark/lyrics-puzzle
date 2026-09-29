@@ -11,6 +11,7 @@ import { NewsPanel } from "./components/NewsPanel";
 import { GiveUpModal } from "./components/modals/GiveUpModal";
 import { HelpModal } from "./components/modals/HelpModal";
 import { ResetModal } from "./components/modals/ResetModal";
+import { SharedModal } from "./components/modals/SharedModal";
 import { NicknameModal } from "./components/modals/NicknameModal";
 import { ReportModal } from "./components/modals/ReportModal";
 import { AccountModal } from "./components/modals/AccountModal";
@@ -26,8 +27,8 @@ import { useNewsSeen } from "./hooks/useNewsSeen";
 import { news } from "./game";
 import { koreaDate } from "./daily";
 import { useRanking } from "./ranking";
-import { isPlayMode } from "./modes";
-import { useGame } from "./store";
+import { parseSharedLink } from "./share";
+import { replacesProgress, useGame } from "./store";
 import { useTheme } from "./theme";
 
 export function App() {
@@ -37,7 +38,19 @@ export function App() {
       ? "daily"
       : "play",
   );
-  const [modal, setModal] = useState<ModalName | null>(null);
+  // A same-question link (?q=문제ID&mode=모드); asks first if it would replace a round in progress.
+  const [shared] = useState(() => {
+    const link = parseSharedLink(window.location.href);
+    return (
+      link && {
+        ...link,
+        confirm: replacesProgress(useGame.getState(), link.id, link.mode),
+      }
+    );
+  });
+  const [modal, setModal] = useState<ModalName | null>(() =>
+    shared?.confirm ? "shared" : null,
+  );
   const [today, setToday] = useState(koreaDate);
   const syncDaily = useGame((s) => s.syncDaily);
   useEffect(() => {
@@ -66,17 +79,16 @@ export function App() {
     const { nickname, asked } = useRanking.getState();
     setModal(nickname || asked ? null : "nickname");
   };
-  // A shared result link (?q=문제ID&mode=모드) opens that question once, then leaves the URL clean.
+  // The link applies once: clean the URL so a refresh doesn't open it again.
   useEffect(() => {
+    if (!shared) return;
+    if (!shared.confirm)
+      useGame.getState().openQuestion(shared.id, shared.mode);
     const url = new URL(window.location.href);
-    const id = url.searchParams.get("q");
-    if (!id) return;
-    const mode = url.searchParams.get("mode");
-    useGame.getState().openQuestion(id, isPlayMode(mode) ? mode : "classic");
     url.searchParams.delete("q");
     url.searchParams.delete("mode");
     window.history.replaceState(null, "", url.href);
-  }, []);
+  }, [shared]);
   useModelContextTools();
   return (
     <>
@@ -170,6 +182,17 @@ export function App() {
           <GiveUpModal onClose={close} mode="daily" />
         )}
         {modal === "reset" && <ResetModal onClose={close} onCancel={close} />}
+        {modal === "shared" && shared && (
+          <SharedModal
+            mode={shared.mode}
+            onOpen={() => {
+              useGame.getState().openQuestion(shared.id, shared.mode);
+              changeTab("play");
+              close();
+            }}
+            onKeep={close}
+          />
+        )}
       </Modal>
     </>
   );

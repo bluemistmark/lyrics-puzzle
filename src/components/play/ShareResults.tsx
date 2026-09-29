@@ -1,17 +1,24 @@
-import { useState } from "react";
-import { Copy, Share2 } from "lucide-react";
 import { dailyResultText } from "../../daily";
+import type { Question } from "../../game";
+import { shareGrid } from "../../share";
 import type { Round } from "../../store";
+import { ShareActions } from "./ShareActions";
 
 type Props = {
   date: string;
+  question: Question;
   round: Round;
   percent: number;
   streak: number;
 };
 
-export function ShareResults({ date, round, percent, streak }: Props) {
-  const [status, setStatus] = useState("");
+export function ShareResults({
+  date,
+  question,
+  round,
+  percent,
+  streak,
+}: Props) {
   const result = dailyResultText({
     date,
     solved: round.solved,
@@ -22,53 +29,27 @@ export function ShareResults({ date, round, percent, streak }: Props) {
     streak,
   });
   const link = new URL(window.location.href);
+  link.search = "";
   link.searchParams.set("today", "1");
   link.hash = "";
-  const shareText = `${result}\n${link.href}`;
-  const xLink = new URL("https://x.com/intent/tweet");
-  xLink.searchParams.set("text", result);
-  xLink.searchParams.set("url", link.href);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(shareText);
-      setStatus("결과를 복사했어요.");
-    } catch {
-      setStatus("복사할 수 없어요. 아래 내용을 직접 선택해 주세요.");
-    }
-  };
-  const share = async () => {
-    try {
-      await navigator.share({ text: result, url: link.href });
-      setStatus("공유 창을 열었어요.");
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
-      setStatus("공유 창을 열 수 없어요. 결과 복사를 이용해 주세요.");
-    }
-  };
+  // The card's last line: the streak when there is one, otherwise an invitation.
+  const [heading, outcome, stats, extra] = result.split("\n");
+  const cardText = [
+    heading,
+    outcome,
+    stats,
+    extra ?? "오늘의 문제에 도전해 보세요!",
+  ].join("\n");
 
   return (
     <div className="share-results">
       <h2>오늘의 결과</h2>
-      <pre>{shareText}</pre>
-      <div className="share-actions">
-        <button type="button" onClick={copy}>
-          <Copy size={16} /> 결과 복사
-        </button>
-        <a href={xLink.href} target="_blank" rel="noopener noreferrer">
-          X에 공유
-        </a>
-        {typeof navigator.share === "function" && (
-          <button type="button" onClick={share}>
-            <Share2 size={16} /> 앱으로 공유
-          </button>
-        )}
-      </div>
-      {status && (
-        <p className="share-status" role="status">
-          {status}
-        </p>
-      )}
+      <pre>{`${cardText}\n${link.href}`}</pre>
+      <ShareActions
+        text={cardText}
+        link={link.href}
+        grid={shareGrid(question, round.revealed)}
+      />
     </div>
   );
 }

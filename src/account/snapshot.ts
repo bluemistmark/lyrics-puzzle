@@ -1,6 +1,6 @@
 import { useDifficulty } from "../difficulty.ts";
 import { useRanking } from "../ranking.ts";
-import { useGame } from "../store.ts";
+import { emptyModeStats, useGame } from "../store.ts";
 import type { SaveData } from "./save.ts";
 
 /** What this device would save to the account right now. */
@@ -16,6 +16,7 @@ export function snapshot(): SaveData {
     playLog: g.playLog,
     feats: g.feats,
     achievements: g.achievements,
+    modeStats: g.modeStats,
     themes: g.themes,
     votes: useDifficulty.getState().votes,
     ranking: {
@@ -34,6 +35,9 @@ export function applySnapshot(data: SaveData) {
   const toasts = useGame.getState().justUnlocked;
   useDifficulty.setState({ votes });
   useRanking.setState(ranking);
-  useGame.getState().loadRecords(records);
+  useGame.getState().loadRecords({
+    ...records,
+    modeStats: records.modeStats ?? emptyModeStats(),
+  });
   useGame.setState({ justUnlocked: toasts });
 }

@@ -152,3 +152,25 @@ test("형식이 맞지 않는 저장값은 없는 것으로 봄", () => {
   assert.equal(parseSave({ ...save(), collected: "q1" }), null);
   assert.deepEqual(parseSave(save()), save());
 });
+
+test("다른 모드 기록은 모드별 큰 값으로 합치고, 예전 저장값에 없으면 0으로 봄", () => {
+  const phone = save({
+    modeStats: {
+      simple: { solved: 3, givenUp: 1 },
+      easy: { solved: 0, givenUp: 2 },
+    },
+  });
+  const old = save();
+  const merged = mergeSaves(phone, old);
+  assert.deepEqual(merged.modeStats, phone.modeStats);
+  const pc = save({
+    modeStats: {
+      simple: { solved: 1, givenUp: 4 },
+      easy: { solved: 5, givenUp: 0 },
+    },
+  });
+  assert.deepEqual(mergeSaves(phone, pc).modeStats, {
+    simple: { solved: 3, givenUp: 4 },
+    easy: { solved: 5, givenUp: 2 },
+  });
+});

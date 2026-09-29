@@ -1,0 +1,290 @@
+/* 엑셀: a spreadsheet disguise — quiet office colors, cells and square controls. */
+
+[data-theme="excel"] {
+  .play-grass {
+    --grass-on: #17683b;
+    --grass-empty: #e2ebe3;
+  }
+
+  .grass-cell {
+    border-radius: 0;
+  }
+
+  /* Spreadsheet: quiet office colors, cells and square controls. */
+  &:root {
+    color-scheme: light;
+    background: #fff;
+    color: #202b25;
+    font-family: Arial, var(--body-font);
+  }
+
+  body {
+    position: relative;
+    min-height: 100dvh;
+  }
+
+  .sheet-grid {
+    --cell-width: 96px;
+    position: absolute;
+    z-index: 0;
+    top: 100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: calc(100dvh - 100px);
+    pointer-events: none;
+    overflow: hidden;
+    background-color: #fff;
+    background-image:
+      linear-gradient(to right, #e0e5e0 1px, transparent 1px),
+      linear-gradient(to bottom, #e0e5e0 1px, transparent 1px);
+    background-size: var(--cell-width) 32px;
+    background-position: 44px 28px;
+  }
+
+  .sheet-corner,
+  .sheet-columns,
+  .sheet-rows {
+    position: absolute;
+    background: #e8ede9;
+    color: #526359;
+    font:
+      12px Arial,
+      sans-serif;
+  }
+
+  .sheet-corner {
+    top: 0;
+    left: 0;
+    width: 44px;
+    height: 28px;
+    border-right: 1px solid #c9d4cb;
+    border-bottom: 1px solid #c9d4cb;
+  }
+
+  .sheet-columns {
+    top: 0;
+    left: 44px;
+    right: 0;
+    height: 28px;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .sheet-columns span {
+    flex: 0 0 var(--cell-width);
+    display: grid;
+    place-items: center;
+    border-right: 1px solid #c9d4cb;
+    border-bottom: 1px solid #c9d4cb;
+  }
+
+  .sheet-rows {
+    top: 28px;
+    bottom: 0;
+    left: 0;
+    width: 44px;
+    overflow: hidden;
+  }
+
+  .sheet-rows span {
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-right: 1px solid #c9d4cb;
+    border-bottom: 1px solid #c9d4cb;
+  }
+
+  .app-shell {
+    position: relative;
+    z-index: 1;
+    max-width: none;
+  }
+
+  main {
+    margin-top: 43px;
+    padding: 14px 16px 18px;
+    max-width: 480px;
+    background: #ffffffed;
+    border: 1px solid #cbd6cd;
+  }
+
+  .topbar {
+    background: #fff;
+    border-bottom: 2px solid #217346;
+  }
+
+  .brand-icon {
+    background: #217346;
+    color: white;
+    border-radius: 4px;
+  }
+
+  .brand-sub,
+  .site-footer,
+  .record-note,
+  .news-item time {
+    color: #66746b;
+  }
+
+  .game-tabs {
+    border-color: #d1d9d2;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    color: #17683b;
+    border-color: #217346;
+  }
+
+  .puzzle-card,
+  .record-item,
+  .news-item,
+  .filter,
+  .hints button,
+  .input-wrap,
+  dialog {
+    background: #fff;
+    border: 1px solid #cbd6cd;
+    border-radius: 3px;
+    box-shadow: none;
+  }
+
+  .puzzle-card {
+    padding-top: 50px;
+  }
+
+  .puzzle-card::before {
+    content: "     A                         B                         C";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 27px;
+    overflow: hidden;
+    white-space: pre;
+    border-bottom: 1px solid #cbd6cd;
+    background: #e9efea;
+    color: #526359;
+    text-align: center;
+    font:
+      12px/27px Arial,
+      sans-serif;
+  }
+
+  .record-item strong,
+  .news-block b {
+    color: #205f3d;
+  }
+
+  .word-history .hit,
+  .unit-options button.chosen,
+  .theme-options label.selected {
+    color: #17683b;
+    background: #e8f3eb;
+    border: 1px solid #8bb99a;
+    border-radius: 2px;
+  }
+
+  .lyrics {
+    gap: 0;
+  }
+
+  .lyrics p {
+    color: #283d30;
+    padding: 8px 10px;
+    border: 1px solid #dce5dd;
+    border-bottom: 0;
+    font-size: 16px;
+    line-height: 1.65;
+    letter-spacing: 0;
+  }
+
+  .lyrics p:last-child {
+    border-bottom: 1px solid #dce5dd;
+  }
+
+  .revealed {
+    color: #155b34;
+    background: #d9efdf;
+  }
+
+  .english,
+  .english-a {
+    color: #226e55;
+    text-decoration-color: #8ab8a1;
+  }
+
+  .progress-track {
+    background: #e2ebe3;
+    border-radius: 0;
+  }
+
+  .progress-track > div {
+    background: #217346;
+    border-radius: 0;
+  }
+
+  .primary,
+  .input-wrap button {
+    background: #217346;
+    color: white;
+    border-radius: 3px;
+  }
+
+  .primary:hover:not(:disabled) {
+    background: #185b36;
+  }
+
+  .word-history .miss,
+  .help-example {
+    background: #edf1ed;
+  }
+
+  .theme-options label,
+  .unit-options button,
+  .modal-inner form input {
+    border-radius: 3px;
+  }
+
+  .theme-options input {
+    accent-color: #217346;
+  }
+
+  .site-footer {
+    border-color: #d1d9d2;
+    background: #ffffffed;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .sheet-grid {
+      --cell-width: 80px;
+      top: 66px;
+      min-height: calc(100dvh - 66px);
+    }
+
+    main {
+      margin-top: 41px;
+      padding: 10px 12px 18px;
+    }
+
+    .game-tabs {
+      margin: 0 -12px;
+      padding: 0 12px;
+    }
+  }
+
+  .daily-badge,
+  .share-results {
+    background: white;
+    border-radius: 2px;
+    border-color: #cbd6cd;
+  }
+
+  .share-results pre,
+  .share-actions button,
+  .share-actions a {
+    border-radius: 2px;
+  }
+}

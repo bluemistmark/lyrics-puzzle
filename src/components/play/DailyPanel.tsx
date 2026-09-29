@@ -52,6 +52,7 @@ export function DailyPanel({ hidden, onOpenModal }: Props) {
         <>
           <ShareResults
             date={daily.date}
+            question={question}
             round={round}
             percent={percent}
             streak={dailySummary(history, daily.date).current}

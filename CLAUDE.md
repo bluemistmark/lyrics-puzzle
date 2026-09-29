@@ -40,7 +40,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `components/modals/*`: 모달 내용만 담당하고, 공용 `components/Modal.tsx`가 네이티브 `<dialog>` 하나를 열고 닫는다. 모달은 열릴 때마다 새로 마운트되므로 입력 초안 같은 로컬 state는 닫으면 사라진다.
   - 문제별 로컬 state 초기화는 `key={round.id}`로 리마운트해서 처리한다(`WordForm` 참고).
   - `hooks/useModelContextTools`: `document.modelContext`가 있으면 WebMCP 도구(`guess_lyric_word`)를 등록한다.
-  - 테마는 `theme.ts`(`lyrics-theme` 키, `data-theme` 속성)에서 관리하며, `useTheme`은 `App`에서만 호출하고 테마 모달(`ThemeModal`)에는 props로 넘긴다(여러 곳에서 호출하면 상태가 따로 논다).
+  - 테마는 `theme.ts`(`lyrics-theme` 키, `data-theme` 속성)에서 관리하며, `useTheme`은 `App`에서만 호출하고 테마 모달(`ThemeModal`)에는 props로 넘긴다(여러 곳에서 호출하면 상태가 따로 논다). 새 테마는 `themes.ts` 목록, `theme.ts`와 `index.html`의 초기 스크립트(색 모드·`theme-color`), `share-image.ts` 팔레트, 스타일 파일을 함께 추가한다.
+  - 스타일: `src/styles/index.css`(웹 폰트 → `base.css` → `themes/*.css` 순서, 뒤 파일이 같은 우선순위에서 이김). 테마 파일은 `[data-theme="x"] { … }` 하나로 감싼 CSS 네스팅(빌드 시 esbuild가 펼침)이고, `@keyframes`·`@font-face`는 네스팅 밖에 둔다. `dark.css`는 다크와 우주(`:is(dark, space)`), `rhythm.css`는 라이트·다크·우주·시험지가 함께 쓰는 레이아웃으로 색은 각 테마의 `--rp-*` 변수가 정한다. `base.css`의 기본 색은 초록 계열이라, 테마를 만들거나 기본 스타일에 색을 추가하면 다른 테마(특히 노트·시험지·우주)에 초록이 새지 않는지 확인한다.
   - 한글 IME 조합 중 Enter 제출 방지는 `utils/ime.ts`의 `blockComposingEnter`를 쓴다.
 - **어드민** (`admin.html` → `src/admin/`) — 별도 Vite 엔트리(`vite.config.ts`)라 supabase-js는 어드민 번들에만 들어간다. 게임 코드(`src/components`, `game.ts` 등)에서 `src/admin/`을 import하지 말 것. supabase-js는 게임에서 `src/account/session.ts`에서만 쓰고, 그 파일은 `src/account/index.ts`가 동적 import로만 불러온다(정적으로 import하면 게임 번들에 들어감).
   - `admin/store.ts`(zustand)가 데이터 테이블 전체를 메모리에 들고, 각 액션은 Supabase에 먼저 쓰고 성공하면 로컬 상태를 갱신한다. 에러는 `describeError`로 한국어 메시지로 바꿔 throw한다.

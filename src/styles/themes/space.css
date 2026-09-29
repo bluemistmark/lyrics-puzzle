@@ -1,0 +1,522 @@
+/* 우주: a night-sky mission-control screen. */
+
+@keyframes space-twinkle {
+  0% {
+    opacity: 0;
+    text-shadow: 0 0 24px #fff;
+  }
+
+  40% {
+    opacity: 1;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 22px #8ecbff;
+  }
+}
+
+@keyframes space-blink {
+  50% {
+    color: #8ecbff4d;
+  }
+}
+
+@keyframes space-shoot {
+  0%,
+  86% {
+    opacity: 0;
+    translate: 0 0;
+  }
+
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    translate: 90vw 30vh;
+  }
+}
+
+[data-theme="space"] {
+  & {
+    background:
+      linear-gradient(var(--rp-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rp-grid) 1px, transparent 1px),
+      radial-gradient(circle at 8% 23%, var(--rp-glow) 0, transparent 28%),
+      radial-gradient(circle at 92% 75%, var(--rp-glow) 0, transparent 30%),
+      var(--rp-bg);
+    background-size:
+      56px 56px,
+      56px 56px,
+      auto,
+      auto;
+  }
+
+  /* 우주: a night sky. Builds on the dark theme and the rhythm-puzzle layout; a quiet starfield,
+   glass panels, and revealed lyrics that twinkle into starlight. */
+  &:root {
+    --rp-bg: #070a1c;
+    --rp-grid: transparent;
+    --rp-glow: transparent;
+    --rp-ink: #eef1ff;
+    --rp-ink-sub: #9fb0e8;
+    --rp-line: #8ecbff1f;
+    --rp-tabs-bg: #0d1330b3;
+    --rp-tabs-border: #8ecbff24;
+    --rp-tab-text: #9fa9d6;
+    --rp-accent: #e8ecff;
+    --rp-accent-hover: #ffffff;
+    --rp-on-accent: #0a0e24;
+    --rp-surface: #121a3f8c;
+    --rp-surface-border: #8ecbff2e;
+    --rp-shadow: #00000066;
+    --rp-lyrics-bg: transparent;
+    --rp-lyrics-border: transparent;
+    --rp-revealed-bg: transparent;
+    --rp-revealed-text: #ffffff;
+    --rp-track-bg: #ffffff12;
+    --rp-track-border: transparent;
+    --rp-input-border: #8ecbff33;
+    --rp-placeholder: #8a93c0;
+    --rp-disabled-bg: #ffffff0f;
+    --rp-disabled-text: #6b7299;
+    --rp-control-text: #dfe5ff;
+    --rp-control-border: #8ecbff29;
+    --rp-control-edge: transparent;
+    --rp-control-icon: #8ecbff;
+    --rp-hover-bg: #8ecbff1a;
+    --rp-hover-border: #8ecbff66;
+    background:
+      radial-gradient(1px 1px at 23px 41px, #ffffffcc, transparent),
+      radial-gradient(1px 1px at 97px 13px, #ffffff99, transparent),
+      radial-gradient(1.5px 1.5px at 151px 88px, #ffffffe6, transparent),
+      radial-gradient(1px 1px at 61px 143px, #ffffff80, transparent),
+      radial-gradient(1px 1px at 187px 171px, #cfe3ffb3, transparent),
+      radial-gradient(1px 1px at 131px 199px, #ffffff66, transparent),
+      radial-gradient(
+        circle at 88% 7%,
+        #f3ead6 0 17px,
+        #f3ead633 18px,
+        transparent 46px
+      ),
+      radial-gradient(ellipse 70% 50% at 10% 20%, #3b2a8a4d 0, transparent 70%),
+      radial-gradient(ellipse 60% 45% at 95% 85%, #1d4f8a40 0, transparent 70%),
+      linear-gradient(#0a0f2a, #05071a);
+    background-size:
+      220px 220px,
+      220px 220px,
+      220px 220px,
+      220px 220px,
+      220px 220px,
+      220px 220px,
+      auto,
+      auto,
+      auto,
+      auto;
+    background-attachment: fixed;
+    color: #dfe5ff;
+  }
+
+  .brand-icon {
+    --logo-bg: #1a2255;
+    --logo-ink: #8ecbff;
+  }
+
+  .brand-icon svg {
+    filter: drop-shadow(0 0 8px #8ecbff55);
+  }
+
+  :is(.brand, main h1, h2, .song-reveal strong, .success-box strong) {
+    font-family: var(--body-font);
+    font-weight: 800;
+    letter-spacing: -0.4px;
+  }
+
+  .brand-sub {
+    color: #8ecbff99;
+  }
+
+  /* Glass panels over the sky. */
+  .puzzle-card,
+  .game-tabs,
+  .filter,
+  .hints button,
+  .input-wrap {
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+  }
+
+  .puzzle-card {
+    box-shadow:
+      inset 0 1px 0 #ffffff14,
+      0 16px 40px #00000066;
+  }
+
+  .song-reveal strong {
+    font-size: 18px;
+  }
+
+  .song-reveal span {
+    color: #9fb0e8;
+    opacity: 1;
+  }
+
+  .lyrics {
+    margin: 8px 0 12px;
+    padding: 18px 0;
+  }
+
+  /* Initials wait as faint starlight... */
+  .lyrics p {
+    color: #7f89bd;
+    font-weight: 800;
+    font-size: 25px;
+    letter-spacing: 1px;
+  }
+
+  /* ...and revealed letters shine. */
+  .revealed {
+    border-radius: 0;
+    color: #fff;
+    text-shadow:
+      0 0 2px #fff,
+      0 0 12px #8ecbffb3;
+    animation: space-twinkle 0.8s ease-out;
+  }
+
+  .english {
+    color: #c4b5ff;
+    text-decoration-color: #c4b5ff66;
+  }
+
+  .progress-track {
+    height: 4px;
+    box-shadow: none;
+  }
+
+  .progress-track::after {
+    display: none;
+  }
+
+  .progress-track > div {
+    background: linear-gradient(90deg, #6c7dff, #8ecbff, #e8ecff);
+    box-shadow: 0 0 10px #8ecbffb3;
+  }
+
+  .progress-label b {
+    color: #cfe3ff;
+    font-weight: 600;
+  }
+
+  .primary {
+    box-shadow: 0 0 28px #8ecbff33;
+  }
+
+  .input-wrap:focus-within {
+    border-color: #8ecbff99;
+    box-shadow: 0 0 0 4px #8ecbff1f;
+  }
+
+  .input-wrap button {
+    background: #8ecbff;
+    color: #0a0e24;
+  }
+
+  .input-wrap button:hover:not(:disabled) {
+    background: #b5dcff;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    box-shadow: 0 0 16px #8ecbff40;
+  }
+
+  /* Replace the dark theme's green surfaces with the night palette. */
+  dialog {
+    background: #0e1433;
+    color: #dfe5ff;
+    border-color: #8ecbff29;
+  }
+
+  .modal-inner form input,
+  .unit-options button,
+  .theme-options label,
+  .record-item,
+  .news-item,
+  .help-example,
+  .modal-icon,
+  .success-box,
+  .share-results,
+  .icon-btn:hover {
+    background: #8ecbff0f;
+    color: #dfe5ff;
+    border-color: #8ecbff24;
+  }
+
+  .unit-options button.chosen,
+  .theme-options label.selected,
+  .word-history .hit {
+    background: #8ecbff26;
+    color: #fff;
+    border-color: #8ecbff80;
+  }
+
+  .success-icon,
+  .success-box p {
+    color: #8ecbff;
+  }
+
+  .empty-history,
+  .feedback,
+  .progress-label,
+  .skip,
+  .report-link,
+  footer,
+  footer small {
+    color: #8a93c0;
+  }
+
+  .topbar,
+  footer {
+    border-color: #8ecbff1f;
+  }
+
+  /* Mission-control HUD: Orbitron for Latin labels, bracketed card, comet progress,
+   a ringed planet and the occasional shooting star. */
+  .brand-sub,
+  .progress-label b {
+    font-family: Orbitron, var(--body-font);
+    letter-spacing: 3px;
+  }
+
+  .puzzle-card {
+    --hud: #8ecbffb3;
+    padding-top: 30px;
+    background:
+      linear-gradient(var(--hud), var(--hud)) top 10px left 10px / 16px 1.5px
+        no-repeat,
+      linear-gradient(var(--hud), var(--hud)) top 10px left 10px / 1.5px 16px
+        no-repeat,
+      linear-gradient(var(--hud), var(--hud)) top 10px right 10px / 16px 1.5px
+        no-repeat,
+      linear-gradient(var(--hud), var(--hud)) top 10px right 10px / 1.5px 16px
+        no-repeat,
+      linear-gradient(var(--hud), var(--hud)) bottom 10px left 10px / 16px 1.5px
+        no-repeat,
+      linear-gradient(var(--hud), var(--hud)) bottom 10px left 10px / 1.5px 16px
+        no-repeat,
+      linear-gradient(var(--hud), var(--hud)) bottom 10px right 10px / 16px
+        1.5px no-repeat,
+      linear-gradient(var(--hud), var(--hud)) bottom 10px right 10px / 1.5px
+        16px no-repeat,
+      var(--rp-surface);
+  }
+
+  .puzzle-card::before {
+    content: "● TRANSMISSION";
+    position: absolute;
+    top: 12px;
+    right: 34px;
+    color: #8ecbff99;
+    font-family: Orbitron, var(--body-font);
+    font-size: 9px;
+    letter-spacing: 3px;
+    animation: space-blink 2.4s steps(1) infinite;
+  }
+
+  .song-reveal.unknown strong {
+    color: #8ecbff;
+    opacity: 0.8;
+    letter-spacing: 4px;
+  }
+
+  .song-reveal.unknown strong::before {
+    content: "UNKNOWN SIGNAL ";
+    font-family: Orbitron, var(--body-font);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    vertical-align: middle;
+    opacity: 0.8;
+  }
+
+  /* Progress is a comet: the bar is its tail, a glowing dot its head. */
+  .progress-track {
+    overflow: visible;
+  }
+
+  .progress-track > div {
+    position: relative;
+  }
+
+  .progress-track > div::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 6px 2px #ffffffb3,
+      0 0 16px 4px #8ecbff99;
+    transform: translateY(-50%);
+  }
+
+  .input-wrap::before {
+    content: "›";
+    align-self: center;
+    padding: 0 2px 0 10px;
+    color: #8ecbff;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .primary {
+    border: 1px solid #ffffff;
+    box-shadow:
+      0 0 0 4px #8ecbff1f,
+      0 0 28px #8ecbff40;
+  }
+
+  /* A ringed planet low on the left of the sky. */
+  body {
+    background:
+      radial-gradient(
+        ellipse 120px 22px at 5% 86%,
+        transparent 58%,
+        #c4b5ff59 61%,
+        #c4b5ff26 68%,
+        transparent 71%
+      ),
+      radial-gradient(
+        circle at 5% 86%,
+        #b9a4ff 0,
+        #6b55d6 26px,
+        #3a2b8a 44px,
+        transparent 45px
+      );
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  /* Shooting star. */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 12%;
+    left: -20%;
+    z-index: -1;
+    width: 140px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, #ffffffd9);
+    border-radius: 999px;
+    opacity: 0;
+    transform: rotate(18deg);
+    pointer-events: none;
+    animation: space-shoot 11s ease-in infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .revealed,
+    .puzzle-card::before,
+    body::before {
+      animation: none;
+    }
+  }
+
+  .modal-icon {
+    color: #8ecbff;
+    box-shadow: 0 0 18px #8ecbff33;
+  }
+
+  .theme-options input {
+    accent-color: #8ecbff;
+  }
+
+  /* Night palette for everything the dark theme colors green. */
+  .icon-btn,
+  h1 span,
+  .streak,
+  .hints,
+  .secondary,
+  .reset-btn,
+  .modal-inner > p,
+  .instructions p,
+  .word-history .empty-history,
+  .record-item span,
+  .record-note,
+  .news-item time,
+  .news-block li span,
+  .news-stats,
+  .collection-summary,
+  .daily-date,
+  .share-results > p {
+    color: #8a93c0;
+  }
+
+  .streak b,
+  .streak svg,
+  .record-item strong,
+  .news-block b,
+  .collection-summary b,
+  .instructions li::marker {
+    color: #8ecbff;
+  }
+
+  input,
+  .news-block ul,
+  .news-note {
+    color: #dfe5ff;
+  }
+
+  input::placeholder {
+    color: #8a93c0;
+  }
+
+  .record-item.play-grass {
+    --grass-on: #8ecbff;
+    --grass-empty: #1f2750;
+  }
+
+  .achievement-toast {
+    background: #0e1433;
+    color: #dfe5ff;
+  }
+
+  .site-footer,
+  .report-form textarea {
+    border-color: #8ecbff29;
+  }
+
+  .daily-badge,
+  .share-results pre,
+  .share-actions button,
+  .share-actions a {
+    background: #8ecbff0f;
+    color: #dfe5ff;
+    border-color: #8ecbff33;
+  }
+
+  .share-actions button:hover,
+  .share-actions a:hover {
+    background: #8ecbff1f;
+  }
+
+  :is(button, a, summary):focus-visible,
+  .theme-options label:focus-within {
+    outline-color: #8ecbff;
+  }
+
+  .word-history .miss {
+    background: #ffffff0a;
+    color: #8a93c0;
+    border: 1px solid #ffffff14;
+  }
+
+  .word-history .hit {
+    background: #8ecbff1f;
+    color: #eef1ff;
+    border: 1px solid #8ecbff4d;
+  }
+}

@@ -36,6 +36,7 @@ export function RecordPanel({ hidden, onReset }: Props) {
   const history = useGame((s) => s.dailyHistory);
   const today = useGame((s) => s.daily.date);
   const playLog = useGame((s) => s.playLog);
+  const modeStats = useGame((s) => s.modeStats);
   const signedIn = useAccount((s) => s.status === "signedIn");
   const daily = dailySummary(history, today);
   const days = calendarWeeks(today, GRASS_WEEKS).flat();
@@ -85,6 +86,17 @@ export function RecordPanel({ hidden, onReset }: Props) {
           </div>
         ))}
       </div>
+      <h2 className="record-subtitle">다른 모드</h2>
+      <div className="record-grid">
+        <div className="record-item">
+          <span>심플 · 제목 정답</span>
+          <strong>{modeStats.simple.solved}문제</strong>
+        </div>
+        <div className="record-item">
+          <span>이지 · 가사 완성</span>
+          <strong>{modeStats.easy.solved}문제</strong>
+        </div>
+      </div>
       <h2 className="record-subtitle">오늘의 문제</h2>
       <div className="record-grid">
         {dailyItems.map(([label, value]) => (
@@ -99,8 +111,9 @@ export function RecordPanel({ hidden, onReset }: Props) {
         {signedIn
           ? "기록은 계정에 저장돼 로그인한 다른 기기에서도 이어져요."
           : "기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도 삭제되니, 오른쪽 위 계정 메뉴에서 로그인하면 계정에 저장할 수 있어요."}{" "}
-        잔디는 일반 플레이에서 제목을 맞히거나 포기한 문제 수로 진해지고, 오늘의
-        문제는 하루를 건너뛰거나 포기하면 연속 정답이 끊겨요.
+        위 플레이 기록·잔디·도감·업적은 클래식 모드만 반영해요. 잔디는
+        클래식에서 제목을 맞히거나 포기한 문제 수로 진해지고, 오늘의 문제는
+        하루를 건너뛰거나 포기하면 연속 정답이 끊겨요.
       </p>
       <button className="reset-btn" onClick={onReset}>
         <RotateCcw size={14} /> 기록 초기화
