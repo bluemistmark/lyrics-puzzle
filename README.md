@@ -26,7 +26,7 @@ React · TypeScript · Vite · Zustand 기반 모바일 가사 퍼즐.
 
 ### 최초 설정
 
-1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/](supabase/migrations/)의 파일을 이름 순서대로 실행합니다(`20260928000000_init.sql` → `20260929000000_artists.sql` → `20260930000000_releases.sql` → `20261001000000_ranking.sql` → `20261002000000_difficulty.sql` → `20261003000000_player_saves.sql` → `20261004000000_reports.sql`). 이미 실행한 파일은 건너뛰고 새 파일만 실행하면 됩니다. 기존 곡에서 가수 목록과 접두어를 자동으로 채웁니다.
+1. **Supabase 프로젝트 생성** 후 SQL Editor에서 [supabase/migrations/](supabase/migrations/)의 파일을 이름 순서대로 실행합니다(`20260928000000_init.sql` → `20260929000000_artists.sql` → `20260930000000_releases.sql` → `20261001000000_ranking.sql` → `20261002000000_difficulty.sql` → `20261003000000_player_saves.sql` → `20261004000000_reports.sql` → `20261005000000_daily_stats.sql` → `20261006000000_member_stats.sql`). 이미 실행한 파일은 건너뛰고 새 파일만 실행하면 됩니다. 기존 곡에서 가수 목록과 접두어를 자동으로 채웁니다.
 2. **관리자 계정**: Authentication > Users > Add user로 이메일·비밀번호 계정을 만들고, SQL Editor에서 `insert into public.admins (email) values ('이메일');`을 실행합니다. Authentication 설정에서 새 가입(Allow new users to sign up)은 꺼 두는 것을 권장합니다. 가입하더라도 `admins`에 없으면 데이터에 접근할 수 없습니다.
 3. **환경 변수**: [.env.example](.env.example)을 `.env.local`로 복사해 값을 채우고, Vercel > Project Settings > Environment Variables에도 같은 이름으로 등록합니다(Production, Preview).
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`: 어드민 화면용. 공개돼도 되는 값이며, Vite가 `VITE_`로 시작하는 변수만 브라우저에 넘겨주므로 **이 두 개는 접두사가 반드시 있어야** 합니다.
