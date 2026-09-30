@@ -20,6 +20,7 @@ type Remote = {
   stats: DailyStat[];
   players: number | null;
   newPlayers: number | null;
+  members: { total: number; new_week: number } | null;
   newReports: number | null;
   difficulty: Tally[];
 };
@@ -64,18 +65,21 @@ export function DashboardTab({ catalog, issues, onNavigate }: Props) {
         .order("date"),
       db.from("players").select("id", count),
       db.from("players").select("id", count).gte("created_at", weekAgo),
+      db.rpc("member_stats").maybeSingle(),
       db.from("reports").select("id", count).eq("status", "new"),
       db
         .from("question_difficulty")
         .select("question_id, hard, total")
         .gte("total", MIN_VOTES),
-    ]).then(([stats, players, newPlayers, reports, difficulty]) => {
+    ]).then(([stats, players, newPlayers, members, reports, difficulty]) => {
       if (!live) return;
       setErrors(
         [
           stats.error &&
             `데일리 퀴즈 추이: ${describeError(stats.error)} (daily_stats 마이그레이션을 실행했는지 확인하세요.)`,
           players.error && `플레이어: ${describeError(players.error)}`,
+          members.error &&
+            `가입 회원: ${describeError(members.error)} (member_stats 마이그레이션을 실행했는지 확인하세요.)`,
           reports.error && `제보: ${describeError(reports.error)}`,
           difficulty.error && `난이도: ${describeError(difficulty.error)}`,
         ].filter((e): e is string => Boolean(e)),
@@ -84,6 +88,7 @@ export function DashboardTab({ catalog, issues, onNavigate }: Props) {
         stats: (stats.data ?? []) as DailyStat[],
         players: players.count,
         newPlayers: newPlayers.count,
+        members: members.data as Remote["members"],
         newReports: reports.count,
         difficulty: (difficulty.data ?? []) as Tally[],
       });
@@ -150,6 +155,15 @@ export function DashboardTab({ catalog, issues, onNavigate }: Props) {
           }
         />
         <Tile
+          label="가입 회원"
+          value={data?.members ? `${data.members.total}명` : "…"}
+          detail={
+            data?.members
+              ? `최근 7일 신규 ${data.members.new_week}명`
+              : undefined
+          }
+        />
+        <Tile
           label="미처리 제보"
           value={data?.newReports != null ? `${data.newReports}건` : "…"}
           warn={Boolean(data?.newReports)}
@@ -171,7 +185,8 @@ export function DashboardTab({ catalog, issues, onNavigate }: Props) {
       </div>
       <p className="muted">
         플레이어는 랭킹 제출·체감 난이도 응답을 한 번 이상 한 브라우저 수예요.
-        일반 플레이는 서버에 기록하지 않아 여기에 포함되지 않아요.
+        일반 플레이는 서버에 기록하지 않아 여기에 포함되지 않아요. 가입 회원은
+        카카오·구글로 로그인한 계정 수예요(탈퇴하면 빠져요).
       </p>
 
       <h2>데일리 퀴즈 · 최근 {DAYS}일</h2>
