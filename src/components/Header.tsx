@@ -1,14 +1,33 @@
-import { FileSpreadsheet, HelpCircle, Palette, UserRound } from "lucide-react";
+import {
+  FileSpreadsheet,
+  HelpCircle,
+  Newspaper,
+  Palette,
+  UserRound,
+} from "lucide-react";
 import { LogoMark } from "./LogoMark";
 
 type Props = {
   discreet: boolean;
+  /** 소식 화면이 열려 있는지 */
+  newsOpen: boolean;
+  /** 아직 안 읽은 소식이 있는지 */
+  newsUnread: boolean;
   onHelp: () => void;
+  onNews: () => void;
   onTheme: () => void;
   onAccount: () => void;
 };
 
-export function Header({ discreet, onHelp, onTheme, onAccount }: Props) {
+export function Header({
+  discreet,
+  newsOpen,
+  newsUnread,
+  onHelp,
+  onNews,
+  onTheme,
+  onAccount,
+}: Props) {
   return (
     <header className="topbar">
       <a className="brand" href="#">
@@ -25,6 +44,15 @@ export function Header({ discreet, onHelp, onTheme, onAccount }: Props) {
       <div className="top-actions">
         <button className="icon-btn" aria-label="게임 방법" onClick={onHelp}>
           <HelpCircle size={21} />
+        </button>
+        <button
+          className="icon-btn news-trigger"
+          aria-label={newsUnread ? "소식 (새 소식 있음)" : "소식"}
+          aria-pressed={newsOpen}
+          onClick={onNews}
+        >
+          <Newspaper size={20} />
+          {newsUnread && <span className="tab-dot" aria-hidden="true" />}
         </button>
         <button
           className="icon-btn theme-trigger"

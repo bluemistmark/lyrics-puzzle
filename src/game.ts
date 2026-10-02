@@ -75,12 +75,27 @@ export function songTitleMatches(
     (v) => normalize(v) === normalize(title) && normalize(title).length > 0,
   );
 }
+/**
+ * 입력 전체를 공백 없이 합쳐 찾고, 공백으로 나눈 한 글자 단어는 따로 한 번 더 찾는다.
+ * 합친 입력(`있는숨`)에서는 한 글자 토큰이 "연속 2글자" 규칙에 걸려 열리지 않기 때문이다.
+ */
 export function matches(
   q: Question,
   word: string,
   revealed: readonly string[] = [],
 ): string[] {
-  const term = normalize(word);
+  const found = matchTerm(q, normalize(word), revealed);
+  const parts = word.split(/\s+/).map(normalize).filter(Boolean);
+  if (parts.length > 1)
+    for (const part of parts)
+      if (part.length === 1) found.push(...matchTerm(q, part, revealed));
+  return [...new Set(found)];
+}
+function matchTerm(
+  q: Question,
+  term: string,
+  revealed: readonly string[],
+): string[] {
   if (!term) return [];
   const found: string[] = [];
   q.lines.forEach((line, l) =>
@@ -122,7 +137,7 @@ export function matches(
       }
     }),
   );
-  return [...new Set(found)];
+  return found;
 }
 export function allKeys(q: Question) {
   return q.lines.flatMap((line, l) =>
@@ -139,6 +154,29 @@ export function progress(q: Question, revealed: string[]) {
     count: keys.filter((k) => revealed.includes(k)).length,
     total: keys.length,
   };
+}
+/**
+ * 단어 공개 힌트: 아직 안 열린 단어(토큰) 중 하나를 무작위로 골라 그 단어의 남은 키를 돌려준다.
+ * `range`([시작, 끝) 줄)를 주면 그 줄 안에서만 고르고, 열 단어가 없으면 빈 배열.
+ * 일반·데일리·내 가사가 같은 함수를 쓴다. 테스트에서는 `random`을 주입한다.
+ */
+export function hintKeys(
+  q: Question,
+  revealed: readonly string[],
+  range?: readonly [number, number],
+  random: () => number = Math.random,
+) {
+  const done = new Set(revealed);
+  const words = new Map<string, string[]>();
+  for (const key of allKeys(q)) {
+    if (done.has(key)) continue;
+    const line = Number(key.split(":")[0]);
+    if (range && (line < range[0] || line >= range[1])) continue;
+    const word = key.slice(0, key.lastIndexOf(":"));
+    words.set(word, [...(words.get(word) ?? []), key]);
+  }
+  const choices = [...words.values()];
+  return choices.length ? choices[Math.floor(random() * choices.length)] : [];
 }
 /** Unseen questions first, then ones not in `collected` (곡 도감), then a different song. */
 export function pickQuestion(

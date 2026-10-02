@@ -11,7 +11,7 @@ import {
 import { dailyQuestionId, koreaDate, type DailyHistory } from "./daily.ts";
 import { useDifficulty } from "./difficulty.ts";
 import {
-  allKeys,
+  hintKeys,
   matches,
   normalize,
   titleMatches,
@@ -427,15 +427,9 @@ export const useGame = create<Store>()(
             if (style === "classic" && round.wordHints >= WORD_HINT_LIMIT)
               return;
             const q = questions.find((q) => q.id === round.id)!;
-            const hidden = allKeys(q).find((k) => !round.revealed.includes(k));
-            if (!hidden) return;
-            const prefix = hidden.split(":").slice(0, 2).join(":") + ":";
-            round.revealed = [
-              ...new Set([
-                ...round.revealed,
-                ...allKeys(q).filter((k) => k.startsWith(prefix)),
-              ]),
-            ];
+            const keys = hintKeys(q, round.revealed);
+            if (!keys.length) return;
+            round.revealed = [...new Set([...round.revealed, ...keys])];
             round.wordHints++;
           }
           round.hints++;

@@ -15,8 +15,7 @@ export function NewsPanel({ hidden }: { hidden: boolean }) {
   return (
     <section
       id="news-panel"
-      role="tabpanel"
-      aria-labelledby="news-tab"
+      aria-label="새 소식"
       hidden={hidden}
       className="news-panel"
     >
