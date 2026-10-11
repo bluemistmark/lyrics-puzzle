@@ -19,6 +19,8 @@ export function DailyPanel({ hidden, onOpenModal }: Props) {
   const daily = useGame((s) => s.daily);
   const history = useGame((s) => s.dailyHistory);
   const finished = round.solved || round.givenUp;
+  // While today's is open, `current` counts the run up to yesterday.
+  const streak = dailySummary(history, daily.date).current;
   return (
     <section
       id="daily-panel"
@@ -32,7 +34,11 @@ export function DailyPanel({ hidden, onOpenModal }: Props) {
           <span className="daily-date">{daily.date.replaceAll("-", ".")}</span>
           <h1>데일리 퀴즈</h1>
         </div>
-        <span className="daily-badge">하루 한 곡</span>
+        <span className="daily-badge">
+          {!finished && streak > 0
+            ? `오늘 풀면 ${streak + 1}일 연속`
+            : "하루 한 곡"}
+        </span>
       </div>
       <PuzzleCard question={question} round={round} percent={percent} />
       {(finished || full) && (
@@ -55,7 +61,7 @@ export function DailyPanel({ hidden, onOpenModal }: Props) {
             question={question}
             round={round}
             percent={percent}
-            streak={dailySummary(history, daily.date).current}
+            streak={streak}
           />
           <DailyRanking
             key={daily.date}

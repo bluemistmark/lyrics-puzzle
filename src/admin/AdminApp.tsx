@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { buildCatalog } from "../data/build-catalog.ts";
+import { draftRelease } from "../data/releases.ts";
 import { ArtistsTab } from "./ArtistsTab";
 import { DashboardTab } from "./DashboardTab";
 import { DictionaryTab } from "./DictionaryTab";
 import { DifficultyTab } from "./DifficultyTab";
+import { HistoryTab } from "./HistoryTab";
 import { Login } from "./Login";
 import { PublishTab } from "./PublishTab";
 import { QuestionsTab } from "./QuestionsTab";
@@ -13,6 +15,7 @@ import { ReportsTab } from "./ReportsTab";
 import { SongsTab } from "./SongsTab";
 import { useAdmin } from "./store";
 import { supabase } from "./supabase";
+import { useRoute } from "./useRoute";
 
 export function AdminApp() {
   if (!supabase)
@@ -74,16 +77,21 @@ function AuthGate({ client }: { client: SupabaseClient }) {
   return <AdminShell email={session.user.email ?? ""} onSignOut={signOut} />;
 }
 
-type Tab =
-  | "dashboard"
-  | "artists"
-  | "songs"
-  | "questions"
-  | "dictionary"
-  | "publish"
-  | "ranking"
-  | "difficulty"
-  | "reports";
+const TABS = [
+  "dashboard",
+  "artists",
+  "songs",
+  "questions",
+  "dictionary",
+  "publish",
+  "ranking",
+  "difficulty",
+  "reports",
+  "history",
+] as const;
+type Tab = (typeof TABS)[number];
+const isTab = (value: string): value is Tab =>
+  (TABS as readonly string[]).includes(value);
 
 function AdminShell({
   email,
@@ -98,26 +106,68 @@ function AdminShell({
   const dictionary = useAdmin((s) => s.dictionary);
   const status = useAdmin((s) => s.status);
   const error = useAdmin((s) => s.error);
+  const releases = useAdmin((s) => s.releases);
+  const newReports = useAdmin((s) => s.newReports);
+  const unpublished = useAdmin((s) => s.unpublished);
+  const countUnpublished = useAdmin((s) => s.countUnpublished);
   const load = useAdmin((s) => s.load);
-  const [tab, setTab] = useState<Tab>("dashboard");
+  const route = useRoute((s) => s.tab);
+  const go = useRoute((s) => s.go);
+  const tab: Tab = isTab(route) ? route : "dashboard";
+  const setTab = (next: Tab) => go(next);
   useEffect(() => {
     load();
   }, [load]);
+  // Every saved edit lands in audit_log, so recount whenever the data changes.
+  useEffect(() => {
+    if (status === "ready") countUnpublished();
+  }, [status, artists, songs, questions, dictionary, countUnpublished]);
   // Same validation the build runs, so what is shown here is what publish will accept.
   const { catalog, issues } = useMemo(
     () => buildCatalog({ artists, songs, questions, dictionary }),
     [artists, songs, questions, dictionary],
   );
-  const tabs: [Tab, string, number | null][] = [
+  // Badges show what needs attention: errors, unhandled reports, unpublished changes.
+  const questionIssues = new Set(
+    issues.flatMap((i) => (i.questionId ? [i.questionId] : [])),
+  ).size;
+  // Prefer the audit log (counts edits too); fall back to added/removed questions.
+  const draftChanges = useMemo(() => {
+    if (!releases[0]) return null;
+    const d = draftRelease(catalog, releases[0], "", "");
+    return d.added_questions + d.removed_questions;
+  }, [catalog, releases]);
+  const pending = unpublished ?? draftChanges;
+  type Badge = { text: string | number; warn?: boolean };
+  const tabs: [Tab, string, Badge | null][] = [
     ["dashboard", "대시보드", null],
-    ["questions", "문제", questions.length],
-    ["songs", "곡", songs.length],
-    ["artists", "가수", artists.length],
-    ["dictionary", "영어 사전", dictionary.length],
-    ["publish", "게시", issues.length],
+    [
+      "questions",
+      "문제",
+      questionIssues
+        ? { text: `오류 ${questionIssues}`, warn: true }
+        : { text: questions.length },
+    ],
+    ["songs", "곡", { text: songs.length }],
+    ["artists", "가수", { text: artists.length }],
+    ["dictionary", "영어 사전", { text: dictionary.length }],
+    [
+      "publish",
+      "게시",
+      issues.length
+        ? { text: `오류 ${issues.length}`, warn: true }
+        : pending
+          ? { text: `변경 ${pending}`, warn: true }
+          : { text: pending === 0 ? "최신" : "준비됨" },
+    ],
     ["ranking", "랭킹", null],
     ["difficulty", "난이도", null],
-    ["reports", "제보", null],
+    [
+      "reports",
+      "제보",
+      newReports ? { text: `새 ${newReports}`, warn: true } : null,
+    ],
+    ["history", "이력", null],
   ];
 
   return (
@@ -135,7 +185,7 @@ function AdminShell({
         <button onClick={onSignOut}>로그아웃</button>
       </header>
       <nav className="admin-tabs" role="tablist">
-        {tabs.map(([key, label, count]) => (
+        {tabs.map(([key, label, badge]) => (
           <button
             key={key}
             role="tab"
@@ -143,15 +193,9 @@ function AdminShell({
             onClick={() => setTab(key)}
           >
             {label}
-            {count !== null && (
-              <span
-                className={key === "publish" && count ? "badge warn" : "badge"}
-              >
-                {key === "publish"
-                  ? count
-                    ? `오류 ${count}`
-                    : "준비됨"
-                  : count}
+            {badge && (
+              <span className={badge.warn ? "badge warn" : "badge"}>
+                {badge.text}
               </span>
             )}
           </button>
@@ -185,6 +229,8 @@ function AdminShell({
             <DifficultyTab />
           ) : tab === "reports" ? (
             <ReportsTab />
+          ) : tab === "history" ? (
+            <HistoryTab />
           ) : (
             <PublishTab catalog={catalog} issues={issues} />
           ))}

@@ -5,13 +5,12 @@ import {
   type Issue,
   type QuestionRow,
 } from "../data/build-catalog.ts";
-import { scanLine, sortDictionary } from "../data/english.ts";
 import { BulkQuestionForm } from "./BulkQuestionForm";
-import { FormDialog } from "./FormDialog";
-import { nextQuestionId } from "./ids";
-import { QuickAddWord } from "./QuickAddWord";
-import { SongSelect } from "./SongSelect";
+import { CsvButton } from "./CsvButton";
+import { DeleteQuestionDialog } from "./DeleteQuestionDialog";
+import { QuestionForm } from "./QuestionForm";
 import { useAdmin } from "./store";
+import { useRoute, useRouteParam } from "./useRoute";
 
 export function QuestionsTab({ issues }: { issues: Issue[] }) {
   const questions = useAdmin((s) => s.questions);
@@ -19,12 +18,24 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
   const songs = useAdmin((s) => s.songs);
   const saveQuestion = useAdmin((s) => s.saveQuestion);
   const removeQuestion = useAdmin((s) => s.removeQuestion);
-  const [artist, setArtist] = useState("");
-  const [songId, setSongId] = useState("");
-  const [query, setQuery] = useState("");
-  const [onlyIssues, setOnlyIssues] = useState(false);
+  const setQuestionsActive = useAdmin((s) => s.setQuestionsActive);
+  const [picked, setPicked] = useState<ReadonlySet<string>>(new Set());
+  const [busy, setBusy] = useState(false);
+  const [artist, setArtist] = useRouteParam("artist");
+  const [songId, setSongId] = useRouteParam("song");
+  const [query, setQuery] = useRouteParam("q");
+  const [issuesParam, setIssuesParam] = useRouteParam("issues");
+  const onlyIssues = issuesParam === "1";
+  const setOnlyIssues = (on: boolean) => setIssuesParam(on ? "1" : "");
   const [editing, setEditing] = useState<QuestionRow | "new" | null>(null);
   const [bulk, setBulk] = useState(false);
+  const [deleting, setDeleting] = useState<QuestionRow | null>(null);
+  const go = useRoute((s) => s.go);
+  const releases = useAdmin((s) => s.releases);
+  const published = useMemo(
+    () => new Set(releases[0]?.question_ids ?? []),
+    [releases],
+  );
 
   const sortedSongs = useMemo(
     () => [...songs].sort(compareSongs(artistRows)),
@@ -60,6 +71,40 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
       });
   }, [questions, songById, artist, songId, onlyIssues, issuesById, query]);
 
+  // Bulk actions apply to picked rows that the current filter still shows.
+  const pickedVisible = visible.filter((row) => picked.has(row.id));
+  const allPicked =
+    visible.length > 0 && pickedVisible.length === visible.length;
+  const pick = (id: string) =>
+    setPicked((prev) => {
+      const next = new Set(prev);
+      if (!next.delete(id)) next.add(id);
+      return next;
+    });
+  const pickAll = () =>
+    setPicked(allPicked ? new Set() : new Set(visible.map((row) => row.id)));
+  const setActive = async (active: boolean) => {
+    const ids = pickedVisible
+      .filter((row) => row.active !== active)
+      .map((row) => row.id);
+    if (!ids.length) return;
+    if (
+      !confirm(
+        `선택한 문제 ${ids.length}개를 ${active ? "출제에 사용" : "미사용"}으로 바꿀까요?`,
+      )
+    )
+      return;
+    setBusy(true);
+    try {
+      await setQuestionsActive(ids, active);
+      setPicked(new Set());
+    } catch (error) {
+      alert((error as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const toggle = async (row: QuestionRow) => {
     try {
       await saveQuestion({ ...row, active: !row.active }, false);
@@ -68,6 +113,7 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
     }
   };
   const remove = async (row: QuestionRow) => {
+    if (published.has(row.id)) return setDeleting(row);
     if (!confirm(`문제 ${row.id}를 삭제할까요? 되돌릴 수 없어요.`)) return;
     try {
       await removeQuestion(row.id);
@@ -117,6 +163,34 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
         </label>
         <span className="admin-spacer" />
         <span className="muted">{visible.length}문제</span>
+        <CsvButton
+          kind="questions"
+          rows={() => [
+            [
+              "문제ID",
+              "가수",
+              "곡ID",
+              "곡명",
+              "가사1",
+              "가사2",
+              "가사3",
+              "출제 사용",
+            ],
+            ...visible.map((q) => {
+              const song = songById.get(q.song_id);
+              return [
+                q.id,
+                song?.artist,
+                q.song_id,
+                song?.title,
+                q.lines[0],
+                q.lines[1],
+                q.lines[2],
+                q.active,
+              ];
+            }),
+          ]}
+        />
         <button onClick={() => setBulk(true)} disabled={!songs.length}>
           여러 문제 추가
         </button>
@@ -128,10 +202,32 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
           문제 추가
         </button>
       </div>
+      {pickedVisible.length > 0 && (
+        <div className="toolbar selection-bar">
+          <b>{pickedVisible.length}개 선택</b>
+          <button disabled={busy} onClick={() => setActive(true)}>
+            출제에 사용
+          </button>
+          <button disabled={busy} onClick={() => setActive(false)}>
+            미사용
+          </button>
+          <button disabled={busy} onClick={() => setPicked(new Set())}>
+            선택 해제
+          </button>
+        </div>
+      )}
       <div className="table-wrap">
         <table>
           <thead>
             <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  aria-label="보이는 문제 모두 선택"
+                  checked={allPicked}
+                  onChange={pickAll}
+                />
+              </th>
               <th>문제ID</th>
               <th>곡</th>
               <th>가사</th>
@@ -146,6 +242,14 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
               const problems = issuesById.get(row.id);
               return (
                 <tr key={row.id} className={row.active ? "" : "inactive"}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      aria-label={`${row.id} 선택`}
+                      checked={picked.has(row.id)}
+                      onChange={() => pick(row.id)}
+                    />
+                  </td>
                   <td className="mono">{row.id}</td>
                   <td>
                     <span className="muted">{song?.artist}</span>
@@ -178,6 +282,13 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
                   </td>
                   <td className="row-actions">
                     <button onClick={() => setEditing(row)}>수정</button>
+                    <button
+                      onClick={() =>
+                        go("history", { table: "questions", q: row.id })
+                      }
+                    >
+                      이력
+                    </button>
                     <button className="danger" onClick={() => remove(row)}>
                       삭제
                     </button>
@@ -195,6 +306,12 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
           onClose={() => setEditing(null)}
         />
       )}
+      {deleting && (
+        <DeleteQuestionDialog
+          question={deleting}
+          onClose={() => setDeleting(null)}
+        />
+      )}
       {bulk && (
         <BulkQuestionForm
           defaultSongId={songId}
@@ -202,101 +319,5 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
         />
       )}
     </section>
-  );
-}
-
-function QuestionForm({
-  question,
-  defaultSongId,
-  onClose,
-}: {
-  question: QuestionRow | null;
-  defaultSongId: string;
-  onClose: () => void;
-}) {
-  const questions = useAdmin((s) => s.questions);
-  const dictionary = useAdmin((s) => s.dictionary);
-  const saveQuestion = useAdmin((s) => s.saveQuestion);
-  const isNew = !question;
-  const [id, setId] = useState(() => question?.id ?? nextQuestionId(questions));
-  const [songId, setSongId] = useState(question?.song_id ?? defaultSongId);
-  const [lines, setLines] = useState(() =>
-    [0, 1, 2].map((i) => question?.lines[i] ?? ""),
-  );
-  const [active, setActive] = useState(question?.active ?? true);
-  const sorted = useMemo(() => sortDictionary(dictionary), [dictionary]);
-  const missing = useMemo(
-    () => [
-      ...new Set(
-        lines.flatMap((line) => scanLine(line.trim(), sorted).missing),
-      ),
-    ],
-    [lines, sorted],
-  );
-  return (
-    <FormDialog
-      title={isNew ? "문제 추가" : `문제 ${question.id} 수정`}
-      onClose={onClose}
-      onSubmit={async () => {
-        const trimmed = lines.map((l) => l.trim());
-        if (!id.trim() || !songId) throw Error("문제ID와 곡을 선택하세요.");
-        if (!trimmed[0] || !trimmed[1]) throw Error("가사1·가사2는 필수예요.");
-        await saveQuestion(
-          {
-            id: id.trim(),
-            song_id: songId,
-            lines: trimmed.filter(Boolean),
-            active,
-          },
-          isNew,
-        );
-      }}
-    >
-      <label>
-        곡
-        <SongSelect value={songId} onChange={setSongId} />
-      </label>
-      <label>
-        문제ID
-        <input
-          className="mono"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-          disabled={!isNew}
-          required
-        />
-        {!isNew && <small>문제ID는 바꿀 수 없어요.</small>}
-      </label>
-      {lines.map((line, i) => (
-        <label key={i}>
-          가사{i + 1}
-          {i === 2 && <span className="muted"> (선택)</span>}
-          <input
-            value={line}
-            onChange={(e) =>
-              setLines(lines.map((l, j) => (j === i ? e.target.value : l)))
-            }
-            required={i < 2}
-          />
-        </label>
-      ))}
-      <label className="check">
-        <input
-          type="checkbox"
-          checked={active}
-          onChange={(e) => setActive(e.target.checked)}
-        />
-        출제에 사용
-      </label>
-      {missing.length > 0 && (
-        <div className="notice">
-          <b>영어 사전에 없는 단어</b>
-          <p>발음을 등록해야 게시할 수 있어요. 저장은 먼저 해도 됩니다.</p>
-          {missing.map((word) => (
-            <QuickAddWord key={word} word={word} />
-          ))}
-        </div>
-      )}
-    </FormDialog>
   );
 }

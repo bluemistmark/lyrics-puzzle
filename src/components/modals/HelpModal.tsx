@@ -1,6 +1,8 @@
 import { Lightbulb } from "lucide-react";
 
-export function HelpModal({ onClose }: { onClose: () => void }) {
+type Props = { onClose: () => void; onTutorial: () => void };
+
+export function HelpModal({ onClose, onTutorial }: Props) {
   return (
     <>
       <span className="modal-icon">
@@ -46,9 +48,14 @@ export function HelpModal({ onClose }: { onClose: () => void }) {
         <br />
         제목은 괄호 안의 영문 제목도 사용할 수 있습니다.
       </div>
-      <button className="primary" onClick={onClose}>
-        확인
-      </button>
+      <div className="bottom-actions">
+        <button className="skip" onClick={onTutorial}>
+          튜토리얼 다시 보기
+        </button>
+        <button className="primary" onClick={onClose}>
+          확인
+        </button>
+      </div>
     </>
   );
 }

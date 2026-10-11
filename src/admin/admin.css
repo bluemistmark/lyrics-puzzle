@@ -536,3 +536,67 @@ button.dash-tile:hover {
   color: var(--accent);
   padding: 4px 6px;
 }
+
+/* 표 안의 이동 링크 (곡 탭의 문제 수 등) */
+td button.link,
+.publish button.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+td button.link.warn-text {
+  color: var(--warn-text);
+}
+
+/* 문제 편집: 게임 화면 미리보기 */
+.lyrics-preview {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+}
+.lyrics-preview p {
+  margin: 4px 0;
+  font-size: 17px;
+  letter-spacing: 1px;
+  white-space: pre-wrap;
+}
+.lyrics-preview .english {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.lyrics-preview .missing {
+  padding: 0 2px;
+  border-radius: 4px;
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}
+
+/* 문제 탭: 여러 문제 선택 시 나타나는 작업 줄 */
+.selection-bar {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+}
+
+/* 이력 탭: 바뀐 칸 목록 */
+.audit-changes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.audit-changes li + li {
+  margin-top: 2px;
+}
+.audit-changes del {
+  color: var(--muted);
+}
+.audit-changes ins {
+  text-decoration: none;
+  color: var(--ok);
+}

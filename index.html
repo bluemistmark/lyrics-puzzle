@@ -89,6 +89,11 @@
           ? "dark"
           : "light";
       }
+      try {
+        // 가사 글자 크기 (src/textSize.ts와 같은 키)
+        document.documentElement.dataset.lyricsSize =
+          localStorage.getItem("lyrics-text-size") || "normal";
+      } catch (e) {}
     </script>
   </head>
   <body>

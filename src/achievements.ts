@@ -158,6 +158,14 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
   const totalSongs = units.reduce((n, u) => n + u.songs.length, 0);
   const songsCollected = (i: AchievementInput) =>
     collection(i.collected).reduce((n, u) => n + u.collected, 0);
+  // 도감 절반 and NCT 마스터 count NCT units only; other artists have their own 도감 완성.
+  const mainSongs = units
+    .filter((u) => u.main)
+    .reduce((n, u) => n + u.songs.length, 0);
+  const mainCollected = (i: AchievementInput) =>
+    collection(i.collected)
+      .filter((u) => u.main)
+      .reduce((n, u) => n + u.collected, 0);
   const daily = (i: AchievementInput) => dailySummary(i.dailyHistory, i.today);
   const busiest = (i: AchievementInput) =>
     Math.max(0, ...Object.values(i.playLog));
@@ -370,10 +378,10 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     book(
       "collect-half",
       "도감 절반",
-      "전체 곡의 절반을 도감에 모아요.",
+      "NCT 곡의 절반을 도감에 모아요.",
       "book",
-      Math.ceil(totalSongs / 2),
-      songsCollected,
+      Math.ceil(mainSongs / 2),
+      mainCollected,
     ),
     book(
       "collect-100",
@@ -398,10 +406,10 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     book(
       "collect-all",
       "NCT 마스터",
-      "모든 곡을 도감에 모아요.",
+      "NCT의 모든 곡을 도감에 모아요.",
       "crown",
-      totalSongs,
-      songsCollected,
+      mainSongs,
+      mainCollected,
     ),
 
     play(

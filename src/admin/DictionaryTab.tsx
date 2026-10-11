@@ -1,15 +1,17 @@
 import { useMemo, useState } from "react";
 import type { DictionaryRow } from "../data/build-catalog.ts";
 import { englishKey, scanLine, sortDictionary } from "../data/english.ts";
+import { CsvButton } from "./CsvButton";
 import { FormDialog } from "./FormDialog";
 import { joinList, splitList } from "./ids";
 import { useAdmin } from "./store";
+import { useRouteParam } from "./useRoute";
 
 export function DictionaryTab() {
   const dictionary = useAdmin((s) => s.dictionary);
   const questions = useAdmin((s) => s.questions);
   const removeEntry = useAdmin((s) => s.removeEntry);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useRouteParam("q");
   const [editing, setEditing] = useState<DictionaryRow | "new" | null>(null);
 
   const visible = useMemo(() => {
@@ -60,6 +62,13 @@ export function DictionaryTab() {
         />
         <span className="admin-spacer" />
         <span className="muted">{visible.length}개</span>
+        <CsvButton
+          kind="dictionary"
+          rows={() => [
+            ["영어", "표시발음", "추가 허용 발음"],
+            ...visible.map((d) => [d.english, d.pronunciation, d.alternatives]),
+          ]}
+        />
         <button className="primary" onClick={() => setEditing("new")}>
           단어 추가
         </button>

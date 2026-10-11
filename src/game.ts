@@ -7,10 +7,13 @@ import {
 } from "./data/english.ts";
 import type { NewsItem } from "./data/releases.ts";
 export type { NewsItem, Token };
+export { initial } from "./data/hangul.ts";
 export type Song = {
   id: string;
   artist: string;
   unit: string;
+  /** An NCT unit's song; other artists show as "다른 가수". */
+  main: boolean;
   title: string;
   aliases: string[];
 };
@@ -28,12 +31,6 @@ export const normalize = (s: string) =>
     .toLowerCase()
     .replace(/[\s\p{P}\p{S}]/gu, "");
 const hangul = (c: string) => /^[가-힣]$/.test(c);
-export const initial = (c: string) => {
-  const n = c.charCodeAt(0) - 0xac00;
-  return n >= 0 && n <= 11171
-    ? "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"[Math.floor(n / 588)]
-    : c;
-};
 const dictionary = sortDictionary(catalog.dictionary);
 /** `sorted` must come from `sortDictionary`; defaults to the bundled dictionary. */
 export function tokenize(
@@ -56,6 +53,12 @@ export const questions: Question[] = catalog.questions.map((q) => {
   };
 });
 export const units = [...new Set(songs.map((s) => s.unit))];
+/** NCT units: the default selection and the daily quiz pool. */
+export const mainUnits = [
+  ...new Set(songs.filter((s) => s.main).map((s) => s.unit)),
+];
+/** Other artists, shown separately as "다른 가수". */
+export const otherUnits = units.filter((u) => !mainUnits.includes(u));
 /** 소식 tab entries, newest first (built from the releases table at deploy time). */
 export const news: NewsItem[] = catalog.news;
 export function titleMatches(q: Question, title: string) {
@@ -78,23 +81,32 @@ export function songTitleMatches(
 /**
  * 입력 전체를 공백 없이 합쳐 찾고, 공백으로 나눈 한 글자 단어는 따로 한 번 더 찾는다.
  * 합친 입력(`있는숨`)에서는 한 글자 토큰이 "연속 2글자" 규칙에 걸려 열리지 않기 때문이다.
+ * 영어는 전체 일치만 인정하므로 공백으로 나뉜 단어 중 이어진 묶음(`baby 사랑해` → `baby`,
+ * `oh my god` → `ohmygod`)마다 비교한다.
  */
 export function matches(
   q: Question,
   word: string,
   revealed: readonly string[] = [],
 ): string[] {
-  const found = matchTerm(q, normalize(word), revealed);
   const parts = word.split(/\s+/).map(normalize).filter(Boolean);
+  const english = new Set<string>();
+  for (let i = 0; i < parts.length; i++)
+    for (let j = i, joined = ""; j < parts.length; j++)
+      english.add((joined += parts[j]));
+  const found = matchTerm(q, normalize(word), revealed, english);
   if (parts.length > 1)
     for (const part of parts)
-      if (part.length === 1) found.push(...matchTerm(q, part, revealed));
+      if (part.length === 1)
+        found.push(...matchTerm(q, part, revealed, english));
   return [...new Set(found)];
 }
 function matchTerm(
   q: Question,
   term: string,
   revealed: readonly string[],
+  /** Normalized inputs an English token may equal (see `matches`). */
+  english: ReadonlySet<string>,
 ): string[] {
   if (!term) return [];
   const found: string[] = [];
@@ -102,8 +114,8 @@ function matchTerm(
     line.forEach((t, w) => {
       if (t.pronunciation) {
         if (
-          [t.text, t.pronunciation, ...(t.alternatives || [])].some(
-            (v) => normalize(v) === term,
+          [t.text, t.pronunciation, ...(t.alternatives || [])].some((v) =>
+            english.has(normalize(v)),
           )
         )
           found.push(`${l}:${w}:en`);

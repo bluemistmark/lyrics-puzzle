@@ -11,6 +11,8 @@ export type ArtistRow = {
   /** Prefix for suggested song ids (e.g. "D" → "D_073"). Letters and digits only. */
   prefix: string;
   sort_order: number;
+  /** An NCT unit: default play range, daily quiz pool and "NCT 마스터". Others show as "다른 가수". */
+  main: boolean;
 };
 export type SongRow = {
   id: string;
@@ -38,6 +40,8 @@ export type Catalog = {
     id: string;
     artist: string;
     unit: string;
+    /** Whether the song's artist is an NCT unit (`ArtistRow.main`). */
+    main: boolean;
     title: string;
     aliases: string[];
   }[];
@@ -179,6 +183,19 @@ export function buildCatalog({ artists, songs, questions, dictionary }: Rows): {
   if (!published.length) issues.push({ message: "출제 가능한 문제 없음" });
 
   const activeSongs = new Set(published.map((q) => q.songId));
+  const mainArtists = new Set(
+    artists.filter((a) => a.main).map((a) => a.name.trim()),
+  );
+  // The daily quiz draws only from NCT units, so it needs at least one.
+  if (
+    published.length &&
+    !songs.some(
+      (s) => activeSongs.has(s.id) && mainArtists.has(s.artist.trim()),
+    )
+  )
+    issues.push({
+      message: "NCT 유닛으로 표시된 가수의 출제 가능한 문제 없음",
+    });
   return {
     catalog: {
       songs: [...songs]
@@ -188,6 +205,7 @@ export function buildCatalog({ artists, songs, questions, dictionary }: Rows): {
           id: s.id,
           artist: s.artist.trim(),
           unit: s.artist.trim(),
+          main: mainArtists.has(s.artist.trim()),
           title: s.title.trim(),
           aliases: clean(s.aliases),
         })),

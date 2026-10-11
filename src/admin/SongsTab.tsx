@@ -4,9 +4,11 @@ import {
   sortArtists,
   type SongRow,
 } from "../data/build-catalog.ts";
+import { CsvButton } from "./CsvButton";
 import { FormDialog } from "./FormDialog";
 import { joinList, nextSongId, splitList } from "./ids";
 import { useAdmin } from "./store";
+import { useRoute, useRouteParam } from "./useRoute";
 
 const includes = (value: string, query: string) =>
   value.toLowerCase().includes(query.trim().toLowerCase());
@@ -16,8 +18,10 @@ export function SongsTab() {
   const songs = useAdmin((s) => s.songs);
   const questions = useAdmin((s) => s.questions);
   const removeSong = useAdmin((s) => s.removeSong);
-  const [artist, setArtist] = useState("");
-  const [query, setQuery] = useState("");
+  const go = useRoute((s) => s.go);
+  const releases = useAdmin((s) => s.releases);
+  const [artist, setArtist] = useRouteParam("artist");
+  const [query, setQuery] = useRouteParam("q");
   const [editing, setEditing] = useState<SongRow | "new" | null>(null);
 
   const counts = useMemo(() => {
@@ -46,6 +50,15 @@ export function SongsTab() {
 
   const remove = async (song: SongRow) => {
     const n = counts.get(song.id)?.total ?? 0;
+    // Published songs: deleting drops their questions from players' 도감 and records.
+    if (
+      releases[0]?.song_ids.includes(song.id) &&
+      !confirm(
+        `"${song.title}"은(는) 게임에 게시된 곡이에요. 삭제하면 이 곡 문제를 맞힌 플레이어의 도감·기록에서 빠져요.
+게임에서만 빼려면 삭제 대신 문제를 미사용으로 바꾸세요(문제 수를 누르면 이동해요). 계속할까요?`,
+      )
+    )
+      return;
     const message = n
       ? `"${song.title}" 곡과 이 곡의 문제 ${n}개를 삭제할까요? 되돌릴 수 없어요.`
       : `"${song.title}" 곡을 삭제할까요?`;
@@ -74,6 +87,20 @@ export function SongsTab() {
         />
         <span className="admin-spacer" />
         <span className="muted">{visible.length}곡</span>
+        <CsvButton
+          kind="songs"
+          rows={() => [
+            ["곡ID", "가수", "곡명", "정답 별칭", "사용 문제", "전체 문제"],
+            ...visible.map((s) => [
+              s.id,
+              s.artist,
+              s.title,
+              s.aliases,
+              counts.get(s.id)?.active ?? 0,
+              counts.get(s.id)?.total ?? 0,
+            ]),
+          ]}
+        />
         <button
           className="primary"
           onClick={() => setEditing("new")}
@@ -106,8 +133,14 @@ export function SongsTab() {
                   <td>{s.artist}</td>
                   <td>{s.title}</td>
                   <td>{joinList(s.aliases)}</td>
-                  <td className={c?.active ? "" : "warn-text"}>
-                    {c?.active ?? 0}/{c?.total ?? 0}
+                  <td>
+                    <button
+                      className={c?.active ? "link" : "link warn-text"}
+                      title="이 곡의 문제 보기"
+                      onClick={() => go("questions", { song: s.id })}
+                    >
+                      {c?.active ?? 0}/{c?.total ?? 0}
+                    </button>
                   </td>
                   <td className="row-actions">
                     <button onClick={() => setEditing(s)}>수정</button>
