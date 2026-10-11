@@ -16,7 +16,8 @@ export type ModalName =
   | "giveup"
   | "daily-giveup"
   | "reset"
-  | "shared";
+  | "shared"
+  | "tutorial";
 
 type Props = { open: boolean; onClose: () => void; children: ReactNode };
 

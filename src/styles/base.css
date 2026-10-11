@@ -263,6 +263,17 @@ h1 span {
   transition: width 0.3s;
 }
 
+/* 가사 글자 크기 설정 (src/textSize.ts). 테마마다 글자 크기가 달라서 영역 전체를 비율로 키운다. */
+[data-lyrics-size="small"] .lyrics {
+  zoom: 0.88;
+}
+[data-lyrics-size="large"] .lyrics {
+  zoom: 1.18;
+}
+[data-lyrics-size="xlarge"] .lyrics {
+  zoom: 1.36;
+}
+
 .lyrics {
   padding: 20px 0 30px;
   min-height: 220px;
@@ -1085,6 +1096,16 @@ h3 {
   background: #edf5df;
   border-color: #7b9b59;
   color: #34552b;
+}
+
+.size-options {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 400px) {
+  .size-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .theme-options input {
@@ -2449,5 +2470,41 @@ main [hidden] {
 
 /* 쪽 번호 칩과 진행바 사이 간격 */
 .custom-pager + .progress-track {
+  margin-top: 18px;
+}
+
+/* 첫 방문 튜토리얼 (TutorialModal). 색은 테마를 따르도록 currentColor만 쓴다. */
+.modal-inner > p.tutorial-step {
+  margin: -8px 0 6px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+.tutorial-card .lyrics {
+  min-height: 0;
+  padding: 16px 0;
+  gap: 8px;
+}
+.tutorial-list {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.tutorial-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.tutorial-list svg {
+  flex: none;
+  margin-top: 4px;
+}
+.tutorial-list b {
+  display: block;
+}
+.tutorial-actions {
   margin-top: 18px;
 }

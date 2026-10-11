@@ -18,6 +18,7 @@ import { ReportModal } from "./components/modals/ReportModal";
 import { AccountModal } from "./components/modals/AccountModal";
 import { ThemeModal } from "./components/modals/ThemeModal";
 import { TitleModal } from "./components/modals/TitleModal";
+import { TutorialModal } from "./components/modals/TutorialModal";
 import { ModeModal } from "./components/modals/ModeModal";
 import { UnitModal } from "./components/modals/UnitModal";
 import { DailyPanel } from "./components/play/DailyPanel";
@@ -30,10 +31,13 @@ import { koreaDate } from "./daily";
 import { useRanking } from "./ranking";
 import { parseSharedLink } from "./share";
 import { replacesProgress, useGame } from "./store";
+import { useTextSize } from "./textSize";
 import { useTheme } from "./theme";
+import { isNewPlayer, tutorialDone } from "./tutorial";
 
 export function App() {
   const { theme, setTheme } = useTheme();
+  const { size: textSize, setSize: setTextSize } = useTextSize();
   const [activeTab, setActiveTab] = useState<Tab>(() =>
     new URLSearchParams(window.location.search).get("today") === "1"
       ? "daily"
@@ -50,7 +54,11 @@ export function App() {
     );
   });
   const [modal, setModal] = useState<ModalName | null>(() =>
-    shared?.confirm ? "shared" : null,
+    shared?.confirm
+      ? "shared"
+      : !tutorialDone() && isNewPlayer(useGame.getState())
+        ? "tutorial"
+        : null,
   );
   const [today, setToday] = useState(koreaDate);
   const syncDaily = useGame((s) => s.syncDaily);
@@ -166,7 +174,13 @@ export function App() {
         {modal === "units" && <UnitModal onClose={close} />}
         {modal === "modes" && <ModeModal onClose={close} />}
         {modal === "theme" && (
-          <ThemeModal theme={theme} onThemeChange={setTheme} onClose={close} />
+          <ThemeModal
+            theme={theme}
+            onThemeChange={setTheme}
+            textSize={textSize}
+            onTextSizeChange={setTextSize}
+            onClose={close}
+          />
         )}
         {modal === "account" && (
           <AccountModal onReport={() => setModal("general-report")} />
@@ -177,7 +191,18 @@ export function App() {
         )}
         {modal === "general-report" && <ReportModal onClose={close} />}
         {modal === "nickname" && <NicknameModal onClose={close} />}
-        {modal === "help" && <HelpModal onClose={close} />}
+        {modal === "help" && (
+          <HelpModal onClose={close} onTutorial={() => setModal("tutorial")} />
+        )}
+        {modal === "tutorial" && (
+          <TutorialModal
+            onClose={close}
+            onStart={() => {
+              changeTab("play");
+              close();
+            }}
+          />
+        )}
         {modal === "giveup" && <GiveUpModal onClose={close} />}
         {modal === "daily-giveup" && (
           <GiveUpModal onClose={close} mode="daily" />
