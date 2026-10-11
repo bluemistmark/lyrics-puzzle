@@ -12,6 +12,7 @@ import { dailyQuestionId, koreaDate, type DailyHistory } from "./daily.ts";
 import { useDifficulty } from "./difficulty.ts";
 import {
   guessCount,
+  guessWeight,
   hintKeys,
   mainUnits,
   matches,
@@ -36,7 +37,8 @@ export type Stats = {
 export type Round = {
   id: string;
   revealed: string[];
-  words: { word: string; hit: boolean }[];
+  /** `count`: guesses this input counts as (`guessWeight`); missing on older saves. */
+  words: { word: string; hit: boolean; count?: number }[];
   solved: boolean;
   givenUp: boolean;
   english: boolean;
@@ -339,7 +341,14 @@ export const useGame = create<Store>()(
           const round = {
             ...current,
             revealed: [...new Set([...current.revealed, ...found])],
-            words: [...current.words, { word: text, hit: found.length > 0 }],
+            words: [
+              ...current.words,
+              {
+                word: text,
+                hit: found.length > 0,
+                count: guessWeight(text, found),
+              },
+            ],
           };
           const notice = added.length
             ? "일치하는 가사가 공개됐어요."
@@ -614,8 +623,11 @@ export const useGame = create<Store>()(
       }),
       merge: (persisted, current) => {
         const p = persisted as Partial<Store> | undefined;
-        if (!p || !p.round || !questions.some((q) => q.id === p.round?.id))
-          return current;
+        if (!p) return current;
+        // A question dropped by a publish only replaces the current round; records stay.
+        const keepRound = Boolean(
+          p.round && questions.some((q) => q.id === p.round?.id),
+        );
         const selected = Array.isArray(p.selected)
           ? p.selected.filter((u) => units.includes(u))
           : mainUnits;
@@ -629,7 +641,9 @@ export const useGame = create<Store>()(
           ? p.collected
           : [
               ...new Set(
-                [p.round, daily.round].filter((r) => r.solved).map((r) => r.id),
+                [keepRound ? p.round : undefined, daily.round]
+                  .filter((r): r is Round => Boolean(r?.solved))
+                  .map((r) => r.id),
               ),
             ];
         const dailyHistory =
@@ -662,6 +676,8 @@ export const useGame = create<Store>()(
           ...current,
           ...p,
           ...records,
+          round: keepRound ? p.round! : current.round,
+          seen: keepRound && Array.isArray(p.seen) ? p.seen : current.seen,
           selected: selected.length ? selected : mainUnits,
           playMode: isPlayMode(p.playMode) ? p.playMode : "classic",
           modes,

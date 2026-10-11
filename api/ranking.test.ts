@@ -101,6 +101,8 @@ test("지난 날짜·잘못된 토큰·범위를 벗어난 결과는 거절", as
     { guesses: -1 },
     { hints: 1.5 },
     { solved: "yes" },
+    // 제목은 단어를 하나 이상 넣어야 맞힐 수 있다.
+    { guesses: 0 },
   ])
     assert.equal(
       (await send("POST", { ...valid, ...change })).status,
@@ -135,10 +137,12 @@ test("랭킹 조회는 토큰이 있으면 내 순위를 위해 해시를 넘기
   await api.GET(new Request("https://game.test/api/ranking"));
   assert.equal(calls[1].body.p_player, "");
   assert.equal(calls[1].body.p_date, koreaDate());
-  const bad = await api.GET(
-    new Request("https://game.test/api/ranking?date=x"),
-  );
-  assert.equal(bad.status, 400);
+  for (const date of ["x", "2026-02-30", "2026-13-01"]) {
+    const bad = await api.GET(
+      new Request(`https://game.test/api/ranking?date=${date}`),
+    );
+    assert.equal(bad.status, 400, date);
+  }
 });
 
 test("DB 오류나 환경 변수 누락은 한국어 안내로 응답", async () => {

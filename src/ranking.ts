@@ -27,6 +27,9 @@ export type DailySubmission = {
 };
 
 const ENDPOINT = "/api/ranking";
+/** Upper bounds api/ranking.ts accepts. */
+const MAX_GUESSES = 1000;
+const MAX_HINTS = 100;
 
 /** Fetches JSON from our /api; failures become Korean errors (the server's message when it sent one). */
 export async function requestJson<T>(
@@ -42,7 +45,9 @@ export async function requestJson<T>(
   const body = (await response.json().catch(() => null)) as
     (T & { error?: string }) | null;
   if (!response.ok || !body)
-    throw Error(body?.error ?? "요청을 처리하지 못했어요.");
+    throw Object.assign(Error(body?.error ?? "요청을 처리하지 못했어요."), {
+      status: response.status,
+    });
   return body;
 }
 const call = <T>(init: RequestInit & { query?: string }) =>
@@ -95,7 +100,22 @@ export const useRanking = create<RankingStore>()(
         version: 0,
         submit: async (result) => {
           if (get().submitted === result.date) return;
-          await call(json("POST", result));
+          try {
+            // Same bounds as the server, so a very long game still gets recorded.
+            await call(
+              json("POST", {
+                ...result,
+                guesses: Math.min(result.guesses, MAX_GUESSES),
+                hints: Math.min(result.hints, MAX_HINTS),
+              }),
+            );
+          } catch (error) {
+            // The server refused this result for good (e.g. finished long after midnight):
+            // stop retrying on every visit; the message is shown once.
+            const status = (error as { status?: number }).status ?? 0;
+            if (status >= 400 && status < 500) set({ submitted: result.date });
+            throw error;
+          }
           // No version bump: the caller loads the board right after submitting.
           set({ submitted: result.date });
         },

@@ -82,7 +82,11 @@ function mergeRecords(local: Records, remote: Records): Records {
   for (const [id, date] of Object.entries(remote.achievements))
     if (!achievements[id] || date < achievements[id]) achievements[id] = date;
   return {
-    stats: maxEach(local.stats, remote.stats),
+    stats: {
+      ...maxEach(local.stats, remote.stats),
+      // The current run is this device's: a give-up resets it to 0, which max would undo.
+      streak: local.stats.streak,
+    },
     collected: union(remote.collected, local.collected),
     // The first finish of a day counts; the saved one came first.
     dailyHistory: { ...local.dailyHistory, ...remote.dailyHistory },
@@ -94,11 +98,13 @@ function mergeRecords(local: Records, remote: Records): Records {
 }
 
 const finished = (r: Round) => r.solved || r.givenUp;
-const effort = (r: Round) => r.words.length + r.hints;
+/** Lyrics can still be filled in after the title is solved, so progress keeps growing. */
+const effort = (r: Round) => r.revealed.length + r.words.length + r.hints;
 /**
- * The daily round to keep. A newer day wins; on the same day a finished round wins
- * (the saved one if both finished, like `dailyHistory`), otherwise the one further along,
- * so a round started on one device can be continued on another.
+ * The daily round to keep. A newer day wins; on the same day a finished round beats an
+ * open one. When both are finished with different outcomes the saved one wins (like
+ * `dailyHistory`); otherwise the one further along, so solving on one device and filling in
+ * the rest of the lyrics (here or on another device) is never rolled back.
  */
 export function mergeDaily(
   local: DailySave | undefined,
@@ -109,9 +115,11 @@ export function mergeDaily(
     return local.date > remote.date ? local : remote;
   // Different questions on the same day means the devices run different catalogs.
   if (local.round.id !== remote.round.id) return local;
-  if (finished(remote.round)) return remote;
-  if (finished(local.round)) return local;
-  return effort(remote.round) > effort(local.round) ? remote : local;
+  const a = local.round;
+  const b = remote.round;
+  if (finished(a) !== finished(b)) return finished(b) ? remote : local;
+  if (finished(b) && a.solved !== b.solved) return remote;
+  return effort(b) > effort(a) ? remote : local;
 }
 
 /** Local device state merged with the account's save (null before the first sync). */
@@ -124,8 +132,17 @@ export function mergeSaves(local: SaveData, remote: SaveData | null): SaveData {
         ? local
         : remote;
   // Every device adopts the account's ranking token so they rank as one player.
+  // Keep the later `submitted`: a result this device already sent today (under its own
+  // token, before signing in) must not be sent again under the account's token.
   const ranking = remote.ranking.token
-    ? { ...remote.ranking, asked: remote.ranking.asked || local.ranking.asked }
+    ? {
+        ...remote.ranking,
+        asked: remote.ranking.asked || local.ranking.asked,
+        submitted:
+          local.ranking.submitted > remote.ranking.submitted
+            ? local.ranking.submitted
+            : remote.ranking.submitted,
+      }
     : local.ranking;
   return {
     version: 1,

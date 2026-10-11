@@ -141,7 +141,8 @@ test("로그인한 기기는 계정에 저장된 랭킹 토큰을 따르고, 계
   assert.deepEqual(mergeSaves(device, account).ranking, {
     token: "account",
     nickname: "시즈니",
-    submitted: "2026-09-28",
+    // 이 기기가 이미 낸 날짜가 더 나중이라 남는다 (같은 날 두 번 내지 않음).
+    submitted: "2026-09-29",
     asked: true,
   });
   assert.equal(mergeSaves(device, save()).ranking.token, "device");
@@ -230,4 +231,62 @@ test("데일리 진행 상태도 계정 기록에 합쳐지고, 모양이 잘못
   assert.ok(parsed);
   assert.equal(parsed.daily, undefined);
   assert.deepEqual(parseSave({ ...save(), daily: solved })?.daily, solved);
+});
+
+test("데일리를 맞힌 뒤 가사를 더 풀면 동기화가 맞힌 직후 상태로 되돌리지 않음", () => {
+  const today = "2026-10-11";
+  const solvedNow = day(today, {
+    solved: true,
+    revealed: ["0:0:0", "0:0:1"],
+    words: [{ word: "사랑", hit: true }],
+  });
+  const filledMore = day(today, {
+    solved: true,
+    revealed: ["0:0:0", "0:0:1", "0:1:0", "0:1:1"],
+    words: [
+      { word: "사랑", hit: true },
+      { word: "하늘", hit: true },
+    ],
+  });
+  assert.equal(mergeDaily(filledMore, solvedNow), filledMore);
+  assert.equal(mergeDaily(solvedNow, filledMore), filledMore);
+  // 결과가 다르면(한쪽은 정답, 한쪽은 포기) 저장된 쪽을 따른다.
+  const gaveUpMore = day(today, { givenUp: true, hints: 9 });
+  assert.equal(mergeDaily(gaveUpMore, solvedNow), solvedNow);
+});
+
+test("포기로 끊긴 연속 정답은 동기화가 되살리지 않고, 최고 기록만 큰 값으로 합침", () => {
+  const stats = save().stats;
+  const synced = save({ stats: { ...stats, solved: 4, streak: 4, best: 4 } });
+  const afterGiveUp = save({
+    stats: { ...stats, solved: 4, skipped: 1, streak: 0, best: 4 },
+  });
+  const merged = mergeSaves(afterGiveUp, synced);
+  assert.equal(merged.stats.streak, 0);
+  assert.equal(merged.stats.best, 4);
+  assert.equal(merged.stats.skipped, 1);
+});
+
+test("로그인 전에 오늘 랭킹을 낸 기기는 계정 토큰으로 바뀌어도 다시 내지 않음", () => {
+  const device = save({
+    ranking: {
+      token: "device",
+      nickname: "",
+      submitted: "2026-10-11",
+      asked: true,
+    },
+  });
+  const account = save({
+    ranking: {
+      token: "account",
+      nickname: "네오",
+      submitted: "2026-10-10",
+      asked: false,
+    },
+  });
+  const merged = mergeSaves(device, account);
+  assert.equal(merged.ranking.token, "account");
+  assert.equal(merged.ranking.nickname, "네오");
+  assert.equal(merged.ranking.submitted, "2026-10-11");
+  assert.equal(merged.ranking.asked, true);
 });

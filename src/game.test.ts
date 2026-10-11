@@ -4,6 +4,7 @@ import { catalog } from "./catalog.ts";
 import { sortDictionary } from "./data/english.ts";
 import {
   guessCount,
+  guessWeight,
   matches,
   questions,
   songs,
@@ -105,6 +106,33 @@ test("괄호 제목과 영문 제목, 별칭 정답 인정", () => {
   assert.ok(!songTitleMatches(song, "다른 노래"));
   assert.ok(!songTitleMatches(song, " "));
 });
+
+test("괄호 안 여러 제목은 세미콜론으로 나누고, 버전·시각 설명은 제목으로 치지 않음", () => {
+  const hero = { title: "영웅 (英雄; Kick It)", aliases: [] };
+  assert.ok(songTitleMatches(hero, "Kick It"));
+  assert.ok(songTitleMatches(hero, "英雄"));
+  assert.ok(songTitleMatches(hero, "영웅"));
+  const regular = { title: "Regular (Korean Ver.)", aliases: [] };
+  assert.ok(songTitleMatches(regular, "Regular"));
+  assert.ok(!songTitleMatches(regular, "Korean Ver."));
+  const late = { title: "Back 2 U (AM 01:27)", aliases: [] };
+  assert.ok(!songTitleMatches(late, "AM 01:27"));
+  assert.ok(songTitleMatches(late, "Back 2 U"));
+  // 닫는 괄호가 빠진 제목도 앞뒤를 나눠 인정한다.
+  const typo = { title: "발자국 (Walk With You", aliases: [] };
+  assert.ok(songTitleMatches(typo, "발자국"));
+  assert.ok(songTitleMatches(typo, "Walk With You"));
+});
+
+test("괄호 안 부분이 다른 곡 제목이면 정답이 아니고, 별칭으로 등록하면 인정", () => {
+  const other = (t: string) => t === "favorite";
+  const song = { title: "Tangerine Love (Favorite)", aliases: [] };
+  assert.ok(!songTitleMatches(song, "Favorite", other));
+  assert.ok(songTitleMatches(song, "Tangerine Love", other));
+  assert.ok(
+    songTitleMatches({ ...song, aliases: ["Favorite"] }, "Favorite", other),
+  );
+});
 test("유닛 필터, 중복 문제와 동일 곡 연속 방지", () => {
   const unit = units.find(
     (u) =>
@@ -205,4 +233,23 @@ test("띄어 쓴 여러 단어를 한 번에 넣으면 단어 수만큼 입력�
   assert.equal(guessCount([]), 0);
   assert.equal(guessCount(words("사랑")), 1);
   assert.equal(guessCount(words("너를 처음 본 순간", "  City  ")), 5);
+});
+
+test("붙여 써도 맞은 가사 단어 수만큼 입력으로 셈", () => {
+  const q = fixture("너를 사랑해 정말 보고 싶어");
+  const together = "너를사랑해정말보고싶어";
+  const found = matches(q, together);
+  // 붙여 쓴 한 번의 입력이 다섯 단어를 연다.
+  assert.equal(new Set(found.map((k) => k.split(":")[1])).size, 5);
+  assert.equal(guessWeight(together, found), 5);
+  assert.equal(guessWeight("너를 사랑해", matches(q, "너를 사랑해")), 2);
+  assert.equal(guessWeight("없는말", []), 1);
+  // 저장된 값이 있으면 그 값을, 예전 기록은 띄어 쓴 단어 수를 쓴다.
+  assert.equal(
+    guessCount([
+      { word: together, hit: true, count: 5 },
+      { word: "예전 기록", hit: true },
+    ]),
+    7,
+  );
 });
