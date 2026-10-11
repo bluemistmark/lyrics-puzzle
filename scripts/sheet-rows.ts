@@ -112,6 +112,8 @@ export async function sheetRows(): Promise<Rows> {
     name,
     prefix: [...counts].sort((a, b) => b[1] - a[1])[0][0],
     sort_order,
+    // The sheet only had NCT units.
+    main: true,
   }));
 
   if (errors.length) throw Error(errors.join("\n"));

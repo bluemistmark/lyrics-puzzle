@@ -7,6 +7,7 @@ const song = (id: string, unit: string): Song => ({
   id,
   artist: unit,
   unit,
+  main: unit === "A",
   title: id,
   aliases: [],
 });
@@ -31,6 +32,10 @@ test("도감은 유닛별로 곡 순서를 유지하고 문제가 없는 곡은 
       ["A", ["A1", "A2"]],
       ["B", ["B1"]],
     ],
+  );
+  assert.deepEqual(
+    result.map((u) => u.main),
+    [true, false],
   );
   assert.deepEqual(
     result[0].songs.map((s) => s.total),

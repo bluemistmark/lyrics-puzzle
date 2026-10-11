@@ -43,8 +43,9 @@ export function ArtistsTab() {
     <section>
       <div className="toolbar">
         <span className="muted">
-          이 순서가 게임의 유닛 표시 순서예요. 곡이 없는 가수만 삭제할 수
-          있어요.
+          이 순서가 게임의 유닛 표시 순서예요. NCT 유닛이 아닌 가수는 게임에서
+          &quot;다른 가수&quot;로 따로 보이고 데일리 퀴즈에 나오지 않아요. 곡이
+          없는 가수만 삭제할 수 있어요.
         </span>
         <span className="admin-spacer" />
         <button className="primary" onClick={() => setEditing("new")}>
@@ -57,6 +58,7 @@ export function ArtistsTab() {
             <tr>
               <th>순서</th>
               <th>가수명</th>
+              <th>구분</th>
               <th>접두어</th>
               <th>곡 수</th>
               <th>다음 곡ID</th>
@@ -85,6 +87,13 @@ export function ArtistsTab() {
                     </button>
                   </td>
                   <td>{a.name}</td>
+                  <td>
+                    {a.main ? (
+                      <span className="badge">NCT</span>
+                    ) : (
+                      <span className="muted">다른 가수</span>
+                    )}
+                  </td>
                   <td className="mono">{a.prefix}</td>
                   <td>{count}</td>
                   <td className="mono muted">{nextSongId(songs, a.prefix)}</td>
@@ -131,6 +140,7 @@ function ArtistForm({
   const saveArtist = useAdmin((s) => s.saveArtist);
   const [name, setName] = useState(artist?.name ?? "");
   const [prefix, setPrefix] = useState(artist?.prefix ?? "");
+  const [main, setMain] = useState(artist?.main ?? false);
   const songCount = artist
     ? songs.filter((s) => s.artist === artist.name).length
     : 0;
@@ -163,6 +173,7 @@ function ArtistForm({
           {
             name: trimmed,
             prefix: code,
+            main,
             sort_order:
               artist?.sort_order ??
               Math.max(-1, ...artists.map((a) => a.sort_order)) + 1,
@@ -195,6 +206,19 @@ function ArtistForm({
           {artist && " 바꿔도 기존 곡ID는 그대로예요."}
         </small>
       </label>
+      <label className="check">
+        <input
+          type="checkbox"
+          checked={main}
+          onChange={(e) => setMain(e.target.checked)}
+        />
+        NCT 유닛
+      </label>
+      <small className="muted">
+        NCT 유닛은 게임의 기본 선택 범위와 데일리 퀴즈에 포함돼요. 체크하지
+        않으면 &quot;다른 가수&quot;로 따로 표시되고, 플레이어가 직접 골라야
+        나와요.
+      </small>
     </FormDialog>
   );
 }

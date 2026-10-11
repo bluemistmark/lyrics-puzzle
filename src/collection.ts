@@ -7,7 +7,13 @@ export type SongEntry = {
   /** Questions of this song whose title the player has guessed. */
   solved: number;
 };
-export type UnitEntry = { unit: string; songs: SongEntry[]; collected: number };
+export type UnitEntry = {
+  unit: string;
+  /** An NCT unit (see `Song.main`); others show under "다른 가수". */
+  main: boolean;
+  songs: SongEntry[];
+  collected: number;
+};
 
 /**
  * Groups songs by unit in catalog order. A song counts as collected once any of its
@@ -30,7 +36,7 @@ export function buildCollection(
     };
     let unit = units.get(song.unit);
     if (!unit) {
-      unit = { unit: song.unit, songs: [], collected: 0 };
+      unit = { unit: song.unit, main: song.main, songs: [], collected: 0 };
       units.set(song.unit, unit);
     }
     unit.songs.push(entry);

@@ -25,7 +25,7 @@ async function fetchAll<T>(
   }
 }
 
-export const ARTIST_COLUMNS = "name,prefix,sort_order";
+export const ARTIST_COLUMNS = "name,prefix,sort_order,main";
 export const SONG_COLUMNS = "id,artist,title,aliases,sort_order";
 export const QUESTION_COLUMNS = "id,song_id,lines,active";
 export const DICTIONARY_COLUMNS = "english,pronunciation,alternatives";

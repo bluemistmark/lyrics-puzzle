@@ -11,6 +11,8 @@ export type Song = {
   id: string;
   artist: string;
   unit: string;
+  /** An NCT unit's song; other artists show as "다른 가수". */
+  main: boolean;
   title: string;
   aliases: string[];
 };
@@ -56,6 +58,12 @@ export const questions: Question[] = catalog.questions.map((q) => {
   };
 });
 export const units = [...new Set(songs.map((s) => s.unit))];
+/** NCT units: the default selection and the daily quiz pool. */
+export const mainUnits = [
+  ...new Set(songs.filter((s) => s.main).map((s) => s.unit)),
+];
+/** Other artists, shown separately as "다른 가수". */
+export const otherUnits = units.filter((u) => !mainUnits.includes(u));
 /** 소식 tab entries, newest first (built from the releases table at deploy time). */
 export const news: NewsItem[] = catalog.news;
 export function titleMatches(q: Question, title: string) {

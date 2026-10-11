@@ -681,6 +681,12 @@ h3 {
   gap: 9px;
 }
 
+.modal-inner .unit-group {
+  margin: 18px 2px 8px;
+  font-size: 13px;
+  text-align: left;
+}
+
 .unit-options button {
   padding: 12px;
   border: 1px solid #e2e6db;

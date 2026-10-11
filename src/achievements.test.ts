@@ -14,10 +14,12 @@ import type { Song } from "./game.ts";
 import { THEMES } from "./themes.ts";
 
 // Fixture catalog so editing real data can't break these rules.
+// A is an NCT unit (main), B is another artist.
 const song = (id: string, unit: string): Song => ({
   id,
   artist: unit,
   unit,
+  main: unit === "A",
   title: id,
   aliases: [],
 });
@@ -51,7 +53,13 @@ test("업적 ID는 겹치지 않고, 모두 분류가 있으며 유닛마다 도
   assert.ok(list.every((a) => ACHIEVEMENT_GROUPS.includes(a.group)));
   assert.ok(ids.includes("collect-A") && ids.includes("collect-B"));
   assert.equal(progress("collect-A", empty).goal, 2);
-  assert.equal(progress("collect-all", empty).goal, 3);
+  // NCT 마스터 and 도감 절반 count NCT units only; 도감 100곡 counts every song.
+  assert.equal(progress("collect-all", empty).goal, 2);
+  assert.equal(progress("collect-half", empty).goal, 1);
+  assert.deepEqual(progress("collect-all", { ...empty, collected: ["b1"] }), {
+    current: 0,
+    goal: 2,
+  });
   // Fewer than 100 songs: the goal is the whole catalog, so it stays reachable.
   assert.equal(progress("collect-100", empty).goal, 3);
   assert.deepEqual(

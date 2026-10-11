@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import { units } from "../../game";
+import { mainUnits, units } from "../../game";
 import { useRound } from "../../hooks/useRound";
 import { playModeName } from "../../modes";
 import { useGame } from "../../store";
@@ -13,12 +13,16 @@ import { ResultBox } from "./ResultBox";
 import { WordForm } from "./WordForm";
 import { WordHistory } from "./WordHistory";
 
+const sameUnits = (a: string[], b: string[]) =>
+  a.length === b.length && b.every((u) => a.includes(u));
 const unitLabel = (selected: string[]) =>
-  selected.length === units.length
+  sameUnits(selected, mainUnits)
     ? "NCT 전체"
-    : selected.length === 1
-      ? selected[0]
-      : `${selected.length}개 유닛`;
+    : sameUnits(selected, units)
+      ? "전체"
+      : selected.length === 1
+        ? selected[0]
+        : `${selected.length}개 선택`;
 
 type Props = { hidden: boolean; onOpenModal: (name: ModalName) => void };
 

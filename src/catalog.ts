@@ -5,6 +5,7 @@ export const catalog = {
       "id": "U_001",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "Baggy Jeans",
       "aliases": []
     },
@@ -12,6 +13,7 @@ export const catalog = {
       "id": "U_002",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "BOSS",
       "aliases": []
     },
@@ -19,6 +21,7 @@ export const catalog = {
       "id": "U_003",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "Make A Wish (Birthday Song)",
       "aliases": []
     },
@@ -26,6 +29,7 @@ export const catalog = {
       "id": "U_004",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "90's Love",
       "aliases": []
     },
@@ -33,6 +37,7 @@ export const catalog = {
       "id": "U_005",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "일곱 번째 감각",
       "aliases": []
     },
@@ -40,6 +45,7 @@ export const catalog = {
       "id": "U_006",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "Misfit",
       "aliases": []
     },
@@ -47,6 +53,7 @@ export const catalog = {
       "id": "U_007",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "From Home",
       "aliases": []
     },
@@ -54,6 +61,7 @@ export const catalog = {
       "id": "U_008",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "Universe",
       "aliases": []
     },
@@ -61,6 +69,7 @@ export const catalog = {
       "id": "U_009",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "Baby Don't Stop",
       "aliases": []
     },
@@ -68,6 +77,7 @@ export const catalog = {
       "id": "U_010",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "WITHOUT YOU",
       "aliases": []
     },
@@ -75,6 +85,7 @@ export const catalog = {
       "id": "U_011",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "PADO",
       "aliases": []
     },
@@ -82,6 +93,7 @@ export const catalog = {
       "id": "U_012",
       "artist": "NCT U",
       "unit": "NCT U",
+      "main": true,
       "title": "Know Now",
       "aliases": []
     },
@@ -89,6 +101,7 @@ export const catalog = {
       "id": "I_001",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Blingy",
       "aliases": []
     },
@@ -96,6 +109,7 @@ export const catalog = {
       "id": "I_002",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Legacy",
       "aliases": []
     },
@@ -103,6 +117,7 @@ export const catalog = {
       "id": "I_003",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Piñata",
       "aliases": []
     },
@@ -110,6 +125,7 @@ export const catalog = {
       "id": "I_004",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Getaway",
       "aliases": []
     },
@@ -117,6 +133,7 @@ export const catalog = {
       "id": "I_005",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "127 Million Miles",
       "aliases": []
     },
@@ -124,6 +141,7 @@ export const catalog = {
       "id": "I_006",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "흐린 기억 속의 그대 (You In Vague Memory)",
       "aliases": []
     },
@@ -131,6 +149,7 @@ export const catalog = {
       "id": "I_007",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "삐그덕 (Walk)",
       "aliases": []
     },
@@ -138,6 +157,7 @@ export const catalog = {
       "id": "I_008",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "No Clue",
       "aliases": []
     },
@@ -145,6 +165,7 @@ export const catalog = {
       "id": "I_009",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "오렌지색 물감 (Orange Seoul)",
       "aliases": []
     },
@@ -152,6 +173,7 @@ export const catalog = {
       "id": "I_010",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Pricey",
       "aliases": []
     },
@@ -159,6 +181,7 @@ export const catalog = {
       "id": "I_011",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Time Capsule",
       "aliases": []
     },
@@ -166,6 +189,7 @@ export const catalog = {
       "id": "I_012",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "영화처럼 (Can't Help Myself)",
       "aliases": []
     },
@@ -173,6 +197,7 @@ export const catalog = {
       "id": "I_013",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Rain Drop",
       "aliases": []
     },
@@ -180,6 +205,7 @@ export const catalog = {
       "id": "I_014",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Gas",
       "aliases": []
     },
@@ -187,6 +213,7 @@ export const catalog = {
       "id": "I_015",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "서서히 (Suddenly)",
       "aliases": []
     },
@@ -194,6 +221,7 @@ export const catalog = {
       "id": "I_016",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "사랑한다는 말의 뜻을 알아가자 (Meaning of Love)",
       "aliases": []
     },
@@ -201,6 +229,7 @@ export const catalog = {
       "id": "I_017",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Be There For Me",
       "aliases": []
     },
@@ -208,6 +237,7 @@ export const catalog = {
       "id": "I_018",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "나 홀로 집에 (Home Alone)",
       "aliases": []
     },
@@ -215,6 +245,7 @@ export const catalog = {
       "id": "I_019",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "하얀 거짓말 (White Lie)",
       "aliases": []
     },
@@ -222,6 +253,7 @@ export const catalog = {
       "id": "I_020",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Fact Check (불가사의; 不可思議)",
       "aliases": []
     },
@@ -229,6 +261,7 @@ export const catalog = {
       "id": "I_021",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "무중력 (Space)",
       "aliases": []
     },
@@ -236,6 +269,7 @@ export const catalog = {
       "id": "I_022",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Parade (행진)",
       "aliases": []
     },
@@ -243,6 +277,7 @@ export const catalog = {
       "id": "I_023",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Angel Eyes",
       "aliases": []
     },
@@ -250,6 +285,7 @@ export const catalog = {
       "id": "I_024",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Yacht",
       "aliases": []
     },
@@ -257,6 +293,7 @@ export const catalog = {
       "id": "I_025",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Je Ne Sais Quoi",
       "aliases": []
     },
@@ -264,6 +301,7 @@ export const catalog = {
       "id": "I_026",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Ay-Yo",
       "aliases": []
     },
@@ -271,6 +309,7 @@ export const catalog = {
       "id": "I_027",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Faster",
       "aliases": []
     },
@@ -278,6 +317,7 @@ export const catalog = {
       "id": "I_028",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "질주 (2 Baddies)",
       "aliases": []
     },
@@ -285,6 +325,7 @@ export const catalog = {
       "id": "I_029",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "DJ",
       "aliases": []
     },
@@ -292,6 +333,7 @@ export const catalog = {
       "id": "I_030",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Designer",
       "aliases": []
     },
@@ -299,6 +341,7 @@ export const catalog = {
       "id": "I_031",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "윤슬",
       "aliases": []
     },
@@ -306,6 +349,7 @@ export const catalog = {
       "id": "I_032",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Favorite (Vampire)",
       "aliases": []
     },
@@ -313,6 +357,7 @@ export const catalog = {
       "id": "I_033",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Sticker",
       "aliases": []
     },
@@ -320,6 +365,7 @@ export const catalog = {
       "id": "I_034",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Lemonade",
       "aliases": []
     },
@@ -327,6 +373,7 @@ export const catalog = {
       "id": "I_035",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Far",
       "aliases": []
     },
@@ -334,6 +381,7 @@ export const catalog = {
       "id": "I_036",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Bring The Noize",
       "aliases": []
     },
@@ -341,6 +389,7 @@ export const catalog = {
       "id": "I_037",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Magic Carpet Ride",
       "aliases": []
     },
@@ -348,6 +397,7 @@ export const catalog = {
       "id": "I_038",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Punch",
       "aliases": []
     },
@@ -355,6 +405,7 @@ export const catalog = {
       "id": "I_039",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "NonStop",
       "aliases": []
     },
@@ -362,6 +413,7 @@ export const catalog = {
       "id": "I_040",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "영웅 (英雄; Kick It)",
       "aliases": []
     },
@@ -369,6 +421,7 @@ export const catalog = {
       "id": "I_041",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "우산 (Love Song)",
       "aliases": []
     },
@@ -376,6 +429,7 @@ export const catalog = {
       "id": "I_042",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Dreams Come True",
       "aliases": []
     },
@@ -383,6 +437,7 @@ export const catalog = {
       "id": "I_043",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "無限的我 (무한적아;Limitless)",
       "aliases": []
     },
@@ -390,6 +445,7 @@ export const catalog = {
       "id": "I_044",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Baby Don’t Like It (나쁜 짓)",
       "aliases": []
     },
@@ -397,6 +453,7 @@ export const catalog = {
       "id": "I_045",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Back 2 U (AM 01:27)",
       "aliases": []
     },
@@ -404,6 +461,7 @@ export const catalog = {
       "id": "I_046",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "TOUCH",
       "aliases": []
     },
@@ -411,6 +469,7 @@ export const catalog = {
       "id": "I_047",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "소방차 (Fire Truck)",
       "aliases": []
     },
@@ -418,6 +477,7 @@ export const catalog = {
       "id": "I_048",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "나의 모든 순간 (No Longer)",
       "aliases": []
     },
@@ -425,6 +485,7 @@ export const catalog = {
       "id": "I_049",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Simon Says",
       "aliases": []
     },
@@ -432,6 +493,7 @@ export const catalog = {
       "id": "I_050",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Summer 127",
       "aliases": []
     },
@@ -439,6 +501,7 @@ export const catalog = {
       "id": "I_051",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "0 Mile",
       "aliases": []
     },
@@ -446,6 +509,7 @@ export const catalog = {
       "id": "I_052",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Highway to Heaven",
       "aliases": []
     },
@@ -453,6 +517,7 @@ export const catalog = {
       "id": "I_053",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "시차 (Jet Lag)",
       "aliases": []
     },
@@ -460,6 +525,7 @@ export const catalog = {
       "id": "I_054",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Regular (Korean Ver.)",
       "aliases": []
     },
@@ -467,6 +533,7 @@ export const catalog = {
       "id": "I_055",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Cherry Bomb",
       "aliases": []
     },
@@ -474,6 +541,7 @@ export const catalog = {
       "id": "I_056",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "Whiplash",
       "aliases": []
     },
@@ -481,6 +549,7 @@ export const catalog = {
       "id": "I_057",
       "artist": "NCT 127",
       "unit": "NCT 127",
+      "main": true,
       "title": "롤러코스터 (Heartbreaker)",
       "aliases": []
     },
@@ -488,6 +557,7 @@ export const catalog = {
       "id": "D_001",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Beat It Up",
       "aliases": []
     },
@@ -495,6 +565,7 @@ export const catalog = {
       "id": "D_002",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "BTTF",
       "aliases": []
     },
@@ -502,6 +573,7 @@ export const catalog = {
       "id": "D_003",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "CHILLER",
       "aliases": []
     },
@@ -509,6 +581,7 @@ export const catalog = {
       "id": "D_004",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "I LIKE IT",
       "aliases": []
     },
@@ -516,6 +589,7 @@ export const catalog = {
       "id": "D_005",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "나의 소나기 (’Bout You)",
       "aliases": []
     },
@@ -523,6 +597,7 @@ export const catalog = {
       "id": "D_006",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "여름 바람이 불어오면 (That Summer)",
       "aliases": []
     },
@@ -530,6 +605,7 @@ export const catalog = {
       "id": "D_007",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "새벽별 (Miss Me)",
       "aliases": []
     },
@@ -537,6 +613,7 @@ export const catalog = {
       "id": "D_008",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "항해 (Beautiful Sailing)",
       "aliases": []
     },
@@ -544,6 +621,7 @@ export const catalog = {
       "id": "D_009",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Love Me Right",
       "aliases": []
     },
@@ -551,6 +629,7 @@ export const catalog = {
       "id": "D_010",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "INTRO : DREAMSCAPE",
       "aliases": []
     },
@@ -558,6 +637,7 @@ export const catalog = {
       "id": "D_011",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "When I'm With You",
       "aliases": []
     },
@@ -565,6 +645,7 @@ export const catalog = {
       "id": "D_012",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Flying Kiss",
       "aliases": []
     },
@@ -572,6 +653,7 @@ export const catalog = {
       "id": "D_013",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "i hate fruits",
       "aliases": []
     },
@@ -579,6 +661,7 @@ export const catalog = {
       "id": "D_014",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "No Escape",
       "aliases": []
     },
@@ -586,6 +669,7 @@ export const catalog = {
       "id": "D_015",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Best of Me",
       "aliases": []
     },
@@ -593,6 +677,7 @@ export const catalog = {
       "id": "D_016",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "YOU (숲)",
       "aliases": []
     },
@@ -600,6 +685,7 @@ export const catalog = {
       "id": "D_017",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "하늘을 나는 꿈 (Heavenly)",
       "aliases": []
     },
@@ -607,6 +693,7 @@ export const catalog = {
       "id": "D_018",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "밤 (Night Poem)",
       "aliases": []
     },
@@ -614,6 +701,7 @@ export const catalog = {
       "id": "D_019",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Off The Wall",
       "aliases": []
     },
@@ -621,6 +709,7 @@ export const catalog = {
       "id": "D_020",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "icantfeelanything",
       "aliases": []
     },
@@ -628,6 +717,7 @@ export const catalog = {
       "id": "D_021",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Smoothie",
       "aliases": []
     },
@@ -635,6 +725,7 @@ export const catalog = {
       "id": "D_022",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "BOX",
       "aliases": []
     },
@@ -642,6 +733,7 @@ export const catalog = {
       "id": "D_023",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Carat Cake",
       "aliases": []
     },
@@ -649,6 +741,7 @@ export const catalog = {
       "id": "D_024",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "UNKNOWN",
       "aliases": []
     },
@@ -656,6 +749,7 @@ export const catalog = {
       "id": "D_025",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "숨 (Breathing)",
       "aliases": []
     },
@@ -663,6 +757,7 @@ export const catalog = {
       "id": "D_026",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "ISTJ",
       "aliases": []
     },
@@ -670,6 +765,7 @@ export const catalog = {
       "id": "D_027",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Broken Melodies",
       "aliases": []
     },
@@ -677,6 +773,7 @@ export const catalog = {
       "id": "D_028",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Yogurt Shake",
       "aliases": []
     },
@@ -684,6 +781,7 @@ export const catalog = {
       "id": "D_029",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Skateboard",
       "aliases": []
     },
@@ -691,6 +789,7 @@ export const catalog = {
       "id": "D_030",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "파랑 (Blue Wave)",
       "aliases": []
     },
@@ -698,6 +797,7 @@ export const catalog = {
       "id": "D_031",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Poison (모래성)",
       "aliases": []
     },
@@ -705,6 +805,7 @@ export const catalog = {
       "id": "D_032",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "SOS",
       "aliases": []
     },
@@ -712,6 +813,7 @@ export const catalog = {
       "id": "D_033",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Pretzel (♡)",
       "aliases": []
     },
@@ -719,6 +821,7 @@ export const catalog = {
       "id": "D_034",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "제자리 걸음 (Starry Night)",
       "aliases": []
     },
@@ -726,6 +829,7 @@ export const catalog = {
       "id": "D_035",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Like We Just Met",
       "aliases": []
     },
@@ -733,6 +837,7 @@ export const catalog = {
       "id": "D_036",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Candy",
       "aliases": []
     },
@@ -740,6 +845,7 @@ export const catalog = {
       "id": "D_037",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Graduation",
       "aliases": []
     },
@@ -747,6 +853,7 @@ export const catalog = {
       "id": "D_038",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Tangerine Love (Favorite)",
       "aliases": []
     },
@@ -754,6 +861,7 @@ export const catalog = {
       "id": "D_039",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "입김 (Take My Breath)",
       "aliases": []
     },
@@ -761,6 +869,7 @@ export const catalog = {
       "id": "D_040",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "문 (Moon)",
       "aliases": []
     },
@@ -768,6 +877,7 @@ export const catalog = {
       "id": "D_041",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "발자국 (Walk With You",
       "aliases": []
     },
@@ -775,6 +885,7 @@ export const catalog = {
       "id": "D_042",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Beatbox",
       "aliases": []
     },
@@ -782,6 +893,7 @@ export const catalog = {
       "id": "D_043",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Fire Alarm",
       "aliases": []
     },
@@ -789,6 +901,7 @@ export const catalog = {
       "id": "D_044",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "버퍼링 (Glitch Mode)",
       "aliases": []
     },
@@ -796,6 +909,7 @@ export const catalog = {
       "id": "D_045",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Arcade",
       "aliases": []
     },
@@ -803,6 +917,7 @@ export const catalog = {
       "id": "D_046",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "마지막 인사 (To My First)",
       "aliases": []
     },
@@ -810,6 +925,7 @@ export const catalog = {
       "id": "D_047",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "너를 위한 단어 (It’s Yours)",
       "aliases": []
     },
@@ -817,6 +933,7 @@ export const catalog = {
       "id": "D_048",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "잘 자 (Teddy Bear)",
       "aliases": []
     },
@@ -824,6 +941,7 @@ export const catalog = {
       "id": "D_049",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Better Than Gold (지금)",
       "aliases": []
     },
@@ -831,6 +949,7 @@ export const catalog = {
       "id": "D_050",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "북극성 (Never Goodbye)",
       "aliases": []
     },
@@ -838,6 +957,7 @@ export const catalog = {
       "id": "D_051",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "별 밤 (On the way)",
       "aliases": []
     },
@@ -845,6 +965,7 @@ export const catalog = {
       "id": "D_052",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Hello Future",
       "aliases": []
     },
@@ -852,6 +973,7 @@ export const catalog = {
       "id": "D_053",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "맛 (Hot Sauce)",
       "aliases": []
     },
@@ -859,6 +981,7 @@ export const catalog = {
       "id": "D_054",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Diggity",
       "aliases": []
     },
@@ -866,6 +989,7 @@ export const catalog = {
       "id": "D_055",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "오르골 (Life Is Still Going On)",
       "aliases": []
     },
@@ -873,6 +997,7 @@ export const catalog = {
       "id": "D_056",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "고래 (Dive Into You)",
       "aliases": []
     },
@@ -880,6 +1005,7 @@ export const catalog = {
       "id": "D_057",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "우리의 계절 (My Youth)",
       "aliases": []
     },
@@ -887,6 +1013,7 @@ export const catalog = {
       "id": "D_058",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "ANL",
       "aliases": []
     },
@@ -894,6 +1021,7 @@ export const catalog = {
       "id": "D_059",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "주인공 (Irreplaceable)",
       "aliases": []
     },
@@ -901,6 +1029,7 @@ export const catalog = {
       "id": "D_060",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "무대로 (Déjà Vu; 舞代路)",
       "aliases": []
     },
@@ -908,6 +1037,7 @@ export const catalog = {
       "id": "D_061",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Ridin'",
       "aliases": []
     },
@@ -915,6 +1045,7 @@ export const catalog = {
       "id": "D_062",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "내게 말해줘 (7 Days)",
       "aliases": []
     },
@@ -922,6 +1053,7 @@ export const catalog = {
       "id": "D_063",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "BOOM",
       "aliases": []
     },
@@ -929,6 +1061,7 @@ export const catalog = {
       "id": "D_064",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "119",
       "aliases": []
     },
@@ -936,6 +1069,7 @@ export const catalog = {
       "id": "D_065",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "We Go Up",
       "aliases": []
     },
@@ -943,6 +1077,7 @@ export const catalog = {
       "id": "D_066",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "GO",
       "aliases": []
     },
@@ -950,6 +1085,7 @@ export const catalog = {
       "id": "D_067",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "We Young",
       "aliases": []
     },
@@ -957,6 +1093,7 @@ export const catalog = {
       "id": "D_068",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "같은 시간 같은 자리 (Walk you home)",
       "aliases": []
     },
@@ -964,6 +1101,7 @@ export const catalog = {
       "id": "D_069",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "My Page",
       "aliases": []
     },
@@ -971,6 +1109,7 @@ export const catalog = {
       "id": "D_070",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "마지막 첫사랑 (My First and Last)",
       "aliases": []
     },
@@ -978,6 +1117,7 @@ export const catalog = {
       "id": "D_071",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "덩크슛 (Dunk Shot)",
       "aliases": []
     },
@@ -985,6 +1125,7 @@ export const catalog = {
       "id": "D_072",
       "artist": "NCT DREAM",
       "unit": "NCT DREAM",
+      "main": true,
       "title": "Chewing Gum",
       "aliases": []
     },
@@ -992,6 +1133,7 @@ export const catalog = {
       "id": "W_001",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "2.0 (TWO POINT O)",
       "aliases": []
     },
@@ -999,6 +1141,7 @@ export const catalog = {
       "id": "W_002",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Ode to Love",
       "aliases": []
     },
@@ -1006,6 +1149,7 @@ export const catalog = {
       "id": "W_003",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Sticky",
       "aliases": []
     },
@@ -1013,6 +1157,7 @@ export const catalog = {
       "id": "W_004",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Feel The Beat",
       "aliases": []
     },
@@ -1020,6 +1165,7 @@ export const catalog = {
       "id": "W_005",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "여우비 (Crush)",
       "aliases": []
     },
@@ -1027,6 +1173,7 @@ export const catalog = {
       "id": "W_006",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Street (2AM)",
       "aliases": []
     },
@@ -1034,6 +1181,7 @@ export const catalog = {
       "id": "W_007",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Don't Say You Love Me",
       "aliases": []
     },
@@ -1041,6 +1189,7 @@ export const catalog = {
       "id": "W_008",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "COLOR",
       "aliases": []
     },
@@ -1048,6 +1197,7 @@ export const catalog = {
       "id": "W_009",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Baby Blue",
       "aliases": []
     },
@@ -1055,6 +1205,7 @@ export const catalog = {
       "id": "W_010",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Surf",
       "aliases": []
     },
@@ -1062,6 +1213,7 @@ export const catalog = {
       "id": "W_011",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Cheat Code",
       "aliases": []
     },
@@ -1069,6 +1221,7 @@ export const catalog = {
       "id": "W_012",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Videohood",
       "aliases": []
     },
@@ -1076,6 +1229,7 @@ export const catalog = {
       "id": "W_013",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "WICHU",
       "aliases": []
     },
@@ -1083,6 +1237,7 @@ export const catalog = {
       "id": "W_014",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "고양이 릴스 (Reel-ationship)",
       "aliases": []
     },
@@ -1090,6 +1245,7 @@ export const catalog = {
       "id": "W_015",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "poppop",
       "aliases": []
     },
@@ -1097,6 +1253,7 @@ export const catalog = {
       "id": "W_016",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Melt Inside My Pocket",
       "aliases": []
     },
@@ -1104,6 +1261,7 @@ export const catalog = {
       "id": "W_017",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Design",
       "aliases": []
     },
@@ -1111,6 +1269,7 @@ export const catalog = {
       "id": "W_018",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "1000",
       "aliases": []
     },
@@ -1118,6 +1277,7 @@ export const catalog = {
       "id": "W_019",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Silly Dance",
       "aliases": []
     },
@@ -1125,6 +1285,7 @@ export const catalog = {
       "id": "W_020",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Miracle",
       "aliases": []
     },
@@ -1132,6 +1293,7 @@ export const catalog = {
       "id": "W_021",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Steady",
       "aliases": []
     },
@@ -1139,6 +1301,7 @@ export const catalog = {
       "id": "W_022",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Supercute",
       "aliases": []
     },
@@ -1146,6 +1309,7 @@ export const catalog = {
       "id": "W_023",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "Songbird",
       "aliases": []
     },
@@ -1153,6 +1317,7 @@ export const catalog = {
       "id": "W_024",
       "artist": "NCT WISH",
       "unit": "NCT WISH",
+      "main": true,
       "title": "WISH",
       "aliases": []
     }

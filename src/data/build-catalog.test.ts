@@ -5,8 +5,8 @@ import { scanLine, sortDictionary } from "./english.ts";
 
 const rows = (): Rows => ({
   artists: [
-    { name: "B", prefix: "B", sort_order: 1 },
-    { name: "A", prefix: "A", sort_order: 0 },
+    { name: "B", prefix: "B", sort_order: 1, main: false },
+    { name: "A", prefix: "A", sort_order: 0, main: true },
   ],
   songs: [
     {
@@ -49,8 +49,8 @@ test("사용 문제만 게시하고, 문제 있는 곡만 sort_order 순으로 �
 test("곡 순서는 가수 순서가 먼저 (게임의 유닛 표시 순서)", () => {
   const data = rows();
   data.artists = [
-    { name: "B", prefix: "B", sort_order: 0 },
-    { name: "A", prefix: "A", sort_order: 1 },
+    { name: "B", prefix: "B", sort_order: 0, main: false },
+    { name: "A", prefix: "A", sort_order: 1, main: true },
   ];
   assert.deepEqual(
     buildCatalog(data).catalog.songs.map((s) => s.id),
@@ -60,8 +60,8 @@ test("곡 순서는 가수 순서가 먼저 (게임의 유닛 표시 순서)", (
 
 test("가수 목록에 없는 가수, 잘못된·중복 접두어 검출", () => {
   const data = rows();
-  data.artists.push({ name: "C", prefix: "A", sort_order: 2 });
-  data.artists.push({ name: "D", prefix: "D-1", sort_order: 3 });
+  data.artists.push({ name: "C", prefix: "A", sort_order: 2, main: false });
+  data.artists.push({ name: "D", prefix: "D-1", sort_order: 3, main: false });
   data.songs[0].artist = "Z";
   const messages = buildCatalog(data).issues.map((i) => i.message);
   assert.ok(messages.includes("접두어 중복: A (A, C)"));
@@ -145,4 +145,24 @@ test("긴 구절 우선, 붙은 라틴 문자는 매칭하지 않음", () => {
     ["90’s LOVE", "I’m"],
   );
   assert.deepEqual(missing, ["lovely"]);
+});
+
+test("곡마다 NCT 유닛(메인) 여부를 가수에서 가져온다", () => {
+  const { catalog } = buildCatalog(rows());
+  assert.deepEqual(
+    catalog.songs.map((s) => [s.id, s.main]),
+    [
+      ["A_001", true],
+      ["B_001", false],
+    ],
+  );
+});
+
+test("NCT 유닛의 출제 가능한 문제가 없으면 이슈", () => {
+  const data = rows();
+  data.artists = data.artists.map((a) => ({ ...a, main: false }));
+  assert.deepEqual(
+    buildCatalog(data).issues.map((i) => i.message),
+    ["NCT 유닛으로 표시된 가수의 출제 가능한 문제 없음"],
+  );
 });
