@@ -24,6 +24,12 @@ type AdminStore = Rows & {
   /** Recent releases, newest first. Loading them may fail on its own (e.g. migration not run yet). */
   releases: ReleaseRow[];
   releasesError: string;
+  /** Unhandled 오류 제보 for the tab badge; null until counted or when counting failed. */
+  newReports: number | null;
+  countNewReports: () => Promise<void>;
+  /** Data changes (audit_log) since the last release; null when unknown (no release or no audit_log yet). */
+  unpublished: number | null;
+  countUnpublished: () => Promise<void>;
   load: () => Promise<void>;
   /** Called after /api/publish recorded a release. */
   addRelease: (row: ReleaseRow) => void;
@@ -39,6 +45,8 @@ type AdminStore = Rows & {
   /** Inserts all rows in one request: either every row is saved or none is. */
   addQuestions: (rows: QuestionRow[]) => Promise<void>;
   removeQuestion: (id: string) => Promise<void>;
+  /** Turns 출제 사용 on or off for many questions at once. */
+  setQuestionsActive: (ids: string[], active: boolean) => Promise<void>;
   saveEntry: (row: DictionaryRow, isNew: boolean) => Promise<void>;
   removeEntry: (english: string) => Promise<void>;
 };
@@ -86,8 +94,27 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
   error: "",
   releases: [],
   releasesError: "",
+  newReports: null,
+  countNewReports: async () => {
+    const { count, error } = await db()
+      .from("reports")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "new");
+    set({ newReports: error ? null : count });
+  },
+  unpublished: null,
+  countUnpublished: async () => {
+    const since = get().releases[0]?.created_at;
+    if (!since) return set({ unpublished: null });
+    const { count, error } = await db()
+      .from("audit_log")
+      .select("id", { count: "exact", head: true })
+      .gt("at", since);
+    set({ unpublished: error ? null : count });
+  },
   load: async () => {
     set({ status: "loading", error: "" });
+    void get().countNewReports();
     const releases = fetchReleases(db(), 20).then(
       (rows) => set({ releases: rows, releasesError: "" }),
       (error) => set({ releases: [], releasesError: (error as Error).message }),
@@ -100,7 +127,10 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
       set({ status: "error", error: (error as Error).message });
     }
   },
-  addRelease: (row) => set({ releases: [row, ...get().releases] }),
+  addRelease: (row) => {
+    set({ releases: [row, ...get().releases] });
+    void get().countUnpublished();
+  },
   removeRelease: async (id) => {
     await remove("releases", "id", String(id));
     set({ releases: get().releases.filter((r) => r.id !== id) });
@@ -186,6 +216,22 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
   removeQuestion: async (id) => {
     await remove("questions", "id", id);
     set({ questions: get().questions.filter((q) => q.id !== id) });
+  },
+  setQuestionsActive: async (ids, active) => {
+    // Chunked so the id list stays well within URL length limits.
+    const saved: QuestionRow[] = [];
+    for (let i = 0; i < ids.length; i += 200) {
+      const { data, error } = await db()
+        .from("questions")
+        .update({ active })
+        .in("id", ids.slice(i, i + 200))
+        .select(QUESTION_COLUMNS);
+      if (error) throw Error(describeError(error));
+      saved.push(...(data as QuestionRow[]));
+      const byId = new Map(saved.map((q) => [q.id, q]));
+      // Apply each chunk as it lands so a later failure keeps the earlier ones visible.
+      set({ questions: get().questions.map((q) => byId.get(q.id) ?? q) });
+    }
   },
   saveEntry: async (row, isNew) => {
     const saved = await write(

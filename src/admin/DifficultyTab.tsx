@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import type { QuestionRow } from "../data/build-catalog.ts";
+import { QuestionForm } from "./QuestionForm";
 import { useAdmin } from "./store";
+import { useRouteParam } from "./useRoute";
 import { describeError, supabase } from "./supabase";
 
 type Tally = {
@@ -21,8 +24,12 @@ export function DifficultyTab() {
   const songs = useAdmin((s) => s.songs);
   const [rows, setRows] = useState<Tally[]>();
   const [error, setError] = useState("");
-  const [sort, setSort] = useState<Sort>("hard");
+  const [sort, setSort] = useRouteParam("sort", "hard") as [
+    Sort,
+    (value: Sort) => void,
+  ];
   const [reload, setReload] = useState(0);
+  const [editing, setEditing] = useState<QuestionRow | null>(null);
   useEffect(() => {
     if (!supabase) return;
     let live = true;
@@ -45,6 +52,10 @@ export function DifficultyTab() {
       questions.map((q) => [q.id, songTitle.get(q.song_id) ?? q.song_id]),
     );
   }, [questions, songs]);
+  const questionById = useMemo(
+    () => new Map(questions.map((q) => [q.id, q])),
+    [questions],
+  );
   const sorted = useMemo(
     () =>
       [...(rows ?? [])].sort((a, b) =>
@@ -99,6 +110,7 @@ export function DifficultyTab() {
                 <th>포기 후 응답</th>
                 <th>응답</th>
                 <th>분포</th>
+                <th />
               </tr>
             </thead>
             <tbody>
@@ -133,12 +145,26 @@ export function DifficultyTab() {
                       />
                     </div>
                   </td>
+                  <td className="row-actions">
+                    {questionById.has(r.question_id) && (
+                      <button
+                        onClick={() =>
+                          setEditing(questionById.get(r.question_id)!)
+                        }
+                      >
+                        문제 수정
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
           {!rows.length && <p className="muted">아직 응답이 없어요.</p>}
         </div>
+      )}
+      {editing && (
+        <QuestionForm question={editing} onClose={() => setEditing(null)} />
       )}
     </section>
   );

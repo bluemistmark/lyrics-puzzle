@@ -9,6 +9,7 @@ import {
 } from "../data/releases.ts";
 import { useAdmin } from "./store";
 import { supabase } from "./supabase";
+import { useRoute } from "./useRoute";
 
 const SHOWN = 100;
 const SONGS_SHOWN = 20;
@@ -32,6 +33,8 @@ export function PublishTab({
   const releases = useAdmin((s) => s.releases);
   const releasesError = useAdmin((s) => s.releasesError);
   const addRelease = useAdmin((s) => s.addRelease);
+  const unpublished = useAdmin((s) => s.unpublished);
+  const go = useRoute((s) => s.go);
   const [features, setFeatures] = useState("");
   const [note, setNote] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
@@ -97,6 +100,16 @@ export function PublishTab({
         어드민에서 저장한 내용은 바로 DB에 들어가지만, 게임에는 게시해야
         반영돼요. 사용 중인 문제가 하나라도 있는 곡만 게임에 나와요.
       </p>
+      {unpublished !== null && (
+        <p>
+          마지막 게시 이후 변경 <b>{unpublished}건</b>{" "}
+          {unpublished > 0 && (
+            <button className="link" onClick={() => go("history")}>
+              이력 보기
+            </button>
+          )}
+        </p>
+      )}
       {issues.length > 0 ? (
         <div className="notice">
           <b>게시 전에 고쳐야 할 문제 {issues.length}건</b>

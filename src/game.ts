@@ -7,6 +7,7 @@ import {
 } from "./data/english.ts";
 import type { NewsItem } from "./data/releases.ts";
 export type { NewsItem, Token };
+export { initial } from "./data/hangul.ts";
 export type Song = {
   id: string;
   artist: string;
@@ -30,12 +31,6 @@ export const normalize = (s: string) =>
     .toLowerCase()
     .replace(/[\s\p{P}\p{S}]/gu, "");
 const hangul = (c: string) => /^[가-힣]$/.test(c);
-export const initial = (c: string) => {
-  const n = c.charCodeAt(0) - 0xac00;
-  return n >= 0 && n <= 11171
-    ? "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"[Math.floor(n / 588)]
-    : c;
-};
 const dictionary = sortDictionary(catalog.dictionary);
 /** `sorted` must come from `sortDictionary`; defaults to the bundled dictionary. */
 export function tokenize(

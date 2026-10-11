@@ -3,6 +3,7 @@ import { scanLine, sortDictionary } from "../data/english.ts";
 import { lyricsKey, parseBulkQuestions } from "./bulk";
 import { FormDialog } from "./FormDialog";
 import { nextQuestionIds } from "./ids";
+import { findOverlaps } from "./overlap";
 import { QuickAddWord } from "./QuickAddWord";
 import { SongSelect } from "./SongSelect";
 import { useAdmin } from "./store";
@@ -51,7 +52,21 @@ export function BulkQuestionForm({
       const missing = [
         ...new Set(block.lines.flatMap((l) => scanLine(l, sorted).missing)),
       ];
-      return { ...block, id: ids[i], error: block.error ?? duplicate, missing };
+      // Exact duplicates block saving; a shared line elsewhere is only a warning.
+      const overlaps = duplicate
+        ? []
+        : [
+            ...new Set(
+              findOverlaps(block.lines, questions).map((o) => o.questionId),
+            ),
+          ];
+      return {
+        ...block,
+        id: ids[i],
+        error: block.error ?? duplicate,
+        missing,
+        overlaps,
+      };
     });
   }, [text, questions, songId, sorted]);
   const errors = preview.filter((p) => p.error).length;
@@ -134,10 +149,19 @@ export function BulkQuestionForm({
                     <td>
                       {p.error ? (
                         <span className="form-error">{p.error}</span>
-                      ) : p.missing.length ? (
-                        <span className="warn-text">
-                          사전에 없음: {p.missing.join(", ")}
-                        </span>
+                      ) : p.missing.length || p.overlaps.length ? (
+                        <>
+                          {p.missing.length > 0 && (
+                            <div className="warn-text">
+                              사전에 없음: {p.missing.join(", ")}
+                            </div>
+                          )}
+                          {p.overlaps.length > 0 && (
+                            <div className="warn-text">
+                              같은 줄 있음: {p.overlaps.join(", ")}
+                            </div>
+                          )}
+                        </>
                       ) : (
                         <span className="ok-text">정상</span>
                       )}

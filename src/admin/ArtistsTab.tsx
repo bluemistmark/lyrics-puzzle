@@ -5,6 +5,7 @@ import {
   sortArtists,
   type ArtistRow,
 } from "../data/build-catalog.ts";
+import { CsvButton } from "./CsvButton";
 import { FormDialog } from "./FormDialog";
 import { nextSongId } from "./ids";
 import { useAdmin } from "./store";
@@ -48,6 +49,19 @@ export function ArtistsTab() {
           없는 가수만 삭제할 수 있어요.
         </span>
         <span className="admin-spacer" />
+        <CsvButton
+          kind="artists"
+          rows={() => [
+            ["순서", "가수명", "NCT 유닛", "접두어", "곡 수"],
+            ...ordered.map((a, i) => [
+              i + 1,
+              a.name,
+              a.main,
+              a.prefix,
+              songCounts.get(a.name) ?? 0,
+            ]),
+          ]}
+        />
         <button className="primary" onClick={() => setEditing("new")}>
           가수 추가
         </button>

@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import type { QuestionRow } from "../data/build-catalog.ts";
 import { REPORT_KINDS } from "../report.ts";
+import { QuestionForm } from "./QuestionForm";
 import { useAdmin } from "./store";
+import { useRouteParam } from "./useRoute";
 import { describeError, supabase } from "./supabase";
 
 type ReportRow = {
@@ -27,11 +30,19 @@ const time = (iso: string) =>
 /** 오류 제보 from the game (reports table). Loaded on demand, not kept in the admin store. */
 export function ReportsTab() {
   const questions = useAdmin((s) => s.questions);
+  const countNewReports = useAdmin((s) => s.countNewReports);
   const songs = useAdmin((s) => s.songs);
   const [rows, setRows] = useState<ReportRow[]>();
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState<Filter>("new");
+  const [filter, setFilter] = useRouteParam("status", "new") as [
+    Filter,
+    (value: Filter) => void,
+  ];
   const [reload, setReload] = useState(0);
+  const [editing, setEditing] = useState<{
+    question: QuestionRow;
+    report: ReportRow;
+  } | null>(null);
   useEffect(() => {
     if (!supabase) return;
     let live = true;
@@ -44,18 +55,23 @@ export function ReportsTab() {
         if (!live) return;
         setError(error ? describeError(error) : "");
         setRows(error ? [] : ((data ?? []) as ReportRow[]));
+        countNewReports();
       });
     return () => {
       live = false;
     };
-  }, [reload]);
+  }, [reload, countNewReports]);
 
   const questionInfo = useMemo(() => {
     const title = new Map(songs.map((s) => [s.id, `${s.artist} · ${s.title}`]));
     return new Map(
       questions.map((q) => [
         q.id,
-        { song: title.get(q.song_id) ?? q.song_id, line: q.lines[0] ?? "" },
+        {
+          row: q,
+          song: title.get(q.song_id) ?? q.song_id,
+          line: q.lines[0] ?? "",
+        },
       ]),
     );
   }, [questions, songs]);
@@ -74,6 +90,7 @@ export function ReportsTab() {
     setRows((list) =>
       list?.map((r) => (r.id === row.id ? { ...r, status } : r)),
     );
+    countNewReports();
   };
   const remove = async (row: ReportRow) => {
     if (!supabase || !confirm("이 제보를 삭제할까요? 되돌릴 수 없어요."))
@@ -81,6 +98,7 @@ export function ReportsTab() {
     const { error } = await supabase.from("reports").delete().eq("id", row.id);
     if (error) return setError(describeError(error));
     setRows((list) => list?.filter((r) => r.id !== row.id));
+    countNewReports();
   };
 
   return (
@@ -158,6 +176,15 @@ export function ReportsTab() {
                     </td>
                     <td className="pre-line">{r.message}</td>
                     <td className="row-actions">
+                      {info && (
+                        <button
+                          onClick={() =>
+                            setEditing({ question: info.row, report: r })
+                          }
+                        >
+                          문제 수정
+                        </button>
+                      )}
                       {r.status === "new" ? (
                         <button onClick={() => update(r, "done")}>
                           처리 완료
@@ -178,6 +205,19 @@ export function ReportsTab() {
           </table>
           {!shown.length && <p className="muted">제보가 없어요.</p>}
         </div>
+      )}
+      {editing && (
+        <QuestionForm
+          question={editing.question}
+          onClose={() => setEditing(null)}
+          onSaved={() => {
+            if (
+              editing.report.status === "new" &&
+              confirm("문제를 저장했어요. 이 제보를 처리 완료로 바꿀까요?")
+            )
+              update(editing.report, "done");
+          }}
+        />
       )}
     </section>
   );
