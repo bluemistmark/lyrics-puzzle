@@ -81,23 +81,32 @@ export function songTitleMatches(
 /**
  * 입력 전체를 공백 없이 합쳐 찾고, 공백으로 나눈 한 글자 단어는 따로 한 번 더 찾는다.
  * 합친 입력(`있는숨`)에서는 한 글자 토큰이 "연속 2글자" 규칙에 걸려 열리지 않기 때문이다.
+ * 영어는 전체 일치만 인정하므로 공백으로 나뉜 단어 중 이어진 묶음(`baby 사랑해` → `baby`,
+ * `oh my god` → `ohmygod`)마다 비교한다.
  */
 export function matches(
   q: Question,
   word: string,
   revealed: readonly string[] = [],
 ): string[] {
-  const found = matchTerm(q, normalize(word), revealed);
   const parts = word.split(/\s+/).map(normalize).filter(Boolean);
+  const english = new Set<string>();
+  for (let i = 0; i < parts.length; i++)
+    for (let j = i, joined = ""; j < parts.length; j++)
+      english.add((joined += parts[j]));
+  const found = matchTerm(q, normalize(word), revealed, english);
   if (parts.length > 1)
     for (const part of parts)
-      if (part.length === 1) found.push(...matchTerm(q, part, revealed));
+      if (part.length === 1)
+        found.push(...matchTerm(q, part, revealed, english));
   return [...new Set(found)];
 }
 function matchTerm(
   q: Question,
   term: string,
   revealed: readonly string[],
+  /** Normalized inputs an English token may equal (see `matches`). */
+  english: ReadonlySet<string>,
 ): string[] {
   if (!term) return [];
   const found: string[] = [];
@@ -105,8 +114,8 @@ function matchTerm(
     line.forEach((t, w) => {
       if (t.pronunciation) {
         if (
-          [t.text, t.pronunciation, ...(t.alternatives || [])].some(
-            (v) => normalize(v) === term,
+          [t.text, t.pronunciation, ...(t.alternatives || [])].some((v) =>
+            english.has(normalize(v)),
           )
         )
           found.push(`${l}:${w}:en`);

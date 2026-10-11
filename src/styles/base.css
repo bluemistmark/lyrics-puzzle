@@ -2296,6 +2296,14 @@ main [hidden] {
   right: 5px;
 }
 
+/* 게임 탭의 알림 점(데일리 미완료)은 탭 글자 바로 옆에 붙인다. */
+.game-tabs .tab-dot {
+  position: static;
+  display: inline-block;
+  margin-left: 4px;
+  vertical-align: 6px;
+}
+
 /* 내 가사 (직접 입력) */
 .custom-note {
   font-size: 12px;

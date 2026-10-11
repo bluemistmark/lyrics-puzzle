@@ -62,6 +62,10 @@ export function App() {
   );
   const [today, setToday] = useState(koreaDate);
   const syncDaily = useGame((s) => s.syncDaily);
+  // Today's daily is still open: mark its tab until it's solved or given up.
+  const dailyOpen = useGame(
+    (s) => !s.daily.round.solved && !s.daily.round.givenUp,
+  );
   useEffect(() => {
     const refresh = () => setToday(koreaDate());
     const timer = window.setInterval(refresh, 60_000);
@@ -134,7 +138,11 @@ export function App() {
               <span>★ 01</span>
             </div>
           )}
-          <GameTabs active={activeTab} onChange={changeTab} />
+          <GameTabs
+            active={activeTab}
+            onChange={changeTab}
+            pending={dailyOpen ? { daily: "오늘 문제 아직 안 풂" } : {}}
+          />
           <PlayPanel hidden={activeTab !== "play"} onOpenModal={setModal} />
           <DailyPanel hidden={activeTab !== "daily"} onOpenModal={setModal} />
           <CustomPanel hidden={activeTab !== "custom"} />
