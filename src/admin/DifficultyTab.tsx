@@ -24,10 +24,10 @@ export function DifficultyTab() {
   const songs = useAdmin((s) => s.songs);
   const [rows, setRows] = useState<Tally[]>();
   const [error, setError] = useState("");
-  const [sort, setSort] = useRouteParam("sort", "hard") as [
-    Sort,
-    (value: Sort) => void,
-  ];
+  const [sort, setSort] = useRouteParam<Sort>("sort", "hard", [
+    "hard",
+    "total",
+  ]);
   const [reload, setReload] = useState(0);
   const [editing, setEditing] = useState<QuestionRow | null>(null);
   useEffect(() => {

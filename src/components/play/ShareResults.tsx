@@ -1,5 +1,5 @@
 import { dailyResultText } from "../../daily";
-import type { Question } from "../../game";
+import { guessCount, type Question } from "../../game";
 import { shareGrid } from "../../share";
 import { drawShareCard } from "../../share-image";
 import type { Round } from "../../store";
@@ -25,7 +25,7 @@ export function ShareResults({
     solved: round.solved,
     givenUp: round.givenUp,
     percent,
-    guesses: round.words.length,
+    guesses: guessCount(round.words),
     hints: round.hints,
     streak,
   });

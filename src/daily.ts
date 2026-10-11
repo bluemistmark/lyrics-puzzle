@@ -7,16 +7,41 @@ export function koreaDate(now = new Date()): string {
     .slice(0, 10);
 }
 
-/** Pick from stable IDs, independent of the catalog's display order. */
-export function dailyQuestionId(date: string, ids: readonly string[]): string {
-  if (!ids.length) throw Error("데일리 퀴즈로 낼 곡이 없어요.");
-  const sorted = [...ids].sort();
+/**
+ * 32-bit FNV-1a followed by the murmur3 finalizer. FNV alone mixes the last characters
+ * poorly, which skews "highest score wins" toward some IDs.
+ */
+function score(text: string) {
   let hash = 2166136261;
-  for (const char of date) {
+  for (const char of text) {
     hash ^= char.charCodeAt(0);
     hash = Math.imul(hash, 16777619);
   }
-  return sorted[(hash >>> 0) % sorted.length];
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x85ebca6b);
+  hash ^= hash >>> 13;
+  hash = Math.imul(hash, 0xc2b2ae35);
+  hash ^= hash >>> 16;
+  return hash >>> 0;
+}
+
+/**
+ * The question with the highest date+ID score (rendezvous hashing). Adding or removing
+ * questions only changes a day whose pick was removed or beaten by a new one, so publishing
+ * during the day keeps everyone (and the ranking) on the same question. Order doesn't matter.
+ */
+export function dailyQuestionId(date: string, ids: readonly string[]): string {
+  if (!ids.length) throw Error("데일리 퀴즈로 낼 곡이 없어요.");
+  let best = "";
+  let bestScore = -1;
+  for (const id of ids) {
+    const value = score(`${date}:${id}`);
+    if (value > bestScore || (value === bestScore && id < best)) {
+      best = id;
+      bestScore = value;
+    }
+  }
+  return best;
 }
 
 type ShareResult = {

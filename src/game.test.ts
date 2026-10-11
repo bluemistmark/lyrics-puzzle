@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { catalog } from "./catalog.ts";
 import { sortDictionary } from "./data/english.ts";
 import {
+  guessCount,
   matches,
   questions,
   songs,
@@ -196,4 +197,12 @@ test("여러 단어를 입력할 때 두 글자 이상 영어도 함께 열림",
   ]);
   // 떨어진 단어를 이어 붙여 만든 묶음은 인정하지 않는다.
   assert.deepEqual(matches(q, "90's 하나 love").sort(), ["0:8:0", "0:8:1"]);
+});
+
+test("띄어 쓴 여러 단어를 한 번에 넣으면 단어 수만큼 입력으로 셈", () => {
+  const words = (...list: string[]) =>
+    list.map((word) => ({ word, hit: true }));
+  assert.equal(guessCount([]), 0);
+  assert.equal(guessCount(words("사랑")), 1);
+  assert.equal(guessCount(words("너를 처음 본 순간", "  City  ")), 5);
 });

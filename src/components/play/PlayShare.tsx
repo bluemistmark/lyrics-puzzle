@@ -1,4 +1,4 @@
-import type { Question } from "../../game";
+import { guessCount, type Question } from "../../game";
 import type { PlayMode } from "../../modes";
 import { playResultText, questionLink, shareGrid } from "../../share";
 import { drawShareCard } from "../../share-image";
@@ -19,7 +19,7 @@ export function PlayShare({ question, round, percent, playMode }: Props) {
     solved: round.solved,
     givenUp: round.givenUp,
     percent,
-    guesses: round.words.length,
+    guesses: guessCount(round.words),
     hints: round.hints,
   });
   return (

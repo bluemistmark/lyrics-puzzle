@@ -34,10 +34,11 @@ export function ReportsTab() {
   const songs = useAdmin((s) => s.songs);
   const [rows, setRows] = useState<ReportRow[]>();
   const [error, setError] = useState("");
-  const [filter, setFilter] = useRouteParam("status", "new") as [
-    Filter,
-    (value: Filter) => void,
-  ];
+  const [filter, setFilter] = useRouteParam<Filter>("status", "new", [
+    "new",
+    "done",
+    "all",
+  ]);
   const [reload, setReload] = useState(0);
   const [editing, setEditing] = useState<{
     question: QuestionRow;

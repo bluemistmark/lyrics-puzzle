@@ -21,6 +21,22 @@ test("같은 날짜와 문제 목록은 표시 순서와 관계없이 같은 문
   assert.ok(ids.includes(dailyQuestionId("2026-09-29", ids)));
 });
 
+test("문제를 추가·삭제해도 대부분의 날은 같은 데일리 문제가 유지됨", () => {
+  const ids = Array.from({ length: 300 }, (_, i) => `Q_${i}`);
+  const dates = Array.from({ length: 100 }, (_, i) =>
+    new Date(Date.UTC(2026, 0, 1 + i)).toISOString().slice(0, 10),
+  );
+  const changed = (next: string[]) =>
+    dates.filter((d) => dailyQuestionId(d, ids) !== dailyQuestionId(d, next))
+      .length;
+  // 한 문제가 늘거나 줄면 그 문제가 고른 날만 바뀐다 (300문제면 100일 중 몇 날 이하).
+  assert.ok(changed([...ids, "Q_new"]) <= 5);
+  const picked = dailyQuestionId(dates[0], ids);
+  const without = ids.filter((id) => id !== picked);
+  assert.notEqual(dailyQuestionId(dates[0], without), picked);
+  assert.ok(changed(without) <= 5);
+});
+
 test("공유 결과에 정답이나 가사가 들어가지 않음", () => {
   const text = dailyResultText({
     date: "2026-09-29",

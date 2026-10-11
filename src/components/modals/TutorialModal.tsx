@@ -86,7 +86,6 @@ export function TutorialModal({ onClose, onStart }: Props) {
                 aria-label="연습 단어 입력"
                 autoComplete="off"
                 maxLength={60}
-                autoFocus
               />
               <button
                 type="submit"
@@ -105,7 +104,8 @@ export function TutorialModal({ onClose, onStart }: Props) {
           {revealed.length > 0 && (
             <p className="feedback">
               두 글자 이상 이어서 맞아야 열려요. 한 글자는 그 글자만으로 된
-              단어이거나, 이미 일부가 열린 단어일 때만 인정돼요.
+              단어이거나, 이미 일부가 열린 단어일 때만 인정돼요. 가사 속 영어는
+              원문과 한글 발음 모두 인정돼요.
             </p>
           )}
         </>
@@ -131,8 +131,7 @@ export function TutorialModal({ onClose, onStart }: Props) {
             <li>
               <Mic2 size={18} aria-hidden="true" />
               <span>
-                <b>가수 힌트</b> 어느 유닛의 노래인지 볼 수 있어요. 영어는
-                원문과 한글 발음 모두 인정돼요.
+                <b>가수 힌트</b> 어느 유닛의 노래인지 볼 수 있어요.
               </span>
             </li>
           </ul>

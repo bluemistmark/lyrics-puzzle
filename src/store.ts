@@ -11,6 +11,7 @@ import {
 import { dailyQuestionId, koreaDate, type DailyHistory } from "./daily.ts";
 import { useDifficulty } from "./difficulty.ts";
 import {
+  guessCount,
   hintKeys,
   mainUnits,
   matches,
@@ -152,7 +153,7 @@ const recordDaily = (
         ...history,
         [date]: {
           solved: round.solved,
-          guesses: round.words.length,
+          guesses: guessCount(round.words),
           hints: round.hints,
         },
       };
@@ -389,7 +390,7 @@ export const useGame = create<Store>()(
           const feats = recordSolve(s.feats, {
             mode,
             unit: q.unit,
-            words: current.words.length,
+            words: guessCount(current.words),
             hasEnglish: q.lines.some((line) =>
               line.some((t) => t.pronunciation),
             ),

@@ -113,7 +113,12 @@ function AdminShell({
   const load = useAdmin((s) => s.load);
   const route = useRoute((s) => s.tab);
   const go = useRoute((s) => s.go);
+  const replaceRoute = useRoute((s) => s.replace);
   const tab: Tab = isTab(route) ? route : "dashboard";
+  // An unknown tab in the URL would otherwise stick to every later filter change.
+  useEffect(() => {
+    if (!isTab(route)) replaceRoute("dashboard");
+  }, [route, replaceRoute]);
   const setTab = (next: Tab) => go(next);
   useEffect(() => {
     load();

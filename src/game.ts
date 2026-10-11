@@ -151,6 +151,15 @@ function matchTerm(
   );
   return found;
 }
+/**
+ * Guesses an input list counts as: every space-separated word is one, so typing a whole
+ * line at once doesn't beat typing it word by word (데일리 랭킹 compares this).
+ */
+export const guessCount = (words: readonly { word: string }[]) =>
+  words.reduce(
+    (n, w) => n + Math.max(1, w.word.split(/\s+/).filter(Boolean).length),
+    0,
+  );
 export function allKeys(q: Question) {
   return q.lines.flatMap((line, l) =>
     line.flatMap((t, w) =>

@@ -77,7 +77,10 @@ test("오늘의 도전은 일반 진행과 기록을 건드리지 않고 저장�
   const dailyId = useGame.getState().daily.round.id;
   const question = questions.find((q) => q.id === dailyId)!;
   useGame.getState().guess(question.lines[0][0].text, "daily");
+  useGame.getState().guess("가나다라 마바사 아자차", "daily");
   assert.ok(useGame.getState().solve(question.title, "daily"));
+  // 랭킹에 내는 입력 수는 띄어 쓴 단어마다 하나씩 센다.
+  assert.equal(useGame.getState().dailyHistory[today].guesses, 4);
   assert.equal(useGame.getState().round.id, normalId);
   assert.deepEqual(useGame.getState().stats, stats);
   await useGame.persist.rehydrate();
