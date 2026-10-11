@@ -37,7 +37,7 @@ export function ReportModal({ mode, onClose }: Props) {
           <Flag />
         </span>
         <h2>제보해 줘서 고마워요!</h2>
-        <p>확인해서 고칠게요. 반영되면 소식 탭으로 알려 드려요.</p>
+        <p>확인해서 고칠게요. 반영되면 소식으로 알려 드려요.</p>
         <button className="primary" onClick={onClose}>
           닫기
         </button>

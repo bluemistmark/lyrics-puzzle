@@ -439,3 +439,37 @@ test("선택 범위를 한 바퀴 다 보면 알려 주고 다시 처음부터 �
   );
   useGame.getState().reset();
 });
+
+test("단어 공개 힌트는 아직 안 열린 단어 하나만 열고, 다 열리면 더 열지 않음", () => {
+  const long = questions.find(
+    (q) => q.lines.flat().filter((t) => t.text.trim()).length > 6,
+  )!;
+  for (const mode of ["play", "daily"] as const) {
+    useGame.getState().reset();
+    // 데일리는 reset해도 오늘 라운드가 남으므로 공개 상태를 직접 비운다.
+    const fresh = { id: long.id, revealed: [], givenUp: false, wordHints: 0 };
+    if (mode === "play")
+      useGame.setState({ round: { ...useGame.getState().round, ...fresh } });
+    else
+      useGame.setState({
+        daily: {
+          ...useGame.getState().daily,
+          round: { ...useGame.getState().daily.round, ...fresh },
+        },
+      });
+    const roundOf = () =>
+      mode === "daily"
+        ? useGame.getState().daily.round
+        : useGame.getState().round;
+    useGame.getState().hint("word", mode);
+    const words = new Set(
+      roundOf().revealed.map((key) => key.split(":").slice(0, 2).join(":")),
+    );
+    assert.equal(words.size, 1, mode);
+    const before = roundOf().revealed.length;
+    useGame.getState().hint("word", mode);
+    const after = roundOf().revealed.length;
+    assert.ok(after > before, mode);
+  }
+  useGame.getState().reset();
+});

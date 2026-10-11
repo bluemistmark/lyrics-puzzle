@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { beforeSend } from "./analytics";
 import { AchievementToast } from "./components/AchievementToast";
 import { CollectionPanel } from "./components/CollectionPanel";
+import { CustomPanel } from "./components/custom/CustomPanel";
 import { Footer } from "./components/Footer";
 import { GameTabs, type Tab } from "./components/GameTabs";
 import { Header } from "./components/Header";
@@ -110,6 +111,9 @@ export function App() {
       <div className="app-shell">
         <Header
           discreet={theme === "excel"}
+          newsOpen={activeTab === "news"}
+          newsUnread={unread && activeTab !== "news"}
+          onNews={() => changeTab(activeTab === "news" ? "play" : "news")}
           onHelp={() => setModal("help")}
           onTheme={() => setModal("theme")}
           onAccount={() => setModal("account")}
@@ -122,13 +126,10 @@ export function App() {
               <span>★ 01</span>
             </div>
           )}
-          <GameTabs
-            active={activeTab}
-            onChange={changeTab}
-            dots={{ news: unread && activeTab !== "news" }}
-          />
+          <GameTabs active={activeTab} onChange={changeTab} />
           <PlayPanel hidden={activeTab !== "play"} onOpenModal={setModal} />
           <DailyPanel hidden={activeTab !== "daily"} onOpenModal={setModal} />
+          <CustomPanel hidden={activeTab !== "custom"} />
           <RecordPanel
             hidden={activeTab !== "record"}
             onReset={() => setModal("reset")}
