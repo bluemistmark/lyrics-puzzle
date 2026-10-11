@@ -77,7 +77,17 @@ test("오늘의 도전은 일반 진행과 기록을 건드리지 않고 저장�
   const dailyId = useGame.getState().daily.round.id;
   const question = questions.find((q) => q.id === dailyId)!;
   useGame.getState().guess(question.lines[0][0].text, "daily");
+  // 자모만으로 된 입력은 어떤 가사와도 맞지 않는다.
+  useGame.getState().guess("ㅋㅋ ㅎㅎ ㅠㅠ", "daily");
   assert.ok(useGame.getState().solve(question.title, "daily"));
+  // 랭킹에 내는 입력 수는 띄어 쓴 단어 수와 맞은 가사 단어 수 중 큰 값의 합이다.
+  const [first, second] = useGame.getState().daily.round.words;
+  assert.ok(first.count! >= 1);
+  assert.equal(second.count, 3);
+  assert.equal(
+    useGame.getState().dailyHistory[today].guesses,
+    first.count! + 3,
+  );
   assert.equal(useGame.getState().round.id, normalId);
   assert.deepEqual(useGame.getState().stats, stats);
   await useGame.persist.rehydrate();
@@ -471,5 +481,20 @@ test("단어 공개 힌트는 아직 안 열린 단어 하나만 열고, 다 열
     const after = roundOf().revealed.length;
     assert.ok(after > before, mode);
   }
+  useGame.getState().reset();
+});
+
+test("보던 문제가 게시에서 빠져도 기록은 남고 현재 문제만 바뀜", async () => {
+  useGame.getState().reset();
+  const saved = JSON.parse(memory.get("chosung-lyrics-live-v1")!);
+  saved.state.round = { ...saved.state.round, id: "GONE" };
+  saved.state.stats = { ...saved.state.stats, solved: 42 };
+  saved.state.collected = [questions[0].id];
+  memory.set("chosung-lyrics-live-v1", JSON.stringify(saved));
+  await useGame.persist.rehydrate();
+  const s = useGame.getState();
+  assert.equal(s.stats.solved, 42);
+  assert.deepEqual(s.collected, [questions[0].id]);
+  assert.ok(questions.some((q) => q.id === s.round.id));
   useGame.getState().reset();
 });

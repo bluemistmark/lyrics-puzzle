@@ -43,7 +43,7 @@ test("랭킹 조회는 토큰이 없으면 만들지 않고, 첫 제출 때 토�
   assert.equal(calls.length, 1, "같은 날은 다시 보내지 않음");
 });
 
-test("제출이 실패하면 서버 메시지를 던지고 다음에 다시 보낼 수 있음", async () => {
+test("서버가 거절한 결과는 메시지를 한 번 보이고 다시 보내지 않으며, 연결 실패는 다음에 다시 보냄", async () => {
   useRanking.setState({ submitted: "" });
   mockFetch(
     () =>
@@ -52,7 +52,8 @@ test("제출이 실패하면 서버 메시지를 던지고 다음에 다시 보�
       }),
   );
   await assert.rejects(useRanking.getState().submit(result), /오늘의 문제/);
-  assert.equal(useRanking.getState().submitted, "");
+  assert.equal(useRanking.getState().submitted, result.date);
+  useRanking.setState({ submitted: "" });
   mockFetch(() => {
     throw TypeError("offline");
   });
@@ -60,6 +61,15 @@ test("제출이 실패하면 서버 메시지를 던지고 다음에 다시 보�
     useRanking.getState().submit(result),
     /연결할 수 없어요/,
   );
+  assert.equal(useRanking.getState().submitted, "");
+});
+
+test("서버 상한을 넘는 입력 수는 상한으로 잘라 보냄", async () => {
+  useRanking.setState({ submitted: "" });
+  mockFetch(ok);
+  await useRanking.getState().submit({ ...result, guesses: 5000, hints: 300 });
+  assert.equal(body(calls[0]).guesses, 1000);
+  assert.equal(body(calls[0]).hints, 100);
 });
 
 test("닉네임은 규칙을 먼저 검사하고, 저장하면 다시 묻지 않고 랭킹을 새로 불러옴", async () => {

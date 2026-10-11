@@ -26,7 +26,7 @@ import { PlayPanel } from "./components/play/PlayPanel";
 import { RecordPanel } from "./components/RecordPanel";
 import { useModelContextTools } from "./hooks/useModelContextTools";
 import { useNewsSeen } from "./hooks/useNewsSeen";
-import { news } from "./game";
+import { news, questions } from "./game";
 import { koreaDate } from "./daily";
 import { useRanking } from "./ranking";
 import { parseSharedLink } from "./share";
@@ -46,12 +46,15 @@ export function App() {
   // A same-question link (?q=문제ID&mode=모드); asks first if it would replace a round in progress.
   const [shared] = useState(() => {
     const link = parseSharedLink(window.location.href);
-    return (
-      link && {
-        ...link,
-        confirm: replacesProgress(useGame.getState(), link.id, link.mode),
-      }
-    );
+    if (!link) return null;
+    // An old link to a question a publish removed: just say so.
+    const missing = !questions.some((q) => q.id === link.id);
+    return {
+      ...link,
+      missing,
+      confirm:
+        !missing && replacesProgress(useGame.getState(), link.id, link.mode),
+    };
   });
   const [modal, setModal] = useState<ModalName | null>(() =>
     shared?.confirm
@@ -95,7 +98,11 @@ export function App() {
   // The link applies once: clean the URL so a refresh doesn't open it again.
   useEffect(() => {
     if (!shared) return;
-    if (!shared.confirm)
+    if (shared.missing)
+      useGame.setState({
+        notice: "공유받은 문제는 더 이상 없어요. 지금 문제를 풀어 보세요.",
+      });
+    else if (!shared.confirm)
       useGame.getState().openQuestion(shared.id, shared.mode);
     const url = new URL(window.location.href);
     url.searchParams.delete("q");

@@ -25,6 +25,12 @@ const GRACE = 10 * 60 * 1000;
 
 const TOKEN = /^[A-Za-z0-9_-]{40,64}$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
+/** A real calendar day (`2026-02-30` passes the pattern but Postgres rejects it). */
+function isDate(v: string) {
+  if (!DATE.test(v)) return false;
+  const day = new Date(`${v}T00:00:00Z`);
+  return !Number.isNaN(day.getTime()) && day.toISOString().slice(0, 10) === v;
+}
 
 async function playerId(token: string) {
   const digest = await crypto.subtle.digest(
@@ -88,7 +94,7 @@ export async function GET(request: Request) {
   if (db instanceof Response) return db;
   const date =
     new URL(request.url).searchParams.get("date") ?? koreaDate(Date.now());
-  if (!DATE.test(date))
+  if (!isDate(date))
     return json(400, { error: "날짜 형식이 올바르지 않아요." });
   const token = request.headers.get("x-ranking-token") ?? "";
   const response = await fetch(`${db.rest}/rpc/daily_ranking`, {
@@ -122,7 +128,9 @@ export async function POST(request: Request) {
   if (
     typeof solved !== "boolean" ||
     !count(guesses, 1000) ||
-    !count(hints, 100)
+    !count(hints, 100) ||
+    // A title can't be guessed without typing at least one word first.
+    (solved && (guesses as number) < 1)
   )
     return json(400, { error: "결과 형식이 올바르지 않아요." });
 

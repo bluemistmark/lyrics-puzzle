@@ -187,15 +187,22 @@ export async function signOut() {
 
 export async function deleteAccount() {
   if (!session) throw Error("로그인이 필요합니다.");
+  // Pause syncing so nothing is written back while the account is being deleted.
   stopWatching?.();
-  await requestJson("/api/account", {
-    method: "DELETE",
-    headers: {
-      authorization: `Bearer ${session.access_token}`,
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({ token: useRanking.getState().token }),
-  });
+  try {
+    await requestJson("/api/account", {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${session.access_token}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ token: useRanking.getState().token }),
+    });
+  } catch (error) {
+    // Still signed in: keep saving this device's play to the account.
+    if (session && !stopWatching) watch();
+    throw error;
+  }
   // The ranking player is gone too; start over with a fresh anonymous one.
   useRanking.setState({ token: "", nickname: "", submitted: "", asked: false });
   await client.auth.signOut({ scope: "local" }).catch(() => {});

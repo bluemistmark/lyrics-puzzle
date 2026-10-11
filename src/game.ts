@@ -61,21 +61,50 @@ export const mainUnits = [
 export const otherUnits = units.filter((u) => !mainUnits.includes(u));
 /** 소식 tab entries, newest first (built from the releases table at deploy time). */
 export const news: NewsItem[] = catalog.news;
-export function titleMatches(q: Question, title: string) {
-  return songTitleMatches(
-    songs.find((s) => s.id === q.songId)!,
-    title,
-  );
+/** Version notes in parentheses ("Korean Ver.", "Feat. X", "AM 01:27") aren't titles. */
+const NOTE =
+  /\b(ver|version|feat|ft|prod|inst|instrumental|remix)\b\.?|^(am|pm)?\s*\d{1,2}:\d{2}/i;
+/**
+ * The title without parentheses, and the answers inside them: split on `;`
+ * (`英雄; Kick It`), version notes dropped. An unclosed "(" still opens a part.
+ */
+export function titleParts(title: string) {
+  const inside = /\(([^)]*)(?:\)|$)/g;
+  const parts = [...title.matchAll(inside)]
+    .flatMap((m) => m[1].split(/[;；]/))
+    .map((p) => p.trim())
+    .filter((p) => p && !NOTE.test(p));
+  const base = title.replace(/\s*\([^)]*(?:\)|$)/g, "").trim();
+  return { base, parts };
 }
-/** Accepts the full title, the title without parentheses, each parenthesized part and aliases. */
+/**
+ * Accepts the full title, the title without parentheses, each answer inside them and
+ * aliases. `isOtherTitle` (normalized input) rejects a parenthesized part that is another
+ * song's title (`Tangerine Love (Favorite)` vs `Favorite (Vampire)`); aliases always count.
+ */
 export function songTitleMatches(
   song: Pick<Song, "title" | "aliases">,
   title: string,
+  isOtherTitle: (normalized: string) => boolean = () => false,
 ) {
-  const parts = [...song.title.matchAll(/\(([^)]+)\)/g)].map((m) => m[1]);
-  const base = song.title.replace(/\s*\([^)]*\)/g, "").trim();
-  return [song.title, base, ...parts, ...song.aliases].some(
-    (v) => normalize(v) === normalize(title) && normalize(title).length > 0,
+  const input = normalize(title);
+  if (!input) return false;
+  const { base, parts } = titleParts(song.title);
+  if ([song.title, base, ...song.aliases].some((v) => normalize(v) === input))
+    return true;
+  return !isOtherTitle(input) && parts.some((p) => normalize(p) === input);
+}
+/** Normalized full and base titles of every song, to tell another song's title apart. */
+const titleOwners = new Map<string, Set<string>>();
+for (const song of songs)
+  for (const t of [song.title, titleParts(song.title).base]) {
+    const key = normalize(t);
+    titleOwners.set(key, new Set([...(titleOwners.get(key) ?? []), song.id]));
+  }
+export function titleMatches(q: Question, title: string) {
+  const song = songs.find((s) => s.id === q.songId)!;
+  return songTitleMatches(song, title, (t) =>
+    [...(titleOwners.get(t) ?? [])].some((id) => id !== song.id),
   );
 }
 /**
@@ -151,6 +180,26 @@ function matchTerm(
   );
   return found;
 }
+/**
+ * What one input counts as: the larger of its space-separated words and the lyric words
+ * (tokens) it matched, so neither spaces nor run-together text (`너를사랑해정말`) beat
+ * typing word by word. Stored on the entry because the match depends on the round then.
+ */
+export function guessWeight(word: string, found: readonly string[]) {
+  const words = word.split(/\s+/).filter(Boolean).length;
+  const tokens = new Set(found.map((key) => key.slice(0, key.lastIndexOf(":"))))
+    .size;
+  return Math.max(1, words, tokens);
+}
+/** Total guesses for the 데일리 랭킹, share text and 업적 (see `guessWeight`). */
+export const guessCount = (
+  words: readonly { word: string; count?: number }[],
+) =>
+  words.reduce(
+    (n, w) =>
+      n + (w.count ?? Math.max(1, w.word.split(/\s+/).filter(Boolean).length)),
+    0,
+  );
 export function allKeys(q: Question) {
   return q.lines.flatMap((line, l) =>
     line.flatMap((t, w) =>
