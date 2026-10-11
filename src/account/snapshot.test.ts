@@ -50,3 +50,59 @@ test("계정 기록을 합쳐 적용하면 세 스토어에 들어가고 업적�
   useDifficulty.setState({ votes: {} });
   useGame.getState().reset();
 });
+
+/** `reset` keeps today's daily on purpose, so tests start it over themselves. */
+const freshDaily = () => {
+  useGame.getState().reset();
+  const { daily } = useGame.getState();
+  useGame.setState({
+    dailyHistory: {},
+    daily: {
+      ...daily,
+      round: { ...daily.round, solved: false, givenUp: false, words: [] },
+    },
+  });
+};
+
+test("다른 기기에서 푼 오늘 데일리는 이 기기에서도 푼 상태로 열림", () => {
+  freshDaily();
+  const local = snapshot();
+  const daily = useGame.getState().daily;
+  assert.equal(daily.round.solved, false);
+  // The other device solved today's question and synced its round.
+  const remote = {
+    ...local,
+    dailyHistory: { [daily.date]: { solved: true, guesses: 4, hints: 1 } },
+    daily: {
+      date: daily.date,
+      round: {
+        ...daily.round,
+        solved: true,
+        words: [{ word: "사랑", hit: true }],
+      },
+    },
+  };
+  applySnapshot(mergeSaves(local, remote));
+  const after = useGame.getState().daily.round;
+  assert.equal(after.solved, true);
+  assert.deepEqual(after.words, [{ word: "사랑", hit: true }]);
+  // Solving again here changes nothing.
+  assert.equal(useGame.getState().solve("아무 제목", "daily"), false);
+  // The store is shared with other test files; leave today's daily playable.
+  freshDaily();
+});
+
+test("데일리 결과만 있는 예전 계정 기록도 오늘 데일리를 끝난 상태로 맞춤", () => {
+  freshDaily();
+  const local = snapshot();
+  const date = useGame.getState().daily.date;
+  const { daily: _daily, ...old } = {
+    ...local,
+    dailyHistory: { [date]: { solved: false, guesses: 9, hints: 3 } },
+  };
+  applySnapshot(mergeSaves({ ...local, daily: undefined }, old));
+  const round = useGame.getState().daily.round;
+  assert.equal(round.givenUp, true);
+  assert.equal(round.solved, false);
+  freshDaily();
+});

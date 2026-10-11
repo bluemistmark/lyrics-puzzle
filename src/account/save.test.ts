@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { emptyFeats } from "../achievements.ts";
-import { mergeSaves, parseSave, type SaveData } from "./save.ts";
+import type { Round } from "../store.ts";
+import { mergeDaily, mergeSaves, parseSave, type SaveData } from "./save.ts";
 
 const save = (patch: Partial<SaveData> = {}): SaveData => ({
   version: 1,
@@ -173,4 +174,60 @@ test("다른 모드 기록은 모드별 큰 값으로 합치고, 예전 저장�
     simple: { solved: 3, givenUp: 4 },
     easy: { solved: 5, givenUp: 2 },
   });
+});
+
+const round = (patch: Partial<Round> = {}): Round => ({
+  id: "q1",
+  revealed: [],
+  words: [],
+  solved: false,
+  givenUp: false,
+  english: false,
+  artist: false,
+  hints: 0,
+  wordHints: 0,
+  counted: false,
+  ...patch,
+});
+const day = (date: string, patch: Partial<Round> = {}) => ({
+  date,
+  round: round(patch),
+});
+
+test("오늘 데일리는 끝낸 쪽이, 둘 다 끝냈으면 저장된 쪽이, 아니면 더 진행한 쪽이 남음", () => {
+  const today = "2026-10-11";
+  const solved = day(today, {
+    solved: true,
+    words: [{ word: "a", hit: true }],
+  });
+  const fresh = day(today);
+  assert.equal(mergeDaily(fresh, solved), solved);
+  assert.equal(mergeDaily(solved, fresh), solved);
+  const gaveUp = day(today, { givenUp: true });
+  assert.equal(mergeDaily(gaveUp, solved), solved);
+  const started = day(today, { hints: 2 });
+  assert.equal(mergeDaily(fresh, started), started);
+  assert.equal(mergeDaily(started, fresh), started);
+  // A newer day wins, and a missing side takes the other.
+  const yesterday = day("2026-10-10", { solved: true });
+  assert.equal(mergeDaily(fresh, yesterday), fresh);
+  assert.equal(mergeDaily(undefined, solved), solved);
+  // Different question on the same day: this device's catalog wins.
+  assert.equal(
+    mergeDaily(fresh, day(today, { id: "q2", solved: true })),
+    fresh,
+  );
+});
+
+test("데일리 진행 상태도 계정 기록에 합쳐지고, 모양이 잘못되면 그 부분만 버림", () => {
+  const solved = day("2026-10-11", { solved: true });
+  assert.deepEqual(
+    mergeSaves(save({ daily: day("2026-10-11") }), save({ daily: solved }))
+      .daily,
+    solved,
+  );
+  const parsed = parseSave({ ...save(), daily: { date: "2026-10-11" } });
+  assert.ok(parsed);
+  assert.equal(parsed.daily, undefined);
+  assert.deepEqual(parseSave({ ...save(), daily: solved })?.daily, solved);
 });

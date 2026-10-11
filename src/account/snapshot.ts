@@ -25,6 +25,7 @@ export function snapshot(): SaveData {
       submitted: r.submitted,
       asked: r.asked,
     },
+    daily: { date: g.daily.date, round: g.daily.round },
   };
 }
 

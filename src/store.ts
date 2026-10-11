@@ -166,6 +166,21 @@ const todayHistory = (
     : daily.round.solved || daily.round.givenUp
       ? recordDaily({}, daily.date, daily.round)
       : {};
+/**
+ * The daily round matches the day's recorded result. A result can arrive without its round
+ * (an account save from before rounds were synced), and the challenge must not be playable twice.
+ */
+export const settleDaily = (
+  daily: DailyState,
+  history: DailyHistory,
+): DailyState => {
+  const result = history[daily.date];
+  if (!result || daily.round.solved || daily.round.givenUp) return daily;
+  return {
+    ...daily,
+    round: { ...daily.round, solved: result.solved, givenUp: !result.solved },
+  };
+};
 /** Counts a finished classic question (title or give up) on today's date. */
 const logPlay = (log: PlayLog): PlayLog => {
   const date = koreaDate();
@@ -252,7 +267,10 @@ type Store = {
   /** Re-judges achievements after another store (ranking, 난이도) changed. */
   checkAchievements: () => void;
   /** Replaces records with ones merged from the account (see account/save.ts); no toasts. */
-  loadRecords: (records: SyncedRecords) => void;
+  /** Applies an account sync; `daily` is today's synced round, used only if it is this device's question. */
+  loadRecords: (
+    records: SyncedRecords & { daily?: { date: string; round: Round } },
+  ) => void;
 };
 const firstQuestion = pickQuestion(mainUnits, []);
 export const useGame = create<Store>()(
@@ -570,11 +588,20 @@ export const useGame = create<Store>()(
             set({ themes: [...get().themes, theme] });
         },
         checkAchievements: () => set({}),
-        loadRecords: (records) =>
+        loadRecords: ({ daily: synced, ...records }) => {
+          const current = get().daily;
+          const daily =
+            synced &&
+            synced.date === current.date &&
+            synced.round.id === current.round.id
+              ? { ...current, round: synced.round }
+              : current;
           rawSet({
             ...records,
+            daily: settleDaily(daily, records.dailyHistory),
             achievements: earned(records, records.achievements),
-          }),
+          });
+        },
       };
     },
     {
@@ -637,7 +664,8 @@ export const useGame = create<Store>()(
           selected: selected.length ? selected : mainUnits,
           playMode: isPlayMode(p.playMode) ? p.playMode : "classic",
           modes,
-          daily,
+          // Fixes devices that already got today's result by sync but not the round.
+          daily: settleDaily(daily, dailyHistory),
           // Saves from before 업적 get what they already reached, without toasts.
           achievements: earned(
             records,
