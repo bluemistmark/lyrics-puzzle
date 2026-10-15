@@ -58,9 +58,9 @@ type ShareResult = {
 /** Keep the answer and lyrics out of the shared text. */
 export function dailyResultText(result: ShareResult): string {
   const outcome = result.solved
-    ? "🎉 제목 정답"
+    ? "🎉 성공"
     : result.givenUp
-      ? "🎧 정답 확인"
+      ? "🏳️ 포기"
       : "🎵 도전 중";
   return [
     `네오 노래 퀴즈 · 데일리 퀴즈 ${result.date.replaceAll("-", ".")}`,
