@@ -602,3 +602,34 @@ td button.link.warn-text {
   text-decoration: none;
   color: var(--ok);
 }
+
+/* 정렬할 수 있는 표 머리글 */
+th:has(> .sort-header) {
+  padding: 0;
+}
+.sort-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-weight: inherit;
+  text-align: left;
+}
+.sort-header span {
+  font-size: 10px;
+  opacity: 0.45;
+}
+.sort-header.active {
+  color: var(--text);
+}
+.sort-header.active span {
+  opacity: 1;
+}
+.nowrap {
+  white-space: nowrap;
+}
