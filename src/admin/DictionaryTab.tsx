@@ -4,42 +4,68 @@ import { englishKey, scanLine, sortDictionary } from "../data/english.ts";
 import { CsvButton } from "./CsvButton";
 import { FormDialog } from "./FormDialog";
 import { joinList, splitList } from "./ids";
+import { SortHeader, useSortParam } from "./SortHeader";
 import { useAdmin } from "./store";
-import { useRouteParam } from "./useRoute";
+import { byCode, byText, matchesQuery, shortTime, sortRows } from "./table.ts";
+import { useRoute, useRouteParam } from "./useRoute";
+
+const SORT_KEYS = ["english", "pronunciation", "used", "updated"] as const;
 
 export function DictionaryTab() {
   const dictionary = useAdmin((s) => s.dictionary);
   const questions = useAdmin((s) => s.questions);
   const removeEntry = useAdmin((s) => s.removeEntry);
+  const clearParams = useRoute((s) => s.clearParams);
   const [query, setQuery] = useRouteParam("q");
+  const [sort, setSort] = useSortParam(SORT_KEYS, {
+    key: "english",
+    desc: false,
+  });
   const [editing, setEditing] = useState<DictionaryRow | "new" | null>(null);
 
+  // Active questions whose lyrics currently resolve to each entry (by englishKey).
+  const usage = useMemo(() => {
+    const sorted = sortDictionary(dictionary);
+    const counts = new Map<string, number>();
+    for (const q of questions) {
+      if (!q.active) continue;
+      const keys = new Set(
+        q.lines.flatMap((line) =>
+          scanLine(line, sorted)
+            .tokens.filter((t) => t.pronunciation !== undefined)
+            .map((t) => englishKey(t.text)),
+        ),
+      );
+      for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+    return counts;
+  }, [dictionary, questions]);
+  const usedBy = (entry: DictionaryRow) =>
+    usage.get(englishKey(entry.english)) ?? 0;
+
   const visible = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return [...dictionary]
+    const rows = [...dictionary]
       .sort((a, b) =>
         englishKey(a.english).localeCompare(englishKey(b.english)),
       )
       .filter((d) =>
-        [d.english, d.pronunciation, ...d.alternatives].some((v) =>
-          v.toLowerCase().includes(q),
-        ),
+        matchesQuery([d.english, d.pronunciation, ...d.alternatives], query),
       );
-  }, [dictionary, query]);
+    const used = (d: DictionaryRow) => usage.get(englishKey(d.english)) ?? 0;
+    const compare = {
+      // Rows already come in English order.
+      english: () => 0,
+      pronunciation: (a: DictionaryRow, b: DictionaryRow) =>
+        byText(a.pronunciation, b.pronunciation),
+      used: (a: DictionaryRow, b: DictionaryRow) => used(a) - used(b),
+      updated: (a: DictionaryRow, b: DictionaryRow) =>
+        byCode(a.updated_at, b.updated_at),
+    }[sort.key];
+    return sortRows(rows, compare, sort.desc);
+  }, [dictionary, query, sort, usage]);
 
   const remove = async (entry: DictionaryRow) => {
-    // Count active questions whose lyrics currently resolve to this entry.
-    const sorted = sortDictionary(dictionary);
-    const key = englishKey(entry.english);
-    const used = questions.filter(
-      (q) =>
-        q.active &&
-        q.lines.some((line) =>
-          scanLine(line, sorted).tokens.some(
-            (t) => t.pronunciation !== undefined && englishKey(t.text) === key,
-          ),
-        ),
-    ).length;
+    const used = usedBy(entry);
     const message = used
       ? `"${entry.english}"는 사용 중인 문제 ${used}개에 쓰이고 있어요. 삭제하면 다시 등록하기 전까지 게시할 수 없어요. 삭제할까요?`
       : `"${entry.english}"를 삭제할까요?`;
@@ -56,12 +82,19 @@ export function DictionaryTab() {
       <div className="toolbar">
         <input
           type="search"
-          placeholder="영어, 발음 검색"
+          placeholder="영어, 발음, 초성 검색"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        {query && (
+          <button onClick={() => clearParams(["sort"])}>필터 초기화</button>
+        )}
         <span className="admin-spacer" />
-        <span className="muted">{visible.length}개</span>
+        <span className="muted">
+          {query
+            ? `${visible.length} / ${dictionary.length}개`
+            : `${dictionary.length}개`}
+        </span>
         <CsvButton
           kind="dictionary"
           rows={() => [
@@ -82,9 +115,32 @@ export function DictionaryTab() {
         <table>
           <thead>
             <tr>
-              <th>영어</th>
-              <th>표시발음</th>
+              <SortHeader
+                label="영어"
+                sortKey="english"
+                sort={sort}
+                onSort={setSort}
+              />
+              <SortHeader
+                label="표시발음"
+                sortKey="pronunciation"
+                sort={sort}
+                onSort={setSort}
+              />
               <th>추가 허용 발음</th>
+              <SortHeader
+                label="사용 문제"
+                sortKey="used"
+                sort={sort}
+                onSort={setSort}
+              />
+              <SortHeader
+                label="수정"
+                sortKey="updated"
+                sort={sort}
+                onSort={setSort}
+                firstDesc
+              />
               <th />
             </tr>
           </thead>
@@ -94,6 +150,8 @@ export function DictionaryTab() {
                 <td className="mono">{d.english}</td>
                 <td>{d.pronunciation}</td>
                 <td>{joinList(d.alternatives)}</td>
+                <td className={usedBy(d) ? undefined : "muted"}>{usedBy(d)}</td>
+                <td className="muted nowrap">{shortTime(d.updated_at)}</td>
                 <td className="row-actions">
                   <button onClick={() => setEditing(d)}>수정</button>
                   <button className="danger" onClick={() => remove(d)}>

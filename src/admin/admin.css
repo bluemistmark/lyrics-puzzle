@@ -692,3 +692,7 @@ th:has(> .sort-header) {
     display: none;
   }
 }
+.form-dialog .form-note {
+  display: block;
+  margin: -4px 0 12px;
+}
