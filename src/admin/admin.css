@@ -678,3 +678,17 @@ th:has(> .sort-header) {
   padding: 8px;
   color: var(--muted);
 }
+
+.form-shortcut {
+  margin-right: auto;
+  align-self: center;
+  font-size: 12px;
+}
+.form-actions {
+  flex-wrap: wrap;
+}
+@media (max-width: 640px) {
+  .form-shortcut {
+    display: none;
+  }
+}

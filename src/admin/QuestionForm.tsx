@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { QuestionRow } from "../data/build-catalog.ts";
 import { scanLine, sortDictionary } from "../data/english.ts";
 import { FormDialog } from "./FormDialog";
@@ -33,6 +33,9 @@ export function QuestionForm({
     [0, 1, 2].map((i) => question?.lines[i] ?? ""),
   );
   const [active, setActive] = useState(question?.active ?? true);
+  /** "NCT_0643 저장했어요." after 저장하고 계속. */
+  const [saved, setSaved] = useState("");
+  const firstLine = useRef<HTMLInputElement>(null);
   const sorted = useMemo(() => sortDictionary(dictionary), [dictionary]);
   const missing = useMemo(
     () => [
@@ -66,7 +69,23 @@ export function QuestionForm({
         );
         onSaved?.();
       }}
+      // A new question can be followed by the next one: same song, next id, empty lyrics.
+      onContinue={
+        isNew
+          ? () => {
+              setSaved(`${id.trim()} 저장했어요. 다음 문제를 입력하세요.`);
+              setId(nextQuestionId(useAdmin.getState().questions));
+              setLines(["", "", ""]);
+              firstLine.current?.focus();
+            }
+          : undefined
+      }
     >
+      {saved && (
+        <p className="ok-text" role="status">
+          {saved}
+        </p>
+      )}
       <label>
         곡
         <SongSelect value={songId} onChange={setSongId} />
@@ -87,6 +106,7 @@ export function QuestionForm({
           가사{i + 1}
           {i === 2 && <span className="muted"> (선택)</span>}
           <input
+            ref={i === 0 ? firstLine : undefined}
             value={line}
             onChange={(e) =>
               setLines(lines.map((l, j) => (j === i ? e.target.value : l)))
