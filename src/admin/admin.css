@@ -633,3 +633,48 @@ th:has(> .sort-header) {
 .nowrap {
   white-space: nowrap;
 }
+
+/* 검색할 수 있는 곡 선택 (SongSelect) */
+.combo {
+  position: relative;
+  display: grid;
+}
+.toolbar .combo {
+  width: 240px;
+}
+.combo-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  width: max(100%, 280px);
+  max-height: 300px;
+  overflow: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.16);
+}
+.combo-group {
+  padding: 8px 8px 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.combo-list [role="option"] {
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.combo-list [role="option"][aria-selected="true"] {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.combo-list [role="option"].current {
+  font-weight: 700;
+}
+.combo-empty {
+  padding: 8px;
+  color: var(--muted);
+}
