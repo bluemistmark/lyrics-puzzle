@@ -33,11 +33,7 @@ export type PlayResult = {
 
 /** Spoiler-free share text for a finished play-tab question. */
 export function playResultText(r: PlayResult): string {
-  const outcome = r.givenUp
-    ? "🎧 정답 확인"
-    : r.mode === "easy"
-      ? "🎉 가사 완성"
-      : "🎉 제목 정답";
+  const outcome = r.givenUp ? "🏳️ 포기" : "🎉 성공";
   const stats =
     r.mode === "simple"
       ? `힌트 ${r.hints}번`

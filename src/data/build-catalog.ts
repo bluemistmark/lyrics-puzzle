@@ -4,6 +4,11 @@ import {
   sortDictionary,
   type DictionaryEntry,
 } from "./english.ts";
+import {
+  DEFAULT_KNOWN_SETTINGS,
+  knownSettingsIssues,
+  type KnownSettings,
+} from "../known.ts";
 
 // Row shapes of the Supabase tables (see supabase/migrations).
 export type ArtistRow = {
@@ -28,12 +33,32 @@ export type QuestionRow = {
   active: boolean;
 };
 export type DictionaryRow = DictionaryEntry;
+/** The single game_settings row (출제 설정). */
+export type SettingsRow = {
+  id: string;
+  known_weight: number;
+  unknown_weight: number;
+  min_signal_songs: number;
+};
 export type Rows = {
   artists: ArtistRow[];
   songs: SongRow[];
   questions: QuestionRow[];
   dictionary: DictionaryRow[];
+  /** Missing (no row yet) means the defaults in known.ts. */
+  settings?: SettingsRow | null;
 };
+
+export const knownSettingsOf = (
+  row: SettingsRow | null | undefined,
+): KnownSettings =>
+  row
+    ? {
+        knownWeight: row.known_weight,
+        unknownWeight: row.unknown_weight,
+        minSignalSongs: row.min_signal_songs,
+      }
+    : DEFAULT_KNOWN_SETTINGS;
 
 export type Catalog = {
   songs: {
@@ -47,6 +72,8 @@ export type Catalog = {
   }[];
   questions: { id: string; songId: string; lines: string[] }[];
   dictionary: DictionaryEntry[];
+  /** 아는 곡 우선 weights (see known.ts). */
+  knownSongs: KnownSettings;
 };
 export type Issue = {
   message: string;
@@ -80,11 +107,20 @@ export function compareSongs(artists: readonly ArtistRow[]) {
  * Only active questions are published, and only songs that still have one.
  * Any issue means the data must not be published.
  */
-export function buildCatalog({ artists, songs, questions, dictionary }: Rows): {
+export function buildCatalog({
+  artists,
+  songs,
+  questions,
+  dictionary,
+  settings,
+}: Rows): {
   catalog: Catalog;
   issues: Issue[];
 } {
   const issues: Issue[] = [];
+  const knownSongs = knownSettingsOf(settings);
+  for (const message of knownSettingsIssues(knownSongs))
+    issues.push({ message: `출제 설정: ${message}` });
 
   const artistNames = new Set<string>();
   const prefixes = new Map<string, string>();
@@ -211,6 +247,7 @@ export function buildCatalog({ artists, songs, questions, dictionary }: Rows): {
         })),
       questions: published,
       dictionary: [...entries.values()],
+      knownSongs,
     },
     issues,
   };

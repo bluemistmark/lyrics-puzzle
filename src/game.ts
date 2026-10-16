@@ -6,6 +6,7 @@ import {
   type Token,
 } from "./data/english.ts";
 import type { NewsItem } from "./data/releases.ts";
+import { weightedPick, type KnownSettings } from "./known.ts";
 export type { NewsItem, Token };
 export { initial } from "./data/hangul.ts";
 export type Song = {
@@ -59,6 +60,8 @@ export const mainUnits = [
 ];
 /** Other artists, shown separately as "다른 가수". */
 export const otherUnits = units.filter((u) => !mainUnits.includes(u));
+/** 아는 곡 우선 weights from the admin 출제 설정 (game_settings), fixed at deploy time. */
+export const knownSettings: KnownSettings = catalog.knownSongs;
 /** 소식 tab entries, newest first (built from the releases table at deploy time). */
 export const news: NewsItem[] = catalog.news;
 /** Version notes in parentheses ("Korean Ver.", "Feat. X", "AM 01:27") aren't titles. */
@@ -239,12 +242,21 @@ export function hintKeys(
   const choices = [...words.values()];
   return choices.length ? choices[Math.floor(random() * choices.length)] : [];
 }
-/** Unseen questions first, then ones not in `collected` (곡 도감), then a different song. */
+/**
+ * Unseen questions first, then ones not in `collected` (곡 도감), then a different song.
+ * With `weights` (song id → weight, see known.ts) the final draw favors heavier songs.
+ */
 export function pickQuestion(
   selected: string[],
   seen: string[],
   current?: string,
-  collected: readonly string[] = [],
+  {
+    collected = [],
+    weights,
+  }: {
+    collected?: readonly string[];
+    weights?: ReadonlyMap<string, number> | null;
+  } = {},
 ) {
   const filtered = questions.filter((q) => selected.includes(q.unit));
   const pool = filtered.length ? filtered : questions;
@@ -255,5 +267,7 @@ export function pickQuestion(
   const currentSong = questions.find((q) => q.id === current)?.songId;
   const different = choices.filter((q) => q.songId !== currentSong);
   const actual = different.length ? different : choices.length ? choices : pool;
-  return actual[Math.floor(Math.random() * actual.length)];
+  return weights
+    ? weightedPick(actual, (q) => weights.get(q.songId) ?? 1)
+    : actual[Math.floor(Math.random() * actual.length)];
 }

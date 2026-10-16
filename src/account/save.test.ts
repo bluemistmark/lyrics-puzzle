@@ -121,6 +121,31 @@ test("기록 초기화는 더 나중에 초기화한 쪽이 이기지만 테마�
   }
 });
 
+test("아는 곡·모르는 곡 표시는 기록 초기화와 관계없이 나중에 바꾼 쪽이 이김", () => {
+  const before = save({
+    collected: ["q1"],
+    songPrefs: { a: { pref: "known", at: 10 } },
+  });
+  const afterReset = save({
+    resetAt: 1000,
+    songPrefs: { a: { pref: "unknown", at: 20 } },
+  });
+  for (const merged of [
+    mergeSaves(afterReset, before),
+    mergeSaves(before, afterReset),
+  ])
+    assert.deepEqual(merged.songPrefs, { a: { pref: "unknown", at: 20 } });
+  // Saves from before the marks merge as having none.
+  assert.deepEqual(mergeSaves(save(), save()).songPrefs, {});
+  assert.deepEqual(
+    parseSave({
+      ...save(),
+      songPrefs: { a: { pref: "known", at: 1 }, b: { pref: "x" } },
+    })?.songPrefs,
+    { a: { pref: "known", at: 1 } },
+  );
+});
+
 test("로그인한 기기는 계정에 저장된 랭킹 토큰을 따르고, 계정에 없으면 기기 토큰을 올림", () => {
   const device = save({
     ranking: {

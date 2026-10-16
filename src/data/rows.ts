@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Rows } from "./build-catalog.ts";
+import type { Rows, SettingsRow } from "./build-catalog.ts";
 import { RELEASE_COLUMNS, type ReleaseRow } from "./releases.ts";
 
 // Supabase returns at most 1000 rows per request by default. Pages are ordered
@@ -29,6 +29,8 @@ export const ARTIST_COLUMNS = "name,prefix,sort_order,main";
 export const SONG_COLUMNS = "id,artist,title,aliases,sort_order";
 export const QUESTION_COLUMNS = "id,song_id,lines,active";
 export const DICTIONARY_COLUMNS = "english,pronunciation,alternatives";
+export const SETTINGS_COLUMNS =
+  "id,known_weight,unknown_weight,min_signal_songs";
 
 /** Loads every row of the data tables. */
 export async function fetchRows(client: SupabaseClient): Promise<Rows> {
@@ -54,6 +56,16 @@ export async function fetchRows(client: SupabaseClient): Promise<Rows> {
     ),
   ]);
   return { artists, songs, questions, dictionary };
+}
+
+/** The 출제 설정 row, or null when there is none yet (the defaults apply). */
+export async function fetchSettings(client: SupabaseClient) {
+  const { data, error } = await client
+    .from("game_settings")
+    .select(SETTINGS_COLUMNS)
+    .maybeSingle();
+  if (error) throw Error(`game_settings 읽기 실패: ${error.message}`);
+  return data as SettingsRow | null;
 }
 
 /** Most recent releases first. */

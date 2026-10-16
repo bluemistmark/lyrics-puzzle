@@ -176,18 +176,38 @@ test("아직 안 나온 문제 중에서 도감에 없는 문제를 먼저 고�
   const others = pool.filter((q) => q.id !== target.id).map((q) => q.id);
   for (let i = 0; i < 20; i++)
     assert.equal(
-      pickQuestion([target.unit], [], undefined, others).id,
+      pickQuestion([target.unit], [], undefined, { collected: others }).id,
       target.id,
     );
   // Everything collected: any unseen question is still fine.
   assert.ok(
-    pickQuestion(
-      [target.unit],
-      [],
-      undefined,
-      pool.map((q) => q.id),
-    ),
+    pickQuestion([target.unit], [], undefined, {
+      collected: pool.map((q) => q.id),
+    }),
   );
+});
+
+test("곡 가중치가 있으면 남은 후보 안에서 가중치대로 고르고 앞선 우선순위는 그대로", () => {
+  const target = questions[0];
+  const pool = questions.filter((q) => q.unit === target.unit);
+  // Every other song weighs 0, so only the target's song can come up.
+  const weights = new Map(
+    pool.map((q) => [q.songId, q.songId === target.songId ? 1 : 0]),
+  );
+  for (let i = 0; i < 20; i++)
+    assert.equal(
+      pickQuestion([target.unit], [], undefined, { weights }).songId,
+      target.songId,
+    );
+  // A seen question stays behind unseen ones even if its song weighs more.
+  const others = pool.filter((q) => q.songId !== target.songId);
+  if (others.length) {
+    const seen = pool
+      .filter((q) => q.songId === target.songId)
+      .map((q) => q.id);
+    const next = pickQuestion([target.unit], seen, undefined, { weights });
+    assert.notEqual(next.songId, target.songId);
+  }
 });
 
 test("여러 단어를 입력할 때 한 글자 단어도 함께 열림", () => {

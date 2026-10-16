@@ -566,6 +566,10 @@ footer small {
   word-break: keep-all;
 }
 
+.song-pref [role="group"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .difficulty-vote button[aria-pressed="true"] {
   border-color: currentColor;
   background: color-mix(in srgb, currentColor 14%, transparent);
@@ -690,6 +694,10 @@ h3 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 9px;
+}
+
+.unit-options.single {
+  grid-template-columns: 1fr;
 }
 
 .modal-inner .unit-group {

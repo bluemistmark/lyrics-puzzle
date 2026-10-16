@@ -48,7 +48,7 @@ test("공유 결과에 정답이나 가사가 들어가지 않음", () => {
   });
   assert.match(text, /2026\.09\.29/);
   assert.match(text, /가사 복원 72% · 단어 5번 · 힌트 1번/);
-  assert.match(text, /제목 정답/);
+  assert.match(text, /성공/);
 });
 
 test("연속 정답은 2일 이상일 때만 공유 결과에 표시", () => {

@@ -41,9 +41,9 @@ test("공유 문구에는 제목과 가사가 들어가지 않고 모드별 결�
   };
   const classic = playResultText({ ...base, mode: "classic" });
   assert.ok(classic.includes("클래식"));
-  assert.ok(classic.includes("제목 정답"));
+  assert.ok(classic.includes("성공"));
   assert.ok(!classic.includes(q.title) && !classic.includes("노래해요"));
-  assert.ok(playResultText({ ...base, mode: "easy" }).includes("가사 완성"));
+  assert.ok(playResultText({ ...base, mode: "easy" }).includes("성공"));
   assert.ok(!playResultText({ ...base, mode: "simple" }).includes("가사 복원"));
   assert.ok(
     playResultText({
@@ -51,7 +51,7 @@ test("공유 문구에는 제목과 가사가 들어가지 않고 모드별 결�
       solved: false,
       givenUp: true,
       mode: "classic",
-    }).includes("정답 확인"),
+    }).includes("포기"),
   );
 });
 

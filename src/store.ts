@@ -14,6 +14,7 @@ import {
   guessCount,
   guessWeight,
   hintKeys,
+  knownSettings,
   mainUnits,
   matches,
   normalize,
@@ -24,6 +25,12 @@ import {
   songs,
   units,
 } from "./game.ts";
+import {
+  cleanSongPrefs,
+  songWeights,
+  type SongPref,
+  type SongPrefs,
+} from "./known.ts";
 import { isPlayMode, type PlayMode } from "./modes.ts";
 import { useRanking } from "./ranking.ts";
 export type Stats = {
@@ -204,6 +211,7 @@ export type SyncedRecords = Pick<
   | "achievements"
   | "resetAt"
   | "modeStats"
+  | "songPrefs"
 >;
 type Records = Pick<
   Store,
@@ -245,6 +253,10 @@ type Store = {
   feats: Feats;
   /** Theme choices used at least once (업적 "패셔니스타"). */
   themes: string[];
+  /** 아는 곡·모르는 곡 marks (see known.ts); a preference, so a reset keeps them. */
+  songPrefs: SongPrefs;
+  /** 아는 곡 우선: classic draws known songs more often once there is enough data. */
+  preferKnown: boolean;
   /** When records were last reset (ms, 0 = never); the newer reset wins an account sync. */
   resetAt: number;
   /** Achievement id → Korean date it was first reached. */
@@ -262,6 +274,9 @@ type Store = {
   /** Opens a shared question (?q=…&mode=…) as the current round of that mode; false if unknown. */
   openQuestion: (id: string, mode: PlayMode) => boolean;
   select: (selected: string[]) => void;
+  /** Marks a song as known or unknown; null clears the mark. */
+  markSong: (songId: string, pref: SongPref | null) => void;
+  setPreferKnown: (on: boolean) => void;
   reset: () => void;
   /** Clears the toast (it shows every achievement reached so far at once). */
   dismissUnlocked: () => void;
@@ -307,6 +322,8 @@ export const useGame = create<Store>()(
         playLog: {},
         feats: emptyFeats(),
         themes: [],
+        songPrefs: {},
+        preferKnown: true,
         resetAt: 0,
         achievements: {},
         justUnlocked: [],
@@ -524,13 +541,21 @@ export const useGame = create<Store>()(
           const round = playRound(s);
           const seenIds = playSeen(s);
           if (!round.solved && !round.givenUp) return;
-          // Classic fills the 도감, so questions whose title isn't collected yet come first.
-          const q = pickQuestion(
-            s.selected,
-            seenIds,
-            round.id,
-            s.playMode === "classic" ? s.collected : [],
-          );
+          // Classic fills the 도감, so questions whose title isn't collected yet come first,
+          // and with 아는 곡 우선 known songs come up more often.
+          const classic = s.playMode === "classic";
+          const q = pickQuestion(s.selected, seenIds, round.id, {
+            collected: classic ? s.collected : [],
+            weights:
+              classic && s.preferKnown
+                ? songWeights(
+                    questions,
+                    s.collected,
+                    s.songPrefs,
+                    knownSettings,
+                  )
+                : null,
+          });
           const pool = questions.filter((q) => s.selected.includes(q.unit));
           const lap = pool.every((q) => seenIds.includes(q.id));
           const seen = lap ? [q.id] : [...seenIds, q.id];
@@ -567,6 +592,14 @@ export const useGame = create<Store>()(
           if (selected.length)
             set({ selected, notice: "선택한 범위는 다음 문제부터 적용돼요." });
         },
+        markSong: (songId, pref) =>
+          set({
+            songPrefs: {
+              ...get().songPrefs,
+              [songId]: { pref, at: Date.now() },
+            },
+          }),
+        setPreferKnown: (preferKnown) => set({ preferKnown }),
         reset: () => {
           const q = pickQuestion(mainUnits, []);
           const records = {
@@ -681,6 +714,9 @@ export const useGame = create<Store>()(
           selected: selected.length ? selected : mainUnits,
           playMode: isPlayMode(p.playMode) ? p.playMode : "classic",
           modes,
+          songPrefs: cleanSongPrefs(p.songPrefs),
+          preferKnown:
+            typeof p.preferKnown === "boolean" ? p.preferKnown : true,
           // Fixes devices that already got today's result by sync but not the round.
           daily: settleDaily(daily, dailyHistory),
           // Saves from before 업적 get what they already reached, without toasts.
