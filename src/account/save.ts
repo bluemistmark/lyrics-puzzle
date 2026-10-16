@@ -1,6 +1,7 @@
 import type { Feats } from "../achievements.ts";
 import type { DailyHistory } from "../daily.ts";
 import type { Rating } from "../difficulty.ts";
+import { cleanSongPrefs, mergeSongPrefs, type SongPrefs } from "../known.ts";
 import type { ModeStats, Round, Stats } from "../store.ts";
 
 // 계정에 저장하는 기록(player_saves.data)과 두 기기의 기록을 합치는 규칙.
@@ -30,6 +31,8 @@ export type SaveData = {
   ranking: RankingSave;
   /** 심플·이지 results; missing in saves made before play modes. */
   modeStats?: ModeStats;
+  /** 아는 곡·모르는 곡 marks, not cleared by a reset; missing in saves made before them. */
+  songPrefs?: SongPrefs;
   /** Missing in saves made before the daily round was synced. */
   daily?: DailySave;
 };
@@ -155,6 +158,7 @@ export function mergeSaves(local: SaveData, remote: SaveData | null): SaveData {
     achievements: records.achievements,
     modeStats: records.modeStats ?? noModeStats,
     themes: union(remote.themes, local.themes),
+    songPrefs: mergeSongPrefs(local.songPrefs, remote.songPrefs),
     // This device's latest answer wins.
     votes: { ...remote.votes, ...local.votes },
     ranking,
@@ -178,9 +182,14 @@ const isDailySave = (x: unknown): x is DailySave => {
   );
 };
 
-/** A malformed daily round only drops the round, not the whole save. */
-const withDaily = ({ daily, ...save }: SaveData): SaveData =>
-  isDailySave(daily) ? { ...save, daily } : save;
+/** A malformed daily round only drops the round (and bad marks only themselves), not the whole save. */
+const withDaily = ({ daily, ...save }: SaveData): SaveData => {
+  const cleaned =
+    save.songPrefs === undefined
+      ? save
+      : { ...save, songPrefs: cleanSongPrefs(save.songPrefs) };
+  return isDailySave(daily) ? { ...cleaned, daily } : cleaned;
+};
 
 /** Accepts only saves with the expected shape; anything else is treated as no save. */
 export function parseSave(value: unknown): SaveData | null {

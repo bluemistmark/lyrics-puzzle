@@ -3,6 +3,7 @@ import type { Question } from "../../game";
 import type { PlayMode } from "../../modes";
 import type { Round } from "../../store";
 import { DifficultyVote } from "./DifficultyVote";
+import { SongPrefVote } from "./SongPrefVote";
 
 type Props = {
   question: Question;
@@ -45,11 +46,14 @@ export function ResultBox({
         </p>
         {/* Only classic answers count, so the other modes don't skew 체감 난이도. */}
         {answered && playMode === "classic" && (
-          <DifficultyVote
-            questionId={question.id}
-            solved={round.solved}
-            daily={daily}
-          />
+          <>
+            <DifficultyVote
+              questionId={question.id}
+              solved={round.solved}
+              daily={daily}
+            />
+            <SongPrefVote songId={question.songId} />
+          </>
         )}
       </div>
     </div>

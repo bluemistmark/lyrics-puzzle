@@ -18,6 +18,7 @@ export function snapshot(): SaveData {
     achievements: g.achievements,
     modeStats: g.modeStats,
     themes: g.themes,
+    songPrefs: g.songPrefs,
     votes: useDifficulty.getState().votes,
     ranking: {
       token: r.token,
@@ -39,6 +40,7 @@ export function applySnapshot(data: SaveData) {
   useGame.getState().loadRecords({
     ...records,
     modeStats: records.modeStats ?? emptyModeStats(),
+    songPrefs: records.songPrefs ?? {},
   });
   useGame.setState({ justUnlocked: toasts });
 }

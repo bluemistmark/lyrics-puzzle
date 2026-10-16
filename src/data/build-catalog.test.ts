@@ -166,3 +166,31 @@ test("NCT 유닛의 출제 가능한 문제가 없으면 이슈", () => {
     ["NCT 유닛으로 표시된 가수의 출제 가능한 문제 없음"],
   );
 });
+
+test("출제 설정이 없으면 기본값, 있으면 그 값을 게시하고 범위를 벗어나면 이슈", () => {
+  assert.deepEqual(buildCatalog(rows()).catalog.knownSongs, {
+    knownWeight: 3,
+    unknownWeight: 1 / 3,
+    minSignalSongs: 30,
+  });
+  const settings = {
+    id: "default",
+    known_weight: 2,
+    unknown_weight: 0.5,
+    min_signal_songs: 50,
+  };
+  const { catalog, issues } = buildCatalog({ ...rows(), settings });
+  assert.deepEqual(issues, []);
+  assert.deepEqual(catalog.knownSongs, {
+    knownWeight: 2,
+    unknownWeight: 0.5,
+    minSignalSongs: 50,
+  });
+  assert.deepEqual(
+    buildCatalog({
+      ...rows(),
+      settings: { ...settings, known_weight: 0.5 },
+    }).issues.map((i) => i.message),
+    ["출제 설정: 아는 곡 가중치는 1 이상 10 이하여야 합니다."],
+  );
+});

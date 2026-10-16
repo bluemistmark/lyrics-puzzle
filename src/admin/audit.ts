@@ -17,6 +17,7 @@ export const AUDIT_TABLES: [table: string, label: string][] = [
   ["songs", "곡"],
   ["artists", "가수"],
   ["dictionary", "영어 사전"],
+  ["game_settings", "출제 설정"],
 ];
 export const ACTION_LABELS = {
   insert: "추가",
@@ -39,6 +40,9 @@ const FIELD_LABELS: Record<string, string> = {
   english: "영어",
   pronunciation: "표시발음",
   alternatives: "추가 허용 발음",
+  known_weight: "아는 곡 가중치",
+  unknown_weight: "모르는 곡 가중치",
+  min_signal_songs: "적용 기준 곡 수",
 };
 /** Bookkeeping columns that say nothing about the content. */
 const IGNORED = new Set(["updated_at"]);

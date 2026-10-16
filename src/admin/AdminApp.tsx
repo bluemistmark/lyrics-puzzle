@@ -12,6 +12,7 @@ import { PublishTab } from "./PublishTab";
 import { QuestionsTab } from "./QuestionsTab";
 import { RankingTab } from "./RankingTab";
 import { ReportsTab } from "./ReportsTab";
+import { SettingsTab } from "./SettingsTab";
 import { SongsTab } from "./SongsTab";
 import { useAdmin } from "./store";
 import { supabase } from "./supabase";
@@ -86,6 +87,7 @@ const TABS = [
   "publish",
   "ranking",
   "difficulty",
+  "settings",
   "reports",
   "history",
 ] as const;
@@ -104,6 +106,7 @@ function AdminShell({
   const songs = useAdmin((s) => s.songs);
   const questions = useAdmin((s) => s.questions);
   const dictionary = useAdmin((s) => s.dictionary);
+  const settings = useAdmin((s) => s.settings);
   const status = useAdmin((s) => s.status);
   const error = useAdmin((s) => s.error);
   const releases = useAdmin((s) => s.releases);
@@ -126,11 +129,19 @@ function AdminShell({
   // Every saved edit lands in audit_log, so recount whenever the data changes.
   useEffect(() => {
     if (status === "ready") countUnpublished();
-  }, [status, artists, songs, questions, dictionary, countUnpublished]);
+  }, [
+    status,
+    artists,
+    songs,
+    questions,
+    dictionary,
+    settings,
+    countUnpublished,
+  ]);
   // Same validation the build runs, so what is shown here is what publish will accept.
   const { catalog, issues } = useMemo(
-    () => buildCatalog({ artists, songs, questions, dictionary }),
-    [artists, songs, questions, dictionary],
+    () => buildCatalog({ artists, songs, questions, dictionary, settings }),
+    [artists, songs, questions, dictionary, settings],
   );
   // Badges show what needs attention: errors, unhandled reports, unpublished changes.
   const questionIssues = new Set(
@@ -167,6 +178,7 @@ function AdminShell({
     ],
     ["ranking", "랭킹", null],
     ["difficulty", "난이도", null],
+    ["settings", "출제 설정", null],
     [
       "reports",
       "제보",
@@ -232,6 +244,8 @@ function AdminShell({
             <RankingTab />
           ) : tab === "difficulty" ? (
             <DifficultyTab />
+          ) : tab === "settings" ? (
+            <SettingsTab />
           ) : tab === "reports" ? (
             <ReportsTab />
           ) : tab === "history" ? (

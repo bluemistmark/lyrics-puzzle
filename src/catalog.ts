@@ -9862,5 +9862,10 @@ export const catalog = {
       "alternatives": []
     }
   ],
+  "knownSongs": {
+    "knownWeight": 3,
+    "unknownWeight": 0.3333333333333333,
+    "minSignalSongs": 30
+  },
   "news": []
 };

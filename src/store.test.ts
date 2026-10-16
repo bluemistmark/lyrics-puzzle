@@ -426,6 +426,24 @@ test("공유받은 문제가 풀던 문제를 바꿀 때만 확인이 필요함"
   assert.equal(replacesProgress(started, other.id, "easy"), false);
 });
 
+test("아는 곡·모르는 곡 표시와 아는 곡 우선 설정은 저장되고 기록을 초기화해도 유지", async () => {
+  useGame.getState().reset();
+  const songId = questions[0].songId;
+  useGame.getState().markSong(songId, "known");
+  assert.equal(useGame.getState().songPrefs[songId].pref, "known");
+  useGame.getState().markSong(songId, null);
+  assert.equal(useGame.getState().songPrefs[songId].pref, null);
+  useGame.getState().markSong(songId, "unknown");
+  useGame.getState().setPreferKnown(false);
+  useGame.getState().reset();
+  assert.equal(useGame.getState().songPrefs[songId].pref, "unknown");
+  assert.equal(useGame.getState().preferKnown, false);
+  await useGame.persist.rehydrate();
+  assert.equal(useGame.getState().songPrefs[songId].pref, "unknown");
+  assert.equal(useGame.getState().preferKnown, false);
+  useGame.setState({ songPrefs: {}, preferKnown: true });
+});
+
 test("선택 범위를 한 바퀴 다 보면 알려 주고 다시 처음부터 나옴", () => {
   useGame.getState().reset();
   const unit = questions[0].unit;

@@ -5,6 +5,7 @@ import {
   type DictionaryRow,
   type QuestionRow,
   type Rows,
+  type SettingsRow,
   type SongRow,
 } from "../data/build-catalog.ts";
 import type { ReleaseRow } from "../data/releases.ts";
@@ -13,7 +14,9 @@ import {
   DICTIONARY_COLUMNS,
   fetchReleases,
   fetchRows,
+  fetchSettings,
   QUESTION_COLUMNS,
+  SETTINGS_COLUMNS,
   SONG_COLUMNS,
 } from "../data/rows.ts";
 import { describeError, supabase } from "./supabase";
@@ -24,6 +27,10 @@ type AdminStore = Rows & {
   /** Recent releases, newest first. Loading them may fail on its own (e.g. migration not run yet). */
   releases: ReleaseRow[];
   releasesError: string;
+  /** 출제 설정 row (null = none yet, defaults apply). Loading may fail on its own (migration not run yet). */
+  settings: SettingsRow | null;
+  settingsError: string;
+  saveSettings: (row: SettingsRow) => Promise<void>;
   /** Unhandled 오류 제보 for the tab badge; null until counted or when counting failed. */
   newReports: number | null;
   countNewReports: () => Promise<void>;
@@ -94,6 +101,17 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
   error: "",
   releases: [],
   releasesError: "",
+  settings: null,
+  settingsError: "",
+  saveSettings: async (row) => {
+    const { data, error } = await db()
+      .from("game_settings")
+      .upsert(row)
+      .select(SETTINGS_COLUMNS)
+      .single();
+    if (error) throw Error(describeError(error));
+    set({ settings: data as unknown as SettingsRow, settingsError: "" });
+  },
   newReports: null,
   countNewReports: async () => {
     const { count, error } = await db()
@@ -119,9 +137,14 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
       (rows) => set({ releases: rows, releasesError: "" }),
       (error) => set({ releases: [], releasesError: (error as Error).message }),
     );
+    const settings = fetchSettings(db()).then(
+      (row) => set({ settings: row, settingsError: "" }),
+      (error) =>
+        set({ settings: null, settingsError: (error as Error).message }),
+    );
     try {
       set({ ...(await fetchRows(db())) });
-      await releases;
+      await Promise.all([releases, settings]);
       set({ status: "ready" });
     } catch (error) {
       set({ status: "error", error: (error as Error).message });
