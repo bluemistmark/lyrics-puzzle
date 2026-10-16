@@ -25,14 +25,22 @@ export type SongRow = {
   title: string;
   aliases: string[];
   sort_order: number;
+  // Admin only (not in the catalog); missing in rows from before the columns.
+  album?: string;
+  title_track?: boolean;
+  /** `YYYY-MM-DD`, or null when unknown. */
+  released_on?: string | null;
+  /** Set by the DB on every write; the admin sorts by it. */
+  updated_at?: string;
 };
 export type QuestionRow = {
   id: string;
   song_id: string;
   lines: string[];
   active: boolean;
+  updated_at?: string;
 };
-export type DictionaryRow = DictionaryEntry;
+export type DictionaryRow = DictionaryEntry & { updated_at?: string };
 /** The single game_settings row (출제 설정). */
 export type SettingsRow = {
   id: string;
