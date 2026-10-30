@@ -28,6 +28,16 @@ export function rateLabel(rates: AchievementRates | null, id: string) {
     : `플레이어의 ${Math.round(share)}%가 달성`;
 }
 
+/** Reached by fewer than this share (%) of players: shown as rare. */
+export const RARE_SHARE = 5;
+
+/** Reached by someone, but by fewer than RARE_SHARE % of players (once there are enough). */
+export function isRare(rates: AchievementRates | null, id: string) {
+  if (!rates || rates.total < MIN_PLAYERS) return false;
+  const count = rates.counts[id] ?? 0;
+  return count > 0 && (count / rates.total) * 100 < RARE_SHARE;
+}
+
 const ENDPOINT = "/api/achievements";
 /** Fetched again after this long (the server caches about as long). */
 const STALE_MS = 5 * 60 * 1000;

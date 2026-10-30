@@ -66,14 +66,19 @@ export type AlbumSuggestion = {
 };
 
 export async function suggestAlbum(
-  song: Pick<SongRow, "artist" | "title" | "aliases">,
+  row: Pick<SongRow, "artist" | "title" | "aliases">,
 ): Promise<AlbumSuggestion | null> {
+  const { artists } = useAdmin.getState();
+  const song = {
+    ...row,
+    englishArtist: artists.find((a) => a.name === row.artist)?.english_name,
+  };
   const found = await findAlbum(song, lookUp);
   if (!found) return null;
   return {
     found,
     existing: matchAlbum(useAdmin.getState().albums, found),
-    artist: albumArtist(found, song.artist),
+    artist: albumArtist(found, song),
     titleTrack: guessTitleTrack(song, found),
   };
 }

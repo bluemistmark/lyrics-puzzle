@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { rateLabel, useAchievementRates } from "../achievementRates";
+import { isRare, rateLabel, useAchievementRates } from "../achievementRates";
 import { ACHIEVEMENT_GROUPS, type Achievement } from "../achievements";
 import { useDifficulty } from "../difficulty";
 import { useRanking } from "../ranking";
@@ -57,11 +57,13 @@ export function Achievements({ today }: { today: string }) {
           <ul className="achievement-grid">
             {ACHIEVEMENTS.filter((a) => a.group === group).map((a) => {
               const secret = a.hidden && !earned[a.id];
+              // A hidden one not reached yet doesn't tell even that.
+              const rare = !secret && isRare(rates, a.id);
               return (
                 <li key={a.id}>
                   <button
                     type="button"
-                    className={`record-item achievement${earned[a.id] ? " earned" : ""}${secret ? " secret" : ""}`}
+                    className={`record-item achievement${earned[a.id] ? " earned" : ""}${secret ? " secret" : ""}${rare ? " rare" : ""}`}
                     onClick={() => {
                       setClosing(false);
                       setOpen(a);
@@ -74,6 +76,7 @@ export function Achievements({ today }: { today: string }) {
                       />
                     </span>
                     <strong>{secret ? "???" : a.title}</strong>
+                    {rare && <span className="sr-only">희귀 업적</span>}
                   </button>
                 </li>
               );
@@ -93,6 +96,7 @@ export function Achievements({ today }: { today: string }) {
             date={earned[open.id]}
             progress={open.progress(input)}
             rate={rateLabel(rates, open.id)}
+            rare={!(open.hidden && !earned[open.id]) && isRare(rates, open.id)}
           />
         )}
       </Modal>
@@ -107,16 +111,20 @@ function AchievementSheet({
   date,
   progress: { current, goal },
   rate,
+  rare,
 }: {
   achievement: Achievement;
   date: string | undefined;
   progress: { current: number; goal: number };
   /** Share of players who reached it, when known. */
   rate: string | null;
+  rare: boolean;
 }) {
   const secret = a.hidden && !date;
   return (
-    <div className={`achievement-sheet${date ? " earned" : ""}`}>
+    <div
+      className={`achievement-sheet${date ? " earned" : ""}${rare ? " rare" : ""}`}
+    >
       <span className="medal large">
         <AchievementIcon name={secret ? "lock" : a.icon} size={32} />
       </span>

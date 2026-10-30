@@ -21,6 +21,9 @@ export type DeezerAlbum = {
 /** What a song is looked up by (a slice of the songs row). */
 export type ArtworkSong = {
   artist: string;
+  /** How the stores credit the artist when not by `artist` (도영 → DOYOUNG); "" or missing
+   *  when the same. */
+  englishArtist?: string;
   title: string;
   aliases: string[];
   album?: string;
@@ -87,10 +90,11 @@ export const songNames = (song: Pick<ArtworkSong, "title" | "aliases">) =>
  *  song by its title, then by each other name. */
 export function artworkQueries(song: ArtworkSong): ArtworkQuery[] {
   const queries: ArtworkQuery[] = [];
+  const artist = searchArtist(song);
   if (song.album?.trim())
-    queries.push({ kind: "album", q: `${song.artist} ${song.album.trim()}` });
+    queries.push({ kind: "album", q: `${artist} ${song.album.trim()}` });
   for (const name of namesOf(song))
-    queries.push({ kind: "track", q: `${song.artist} ${name}` });
+    queries.push({ kind: "track", q: `${artist} ${name}` });
   return queries;
 }
 
@@ -102,14 +106,24 @@ export const queryUrl = ({ kind, q }: ArtworkQuery, limit = 10) =>
 export const itunesUrls = (song: ArtworkSong, limit = 10) =>
   namesOf(song).map(
     (name) =>
-      `${ITUNES_API}?${new URLSearchParams({ term: `${song.artist} ${name}`, entity: "song", country: "US", limit: String(limit) })}`,
+      `${ITUNES_API}?${new URLSearchParams({ term: `${searchArtist(song)} ${name}`, entity: "song", country: "US", limit: String(limit) })}`,
   );
 
-/** Credited to the song's artist: the same name, or the group a unit belongs to ("NCT"). */
-function sameArtist(found: string, artist: string) {
+/** The artist name searches use: the English one when there is one. */
+const searchArtist = (song: Pick<ArtworkSong, "artist" | "englishArtist">) =>
+  song.englishArtist?.trim() || song.artist;
+
+/** Credited to the song's artist (by either name): the same name, or the group a unit belongs
+ *  to ("NCT"). */
+export function sameArtist(
+  found: string,
+  song: Pick<ArtworkSong, "artist" | "englishArtist">,
+) {
   const a = normalize(found);
-  const b = normalize(artist);
-  return a === b || a === b.split(" ")[0];
+  return [song.artist, song.englishArtist ?? ""].some((name) => {
+    const b = normalize(name);
+    return b !== "" && (a === b || a === b.split(" ")[0]);
+  });
 }
 
 /** `words` begins or ends with `name`, on word boundaries (Deezer joins a Korean title and its
@@ -123,7 +137,7 @@ export function hasName(words: string, name: string) {
 /** The track is this song in its original version, on an album of its own (not a remix
  *  series or other compilation). */
 export const isSongTrack = (t: DeezerTrack, song: ArtworkSong) =>
-  sameArtist(t.artist.name, song.artist) &&
+  sameArtist(t.artist.name, song) &&
   !OTHER_VERSION.test(t.title_version) &&
   !OTHER_ALBUM.test(t.album.title) &&
   songNames(song).some((name) => hasName(normalize(t.title_short), name));
@@ -168,7 +182,7 @@ export function pickAlbumCover(
   const album = normalize(song.album ?? "");
   if (!album) return null;
   const hit = results.find((a) => {
-    if (!sameArtist(a.artist.name, song.artist) || OTHER_ALBUM.test(a.title))
+    if (!sameArtist(a.artist.name, song) || OTHER_ALBUM.test(a.title))
       return false;
     const title = normalize(a.title);
     const head = normalize(a.title.split(/\s[-–]\s/)[0]);

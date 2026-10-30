@@ -18,6 +18,8 @@ export type ArtistRow = {
   sort_order: number;
   /** An NCT unit: default play range, daily quiz pool and "NCT 마스터". Others show as "다른 가수". */
   main: boolean;
+  /** How Deezer·iTunes credit them when not by `name` (도영 → DOYOUNG); admin and build only. */
+  english_name?: string;
 };
 export type SongRow = {
   id: string;

@@ -157,13 +157,24 @@ test("저장된 앨범 찾기: 같은 출처, 또는 부제를 뺀 같은 이름
 
 test("앨범 가수: 그 곡의 가수로 표기된 앨범만 그 가수, 그룹·컴필레이션 앨범은 비움", () => {
   assert.equal(
-    albumArtist(found({ credited: "nct dream" }), "NCT DREAM"),
+    albumArtist(found({ credited: "nct dream" }), { artist: "NCT DREAM" }),
     "NCT DREAM",
   );
-  assert.equal(albumArtist(found({ credited: "NCT" }), "NCT U"), null);
   assert.equal(
-    albumArtist(found({ credited: "Various Artists" }), "aespa"),
+    albumArtist(found({ credited: "NCT" }), { artist: "NCT U" }),
     null,
+  );
+  assert.equal(
+    albumArtist(found({ credited: "Various Artists" }), { artist: "aespa" }),
+    null,
+  );
+  // A solo artist credited in English is still theirs.
+  assert.equal(
+    albumArtist(found({ credited: "DOYOUNG" }), {
+      artist: "도영",
+      englishArtist: "DOYOUNG",
+    }),
+    "도영",
   );
 });
 

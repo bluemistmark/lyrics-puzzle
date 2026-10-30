@@ -36,7 +36,15 @@ const art = await buildArtwork(
     .filter((s) => published.has(s.id))
     .map((s) => {
       const album = s.album_id == null ? undefined : albums.get(s.album_id);
-      return { ...s, album: album?.title, cover: album?.cover_url };
+      const englishArtist = rows.artists.find(
+        (a) => a.name === s.artist,
+      )?.english_name;
+      return {
+        ...s,
+        englishArtist,
+        album: album?.title,
+        cover: album?.cover_url,
+      };
     }),
 );
 catalog.songs = catalog.songs.map((s) =>

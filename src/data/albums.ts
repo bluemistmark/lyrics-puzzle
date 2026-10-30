@@ -150,8 +150,13 @@ export function matchAlbum(
  *  group album like NCT 2020's "NCT", or a compilation). */
 export const albumArtist = (
   found: Pick<FoundAlbum, "credited">,
-  songArtist: string,
-) => (normalize(found.credited) === normalize(songArtist) ? songArtist : null);
+  song: Pick<ArtworkSong, "artist" | "englishArtist">,
+) =>
+  [song.artist, song.englishArtist ?? ""].some(
+    (name) => name && normalize(found.credited) === normalize(name),
+  )
+    ? song.artist
+    : null;
 
 type DeezerError = { error?: { code?: number; message?: string } };
 function checkDeezer(body: unknown) {

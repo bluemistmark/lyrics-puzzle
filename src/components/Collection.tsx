@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { recentSongIds, unitArts, type UnitEntry } from "../collection";
 import { useCollectionSeen } from "../collectionSeen";
-import { questions, songs } from "../game";
+import { questions, songs, type Song } from "../game";
 import { useGame } from "../store";
 import { AlbumArt } from "./AlbumArt";
 import { ArrowLeft, Music } from "./icons";
+import { Modal } from "./Modal";
 import { PlaylistCover } from "./PlaylistCover";
 import { ScrollRow } from "./ScrollRow";
 
@@ -14,7 +15,7 @@ const RECENT = 10;
  *  much is collected, recently guessed songs, then each unit as a playlist (NCT first, then
  *  other artists). Guessed songs show their 앨범아트, and a playlist's cover is made of them;
  *  songs not guessed yet never show theirs, as it would give the title away. A playlist page
- *  lists its tracks. */
+ *  lists its tracks; a guessed one opens its lyrics. */
 export function Collection({
   units,
   focus = null,
@@ -44,6 +45,13 @@ export function Collection({
   }, [open]);
   const unit = units.find((u) => u.unit === open);
   const recentSongs = recentSongIds(questions, collected);
+  // The guessed song whose lyrics sheet is open; kept while the sheet slides away.
+  const [track, setTrack] = useState<Song | null>(null);
+  const [closing, setClosing] = useState(false);
+  const closed = useCallback(() => {
+    setClosing(false);
+    setTrack(null);
+  }, []);
 
   if (unit) {
     const arts = unitArts(unit, recentSongs);
@@ -70,7 +78,14 @@ export function Collection({
           {unit.songs.map(({ song, total, solved }, i) => (
             <li key={song.id} className={solved ? "solved" : "locked"}>
               {solved ? (
-                <>
+                <button
+                  type="button"
+                  className="track-row"
+                  onClick={() => {
+                    setClosing(false);
+                    setTrack(song);
+                  }}
+                >
                   <AlbumArt
                     src={song.art}
                     className="track-art"
@@ -92,7 +107,7 @@ export function Collection({
                       <span className="sr-only">구간</span>
                     </small>
                   )}
-                </>
+                </button>
               ) : (
                 <>
                   <span className="track-art" aria-hidden="true">
@@ -106,6 +121,14 @@ export function Collection({
             </li>
           ))}
         </ol>
+        <Modal
+          open={track !== null}
+          closing={closing}
+          onClose={() => setClosing(true)}
+          onClosed={closed}
+        >
+          {track && <TrackSheet song={track} collected={collected} />}
+        </Modal>
       </div>
     );
   }
@@ -194,6 +217,38 @@ export function Collection({
           {grid(others)}
         </>
       )}
+    </div>
+  );
+}
+
+/** A guessed song: its cover, title and the lyrics of each part guessed (parts not guessed
+ *  yet stay hidden). */
+function TrackSheet({
+  song,
+  collected,
+}: {
+  song: Song;
+  collected: readonly string[];
+}) {
+  const parts = questions.filter(
+    (q) => q.songId === song.id && collected.includes(q.id),
+  );
+  return (
+    <div className="track-sheet">
+      <AlbumArt
+        src={song.art}
+        className="track-sheet-art"
+        fallback={<PlaylistCover large />}
+      />
+      <h2>{song.title}</h2>
+      <p className="track-sheet-unit">{song.unit}</p>
+      {parts.map((q) => (
+        <div key={q.id} className="track-lyrics">
+          {q.lines.map((line, i) => (
+            <p key={i}>{line.map((t) => t.text).join("")}</p>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
