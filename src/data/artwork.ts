@@ -10,7 +10,7 @@ export type DeezerTrack = {
   /** e.g. "(Hukky Shibaseki Remix)"; empty for the original. */
   title_version: string;
   artist: { name: string };
-  album: { title: string; cover_xl: string };
+  album: { id?: number; title: string; cover_xl: string };
 };
 /** The fields of a Deezer album search result. */
 export type DeezerAlbum = {
@@ -32,7 +32,11 @@ export type ItunesTrack = {
   artistName?: string;
   trackName?: string;
   collectionName?: string;
+  collectionId?: number;
   artworkUrl100?: string;
+  /** e.g. "2023-10-06T12:00:00Z". */
+  releaseDate?: string;
+  trackCount?: number;
 };
 
 export const DEEZER_API = "https://api.deezer.com";
@@ -42,7 +46,7 @@ export const ITUNES_API = "https://itunes.apple.com/search";
 const OTHER_VERSION =
   /remix|english|japanese|chinese|mandarin|inst\b|instrumental|a ?cappella|sped|slowed|live|acoustic|demo|karaoke|\bmix\b/i;
 /** SM's remix series and other compilations reuse titles under their own covers. */
-const OTHER_ALBUM = /remix|iscream|screa?m\b|karaoke|instrumental/i;
+export const OTHER_ALBUM = /remix|iscream|screa?m\b|karaoke|instrumental/i;
 /** Parts in a title's brackets that aren't another name for it. */
 const NOT_A_NAME = /feat|prod|ver\.?$|version|sung by/i;
 
@@ -110,30 +114,31 @@ function sameArtist(found: string, artist: string) {
 
 /** `words` begins or ends with `name`, on word boundaries (Deezer joins a Korean title and its
  *  English one, e.g. "버퍼링 Glitch Mode"). */
-function hasName(words: string, name: string) {
+export function hasName(words: string, name: string) {
   return (
     words === name || words.startsWith(`${name} `) || words.endsWith(` ${name}`)
   );
 }
+
+/** The track is this song in its original version, on an album of its own (not a remix
+ *  series or other compilation). */
+export const isSongTrack = (t: DeezerTrack, song: ArtworkSong) =>
+  sameArtist(t.artist.name, song.artist) &&
+  !OTHER_VERSION.test(t.title_version) &&
+  !OTHER_ALBUM.test(t.album.title) &&
+  songNames(song).some((name) => hasName(normalize(t.title_short), name));
 
 /** The cover of the first track that is this song in its original version, or null. */
 export function pickTrackCover(
   results: readonly DeezerTrack[],
   song: ArtworkSong,
 ): string | null {
-  const names = songNames(song);
-  const hit = results.find(
-    (t) =>
-      sameArtist(t.artist.name, song.artist) &&
-      !OTHER_VERSION.test(t.title_version) &&
-      !OTHER_ALBUM.test(t.album.title) &&
-      names.some((name) => hasName(normalize(t.title_short), name)),
-  );
+  const hit = results.find((t) => isSongTrack(t, song));
   return hit?.album.cover_xl || null;
 }
 
 /** iTunes results read as Deezer tracks: the version is the bracketed tail of the name. */
-const asDeezer = (t: ItunesTrack): DeezerTrack => {
+export const asDeezer = (t: ItunesTrack): DeezerTrack => {
   const name = t.trackName ?? "";
   const cut = name.search(/\s*[([]/);
   return {
@@ -141,7 +146,11 @@ const asDeezer = (t: ItunesTrack): DeezerTrack => {
     title_short: cut < 0 ? name : name.slice(0, cut),
     title_version: cut < 0 ? "" : name.slice(cut),
     artist: { name: t.artistName ?? "" },
-    album: { title: t.collectionName ?? "", cover_xl: t.artworkUrl100 ?? "" },
+    album: {
+      id: t.collectionId,
+      title: t.collectionName ?? "",
+      cover_xl: t.artworkUrl100 ?? "",
+    },
   };
 };
 /** The same rules as Deezer tracks, over iTunes results. */

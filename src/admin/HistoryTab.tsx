@@ -69,7 +69,7 @@ export function HistoryTab() {
         </select>
         <input
           type="search"
-          placeholder="문제ID, 곡ID, 가수명, 영어"
+          placeholder="문제ID, 곡ID, 앨범ID, 가수명, 영어"
           value={key}
           onChange={(e) => setKey(e.target.value)}
         />
@@ -82,8 +82,8 @@ export function HistoryTab() {
         <button onClick={() => setReload((n) => n + 1)}>새로고침</button>
       </div>
       <p className="muted">
-        어드민에서 바꾼 가수·곡·문제·영어 사전이 자동으로 기록돼요. 관리자가
-        비어 있으면 SQL Editor나 스크립트로 바꾼 거예요.
+        어드민에서 바꾼 가수·곡·앨범·문제·영어 사전이 자동으로 기록돼요.
+        관리자가 비어 있으면 SQL Editor나 스크립트로 바꾼 거예요.
       </p>
       {error && (
         <p className="form-error">

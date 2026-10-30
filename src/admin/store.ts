@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import {
   sortArtists,
+  type AlbumRow,
   type ArtistRow,
   type ArtworkRow,
   type DictionaryRow,
@@ -11,8 +12,10 @@ import {
 } from "../data/build-catalog.ts";
 import type { ReleaseRow } from "../data/releases.ts";
 import {
+  ALBUM_COLUMNS,
   ARTIST_COLUMNS,
   DICTIONARY_COLUMNS,
+  fetchAlbums,
   fetchArtwork,
   fetchReleases,
   fetchRows,
@@ -53,6 +56,12 @@ type AdminStore = Rows & {
   removeArtist: (name: string) => Promise<void>;
   /** Swaps sort order with the neighbouring artist. */
   moveArtist: (name: string, direction: -1 | 1) => Promise<void>;
+  /** Albums songs are grouped by (album_id). */
+  albums: AlbumRow[];
+  /** Inserts (no id) or updates an album and returns it as stored. */
+  saveAlbum: (row: Omit<AlbumRow, "id"> & { id?: number }) => Promise<AlbumRow>;
+  /** Its songs lose their album (`on delete set null`). */
+  removeAlbum: (id: number) => Promise<void>;
   saveSong: (row: SongRow, isNew: boolean) => Promise<void>;
   removeSong: (id: string) => Promise<void>;
   saveQuestion: (row: QuestionRow, isNew: boolean) => Promise<void>;
@@ -180,7 +189,11 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
       (error) => set({ artwork: {}, artworkError: (error as Error).message }),
     );
     try {
-      set({ ...(await fetchRows(db())) });
+      const [rows, albums] = await Promise.all([
+        fetchRows(db()),
+        fetchAlbums(db()),
+      ]);
+      set({ ...rows, albums });
       await Promise.all([releases, settings, artwork]);
       set({ status: "ready" });
     } catch (error) {
@@ -236,6 +249,30 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
     );
     const byName = new Map(saved.map((a) => [a.name, a]));
     set({ artists: get().artists.map((a) => byName.get(a.name) ?? a) });
+  },
+  albums: [],
+  saveAlbum: async ({ id, ...row }) => {
+    // updated_at belongs to the DB trigger.
+    const values = { ...row };
+    delete values.updated_at;
+    const saved = await write(
+      "albums",
+      ALBUM_COLUMNS,
+      values as AlbumRow,
+      id === undefined ? null : ["id", String(id)],
+    );
+    set({ albums: upsertLocal(get().albums, saved, (a) => a.id === saved.id) });
+    return saved;
+  },
+  removeAlbum: async (id) => {
+    await remove("albums", "id", String(id));
+    set({
+      albums: get().albums.filter((a) => a.id !== id),
+      // Mirrors the `on delete set null` foreign key.
+      songs: get().songs.map((s) =>
+        s.album_id === id ? { ...s, album_id: null } : s,
+      ),
+    });
   },
   saveSong: async (row, isNew) => {
     const saved = await write(

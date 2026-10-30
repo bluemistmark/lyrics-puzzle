@@ -2,7 +2,12 @@
 // a validation issue fails the build so the previous deployment stays live.
 import { buildCatalog } from "../src/data/build-catalog.ts";
 import { NEWS_LIMIT, toNews } from "../src/data/releases.ts";
-import { fetchReleases, fetchRows, fetchSettings } from "../src/data/rows.ts";
+import {
+  fetchAlbums,
+  fetchReleases,
+  fetchRows,
+  fetchSettings,
+} from "../src/data/rows.ts";
 import { buildArtwork } from "./artwork.ts";
 import { failOnIssues, summary, writeCatalogFile } from "./catalog-file.ts";
 import { serviceClient } from "./env.ts";
@@ -15,10 +20,24 @@ const [rows, settings] = await Promise.all([
 const { catalog, issues } = buildCatalog({ ...rows, settings });
 failOnIssues(issues);
 // 앨범아트 of the published songs, downloaded next to the build; never fails the build.
+// Albums (admin only) lend their name to the lookup and their cover.
+const albums = new Map(
+  (
+    await fetchAlbums(client).catch((e: Error) => {
+      console.warn(`앨범 건너뜀: ${e.message}`);
+      return [];
+    })
+  ).map((a) => [a.id, a]),
+);
 const published = new Set(catalog.songs.map((s) => s.id));
 const art = await buildArtwork(
   client,
-  rows.songs.filter((s) => published.has(s.id)),
+  rows.songs
+    .filter((s) => published.has(s.id))
+    .map((s) => {
+      const album = s.album_id == null ? undefined : albums.get(s.album_id);
+      return { ...s, album: album?.title, cover: album?.cover_url };
+    }),
 );
 catalog.songs = catalog.songs.map((s) =>
   art[s.id] ? { ...s, art: art[s.id] } : s,
