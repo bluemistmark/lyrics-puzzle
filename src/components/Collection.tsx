@@ -4,7 +4,7 @@ import { useCollectionSeen } from "../collectionSeen";
 import { questions, songs } from "../game";
 import { useGame } from "../store";
 import { AlbumArt } from "./AlbumArt";
-import { ArrowLeft, Music, Gamepad2 as Play } from "./icons";
+import { ArrowLeft, Music } from "./icons";
 import { PlaylistCover } from "./PlaylistCover";
 import { ScrollRow } from "./ScrollRow";
 
@@ -14,17 +14,14 @@ const RECENT = 10;
  *  much is collected, recently guessed songs, then each unit as a playlist (NCT first, then
  *  other artists). Guessed songs show their 앨범아트, and a playlist's cover is made of them;
  *  songs not guessed yet never show theirs, as it would give the title away. A playlist page
- *  lists its tracks and its play button opens one of its songs not guessed yet. */
+ *  lists its tracks. */
 export function Collection({
   units,
   focus = null,
-  onPlayUnit,
 }: {
   units: UnitEntry[];
   /** A playlist to open first (a cover pressed on the dashboard). */
   focus?: string | null;
-  /** The play button: a question from this unit, in the play tab. */
-  onPlayUnit: (unit: string) => void;
 }) {
   const [open, setOpen] = useState(focus);
   const top = useRef<HTMLDivElement>(null);
@@ -67,14 +64,6 @@ export function Collection({
           </p>
           <div className="playlist-actions">
             <Progress label={`${unit.unit} 수집률`} unit={unit} />
-            <button
-              type="button"
-              className="play-button"
-              aria-label={`${unit.unit} 노래 풀기`}
-              onClick={() => onPlayUnit(unit.unit)}
-            >
-              <Play size={22} weight="fill" aria-hidden="true" />
-            </button>
           </div>
         </header>
         <ol className="tracklist">

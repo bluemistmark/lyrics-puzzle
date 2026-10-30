@@ -212,7 +212,7 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
     const match: [string, string] | null =
       originalName === null ? null : ["name", originalName];
     const saved = await write("artists", ARTIST_COLUMNS, row, match);
-    const { artists, songs } = get();
+    const { artists, songs, albums } = get();
     const renamed = originalName !== null && originalName !== saved.name;
     set({
       artists: upsertLocal(
@@ -226,11 +226,22 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
             s.artist === originalName ? { ...s, artist: saved.name } : s,
           )
         : songs,
+      albums: renamed
+        ? albums.map((a) =>
+            a.artist === originalName ? { ...a, artist: saved.name } : a,
+          )
+        : albums,
     });
   },
   removeArtist: async (name) => {
     await remove("artists", "name", name);
-    set({ artists: get().artists.filter((a) => a.name !== name) });
+    set({
+      artists: get().artists.filter((a) => a.name !== name),
+      // Mirrors the `on delete set null` foreign key.
+      albums: get().albums.map((a) =>
+        a.artist === name ? { ...a, artist: null } : a,
+      ),
+    });
   },
   moveArtist: async (name, direction) => {
     const ordered = sortArtists(get().artists);

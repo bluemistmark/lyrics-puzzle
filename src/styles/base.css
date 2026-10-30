@@ -1931,6 +1931,12 @@ main [hidden] {
   word-break: keep-all;
 }
 
+/* Share of players who reached it, under the rest. */
+.achievement-sheet .achievement-rate {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
 /* 업적 medal: a disc with an inner rim, a ribbon hanging below. Reached: neon disc and a
    green ribbon; the rest gray. */
 .medal {
@@ -2397,7 +2403,7 @@ main [hidden] {
   font-size: 12px;
 }
 
-/* A playlist page: the cover on the left, its name, count and play button beside it, then
+/* A playlist page: the cover on the left, its name, count and progress beside it, then
    the tracks. */
 .playlist-detail,
 .playlist-library {
@@ -2460,17 +2466,6 @@ main [hidden] {
   flex: 1;
   height: 4px;
   margin: 0;
-}
-
-.play-button {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--rp-neon, #c4f53a);
-  color: #111311;
 }
 
 /* Tracks: plain rows, each led by its cover (or its number while not guessed). */

@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { rateLabel, useAchievementRates } from "../achievementRates";
 import { ACHIEVEMENT_GROUPS, type Achievement } from "../achievements";
 import { useDifficulty } from "../difficulty";
 import { useRanking } from "../ranking";
@@ -18,6 +19,11 @@ export function Achievements({ today }: { today: string }) {
   const earned = useGame((s) => s.achievements);
   const votes = useDifficulty((s) => Object.keys(s.votes).length);
   const hasNickname = useRanking((s) => Boolean(s.nickname));
+  const rates = useAchievementRates((s) => s.rates);
+  const loadRates = useAchievementRates((s) => s.load);
+  useEffect(() => {
+    void loadRates();
+  }, [loadRates]);
   const input = {
     stats,
     collected,
@@ -86,6 +92,7 @@ export function Achievements({ today }: { today: string }) {
             achievement={open}
             date={earned[open.id]}
             progress={open.progress(input)}
+            rate={rateLabel(rates, open.id)}
           />
         )}
       </Modal>
@@ -93,15 +100,19 @@ export function Achievements({ today }: { today: string }) {
   );
 }
 
-/** One achievement: how to reach it, then when it was reached or how far along it is. */
+/** One achievement: how to reach it, then when it was reached or how far along it is, and
+ *  how many players reached it. */
 function AchievementSheet({
   achievement: a,
   date,
   progress: { current, goal },
+  rate,
 }: {
   achievement: Achievement;
   date: string | undefined;
   progress: { current: number; goal: number };
+  /** Share of players who reached it, when known. */
+  rate: string | null;
 }) {
   const secret = a.hidden && !date;
   return (
@@ -134,6 +145,7 @@ function AchievementSheet({
           </div>
         )
       )}
+      {rate && <p className="achievement-rate">{rate}</p>}
     </div>
   );
 }

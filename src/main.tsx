@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { startAccount } from "./account";
+import { startAchievementSync } from "./achievementRates";
 import { App } from "./App";
 import { reloadOnStaleChunk } from "./utils/stale-chunk";
 import "./styles/index.css";
@@ -7,3 +8,4 @@ import "./styles/index.css";
 reloadOnStaleChunk();
 createRoot(document.getElementById("root")!).render(<App />);
 startAccount();
+startAchievementSync();

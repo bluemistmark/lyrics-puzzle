@@ -128,7 +128,10 @@ export function SongsTab() {
     sort,
     counts,
   ]);
-  const albumOptions = useMemo(() => sortAlbums(albums), [albums]);
+  const albumOptions = useMemo(
+    () => sortAlbums(artistAlbums(albums, songs, artist, albumParam)),
+    [albums, songs, artist, albumParam],
+  );
 
   const remove = async (song: SongRow) => {
     const n = counts.get(song.id)?.total ?? 0;
@@ -395,7 +398,10 @@ function SongForm({
   // Until the id is typed by hand, suggest the next one from the artist's prefix.
   const prefix = artists.find((a) => a.name === artist)?.prefix ?? "";
   const shownId = song?.id ?? id ?? nextSongId(songs, prefix);
-  const options = useMemo(() => sortAlbums(albums), [albums]);
+  const options = useMemo(
+    () => sortAlbums(artistAlbums(albums, songs, artist, albumId)),
+    [albums, songs, artist, albumId],
+  );
   const autofill = async () => {
     if (!artist.trim() || !title.trim())
       return setLookup("가수와 곡명을 먼저 넣어 주세요.");
@@ -414,7 +420,7 @@ function SongForm({
       setAlbumId(found.existing ? String(found.existing.id) : "new");
       setTitleTrack(found.titleTrack);
       setLookup(
-        `${found.existing ? "저장된 앨범" : "새 앨범"}: ${albumLabel(found.found)}${found.found.kind ? ` (${KIND_LABELS[found.found.kind]})` : ""}. 타이틀곡은 ${found.titleTrack ? "맞는 것으로" : "아닌 것으로"} 추정했어요.`,
+        `${found.existing ? "저장된 앨범" : "새 앨범"}: ${albumLabel({ ...found.found, artist: found.artist })}${found.found.kind ? ` (${KIND_LABELS[found.found.kind]})` : ""}. 타이틀곡은 ${found.titleTrack ? "맞는 것으로" : "아닌 것으로"} 추정했어요.`,
       );
     } catch (error) {
       setLookup((error as Error).message);
@@ -485,7 +491,8 @@ function SongForm({
             <option value="">앨범 없음</option>
             {suggestion && !suggestion.existing && (
               <option value="new">
-                새 앨범: {albumLabel(suggestion.found)}
+                새 앨범:{" "}
+                {albumLabel({ ...suggestion.found, artist: suggestion.artist })}
               </option>
             )}
             {options.map((a) => (
@@ -563,6 +570,26 @@ function SongForm({
   );
 }
 
+/** The artist's albums, and albums of several artists (NCT 2020, SMTOWN) holding one of
+ *  their songs. `keep` (the current choice) always stays. */
+function artistAlbums(
+  albums: AlbumRow[],
+  songs: SongRow[],
+  artist: string,
+  keep: string,
+) {
+  if (!artist) return albums;
+  const held = new Set(
+    songs.filter((s) => s.artist === artist).map((s) => s.album_id),
+  );
+  return albums.filter(
+    (a) =>
+      a.artist === artist ||
+      (a.artist === null && held.has(a.id)) ||
+      String(a.id) === keep,
+  );
+}
+
 /** Newest first; albums without a date last. */
 const sortAlbums = (albums: AlbumRow[]) =>
   [...albums].sort(
@@ -572,7 +599,7 @@ const sortAlbums = (albums: AlbumRow[]) =>
       a.title.localeCompare(b.title),
   );
 const albumLabel = (a: Pick<AlbumRow, "title" | "artist" | "released_on">) =>
-  [a.title, a.artist, a.released_on].filter(Boolean).join(" · ");
+  [a.title, a.artist ?? "여러 가수", a.released_on].filter(Boolean).join(" · ");
 
 type FillState = {
   done: number;

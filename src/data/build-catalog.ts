@@ -37,8 +37,8 @@ export type AlbumKind = "" | "album" | "ep" | "single" | "compile";
 export type AlbumRow = {
   id: number;
   title: string;
-  /** As credited (an NCT 2020 album is "NCT"), so not one of the artists rows. */
-  artist: string;
+  /** Its artist (artists.name); null when its songs are by several (NCT 2020, SMTOWN). */
+  artist: string | null;
   kind: AlbumKind;
   /** `YYYY-MM-DD`, or null when unknown. */
   released_on: string | null;

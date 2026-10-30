@@ -1,4 +1,5 @@
 import {
+  albumArtist,
   findAlbum,
   guessTitleTrack,
   matchAlbum,
@@ -59,6 +60,8 @@ const lookUp: Get = async (urls) => {
 export type AlbumSuggestion = {
   found: FoundAlbum;
   existing: AlbumRow | null;
+  /** The artist a new album gets (null for a group or compilation album). */
+  artist: string | null;
   titleTrack: boolean;
 };
 
@@ -70,23 +73,30 @@ export async function suggestAlbum(
   return {
     found,
     existing: matchAlbum(useAdmin.getState().albums, found),
+    artist: albumArtist(found, song.artist),
     titleTrack: guessTitleTrack(song, found),
   };
 }
 
 /** The suggested album's id: a saved one gets what it lacks from the lookup, a new one is
  *  saved. */
-export async function albumIdFor({ found, existing }: AlbumSuggestion) {
+export async function albumIdFor({ found, existing, artist }: AlbumSuggestion) {
   const { albums, saveAlbum } = useAdmin.getState();
   const saved =
     (existing && albums.find((a) => a.id === existing.id)) ??
     matchAlbum(albums, found);
-  const row: Partial<FoundAlbum> & Omit<FoundAlbum, "tracks"> = { ...found };
-  delete row.tracks;
+  const row = {
+    title: found.title,
+    artist,
+    kind: found.kind,
+    released_on: found.released_on,
+    cover_url: found.cover_url,
+    external_id: found.external_id,
+  };
   if (!saved) return (await saveAlbum(row)).id;
   const filled = {
     ...saved,
-    artist: saved.artist || row.artist,
+    artist: saved.artist ?? row.artist,
     kind: saved.kind || row.kind,
     released_on: saved.released_on ?? row.released_on,
     cover_url: saved.cover_url || row.cover_url,
