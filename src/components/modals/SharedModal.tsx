@@ -1,4 +1,3 @@
-import { Link2 } from "lucide-react";
 import { playModeName, type PlayMode } from "../../modes";
 
 type Props = { mode: PlayMode; onOpen: () => void; onKeep: () => void };
@@ -7,9 +6,6 @@ type Props = { mode: PlayMode; onOpen: () => void; onKeep: () => void };
 export function SharedModal({ mode, onOpen, onKeep }: Props) {
   return (
     <>
-      <span className="modal-icon">
-        <Link2 />
-      </span>
       <h2>공유받은 문제</h2>
       <p>
         {playModeName(mode)} 모드에서 풀던 문제가 있어요.

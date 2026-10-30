@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildCollection } from "./collection.ts";
+import { buildCollection, recentSongIds, unitArts } from "./collection.ts";
 import type { Song } from "./game.ts";
 
 const song = (id: string, unit: string): Song => ({
@@ -51,4 +51,23 @@ test("도감은 한 구간이라도 맞힌 곡을 수집으로 세고 없는 문
     [1, 0],
   );
   assert.equal(b.collected, 0);
+});
+
+test("최근 맞힌 곡은 최근 순서로 곡마다 한 번, 유닛 커버는 맞힌 곡의 서로 다른 앨범아트만", () => {
+  const withArt = [
+    { ...song("A1", "A"), art: "/x.jpg" },
+    song("B1", "B"),
+    { ...song("A2", "A"), art: "/x.jpg" },
+    { ...song("A3", "A"), art: "/y.jpg" },
+  ];
+  const qs = [...questions, { id: "q5", songId: "A3" }];
+  const recent = recentSongIds(qs, ["q4", "q1", "q3", "q2", "gone"]);
+  assert.deepEqual(recent, ["A1", "B1", "A2"]);
+  const [a] = buildCollection(withArt, qs, ["q4", "q1"]);
+  // A3 isn't guessed: its cover stays hidden. A1 and A2 share one album.
+  assert.deepEqual(unitArts(a, recent), ["/x.jpg"]);
+  assert.deepEqual(unitArts(a, ["A3", "A1"]), ["/x.jpg"]);
+  const [all] = buildCollection(withArt, qs, ["q4", "q1", "q5"]);
+  assert.deepEqual(unitArts(all, ["A3", "A1"]), ["/y.jpg", "/x.jpg"]);
+  assert.deepEqual(unitArts(all, ["A3", "A1"], 1), ["/y.jpg"]);
 });

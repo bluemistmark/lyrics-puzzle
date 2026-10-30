@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useGame } from "../store";
+import { GUESS_MESSAGES, useGame } from "../store";
 
 type ModelContext = {
   registerTool: (tool: unknown, options: unknown) => Promise<void>;
@@ -35,9 +35,9 @@ export function useModelContextTools() {
         const w = (data as { word?: unknown })?.word;
         if (typeof w !== "string" || !w.trim() || w.length > 60)
           throw Error("단어를 입력하세요.");
-        useGame.getState().guess(w);
+        const result = useGame.getState().guess(w);
         await new Promise(requestAnimationFrame);
-        return { message: useGame.getState().notice };
+        return { message: GUESS_MESSAGES[result] };
       },
     });
     return () => lifecycle.abort();

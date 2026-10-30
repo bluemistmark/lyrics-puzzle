@@ -15,6 +15,7 @@
     "data:seed": "node --experimental-strip-types --env-file-if-exists=.env.local scripts/seed-supabase.ts"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@supabase/supabase-js": "^2.117.2",
     "@vercel/analytics": "^2.0.1",
     "lucide-react": "^0.468.0",

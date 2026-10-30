@@ -1,4 +1,4 @@
-import { Check, Languages, Mic2, Sparkles } from "lucide-react";
+import { Check, Languages, Mic2, Sparkles } from "../icons";
 import type { Question } from "../../game";
 import type { PlayMode } from "../../modes";
 import {
@@ -24,7 +24,9 @@ export function HintButtons({
   playMode = "classic",
 }: Props) {
   const hint = useGame((s) => s.hint);
+  // Lyric hints end with the lyrics; 가수명 still helps until the title is known.
   const locked = round.givenUp || full;
+  const titleKnown = round.solved || round.givenUp;
   // 심플 already shows the lyrics and 이지 the artist.
   const lyricHints = playMode !== "simple";
   const artistHint = playMode !== "easy";
@@ -52,7 +54,7 @@ export function HintButtons({
         )}
         {artistHint && (
           <button
-            disabled={round.artist || locked}
+            disabled={round.artist || titleKnown}
             onClick={() => hint("artist", mode)}
           >
             {round.artist ? <Check size={14} /> : <Mic2 size={14} />}

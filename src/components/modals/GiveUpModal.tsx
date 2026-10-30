@@ -1,4 +1,3 @@
-import { Headphones } from "lucide-react";
 import { useGame, type GameMode } from "../../store";
 
 export function GiveUpModal({
@@ -12,9 +11,6 @@ export function GiveUpModal({
   const playMode = useGame((s) => (mode === "daily" ? "classic" : s.playMode));
   return (
     <>
-      <span className="modal-icon">
-        <Headphones />
-      </span>
       <h2>정답 확인</h2>
       <p>
         {playMode === "simple"

@@ -53,6 +53,11 @@ test("공유 문구에는 제목과 가사가 들어가지 않고 모드별 결�
       mode: "classic",
     }).includes("포기"),
   );
+  assert.ok(
+    playResultText({ ...base, solved: false, mode: "classic" }).includes(
+      "도전 중",
+    ),
+  );
 });
 
 test("같은 문제 링크는 기존 쿼리·해시를 지우고 문제와 모드만 남김", () => {

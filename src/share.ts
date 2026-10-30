@@ -31,9 +31,9 @@ export type PlayResult = {
   hints: number;
 };
 
-/** Spoiler-free share text for a finished play-tab question. */
+/** Spoiler-free share text for a play-tab question, finished or still in progress. */
 export function playResultText(r: PlayResult): string {
-  const outcome = r.givenUp ? "🏳️ 포기" : "🎉 성공";
+  const outcome = r.givenUp ? "🏳️ 포기" : r.solved ? "🎉 성공" : "🎵 도전 중";
   const stats =
     r.mode === "simple"
       ? `힌트 ${r.hints}번`

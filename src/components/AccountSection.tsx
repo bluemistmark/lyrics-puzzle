@@ -7,6 +7,7 @@ import {
   useAccount,
   type Provider,
 } from "../account";
+import { ProviderLogo } from "./ProviderLogo";
 
 const providerName: Record<string, string> = {
   kakao: "카카오",
@@ -40,23 +41,12 @@ export function AccountSection() {
   const login = (provider: Provider) => run(() => signIn(provider));
 
   return (
-    <section className="account-section" aria-labelledby="account-title">
-      <h3 id="account-title">로그인</h3>
+    <section className="account-section" aria-label="로그인">
       {status === "checking" && <p>로그인 상태를 확인하는 중…</p>}
       {status === "signedOut" && (
         <>
-          <p>
-            로그인하면 기록·도감·업적을 다른 기기에서도 이어서 할 수 있어요.
-            로그인하지 않아도 모든 기능을 쓸 수 있어요.
-          </p>
-          <p className="account-note">
-            로그인은 만 14세 이상만 할 수 있어요. 로그인하면{" "}
-            <a href="/privacy.html" target="_blank" rel="noopener">
-              개인정보 처리방침
-            </a>
-            에 동의하는 것으로 봐요.
-          </p>
-          <div className="account-buttons">
+          <p>기록을 다른 기기에서도 이어서 할 수 있어요.</p>
+          <div className="account-buttons account-logins">
             {PROVIDERS.map(([provider, label]) => (
               <button
                 key={provider}
@@ -65,10 +55,19 @@ export function AccountSection() {
                 disabled={busy}
                 onClick={() => login(provider)}
               >
+                <ProviderLogo provider={provider} />
                 {label}
               </button>
             ))}
           </div>
+          {/* Consent notice: shortened, but it has to stay next to the buttons. */}
+          <p className="account-note">
+            만 14세 이상 · 로그인하면{" "}
+            <a href="/privacy.html" target="_blank" rel="noopener">
+              개인정보 처리방침
+            </a>
+            에 동의하게 돼요
+          </p>
         </>
       )}
       {status === "signedIn" && user && (

@@ -1,11 +1,6 @@
-/* Rhythm puzzle layout shared by 라이트·다크·우주·시험지; each theme sets the --rp-* colors. */
+/* Rhythm puzzle layout shared by 라이트·다크; each theme sets the --rp-* colors. */
 
-:is(
-  [data-theme="light"],
-  [data-theme="dark"],
-  [data-theme="space"],
-  [data-theme="exam"]
-) {
+:is([data-theme="light"], [data-theme="dark"]) {
   &:root {
     background:
       linear-gradient(var(--rp-grid) 1px, transparent 1px),
@@ -226,7 +221,7 @@
     }
   }
 
-  /* Titles and highlights in 여기어때 잘난체; excel, notebook and console keep their own lettering. */
+  /* Titles and highlights in 여기어때 잘난체. */
   :is(.brand, main h1, h2, .success-box strong, .song-reveal strong) {
     font-family: var(--title-font);
     font-weight: normal;

@@ -1,30 +1,24 @@
-import { Palette } from "lucide-react";
-import { TEXT_SIZES, type TextSize } from "../../textSize";
-import { THEMES, type Theme } from "../../themes";
+import { TEXT_SIZES, type TextSize } from "../textSize";
+import { THEMES, type Theme } from "../themes";
 
 type Props = {
   theme: Theme;
   onThemeChange: (theme: Theme) => void;
   textSize: TextSize;
   onTextSizeChange: (size: TextSize) => void;
-  onClose: () => void;
 };
 
-export function ThemeModal({
+/** 테마 and 가사 글자 크기, in the 설정 sheet's 화면 tab. */
+export function ThemeSettings({
   theme,
   onThemeChange,
   textSize,
   onTextSizeChange,
-  onClose,
 }: Props) {
   return (
     <>
-      <span className="modal-icon">
-        <Palette />
-      </span>
-      <h2>화면 테마 고르기</h2>
-      <p>원하는 분위기로 화면을 바꿔보세요.</p>
       <fieldset className="theme-settings">
+        <legend>테마</legend>
         <div className="theme-options">
           {THEMES.map(([value, label]) => (
             <label key={value} className={theme === value ? "selected" : ""}>
@@ -57,9 +51,6 @@ export function ThemeModal({
           ))}
         </div>
       </fieldset>
-      <button className="primary" onClick={onClose}>
-        완료
-      </button>
     </>
   );
 }

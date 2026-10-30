@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NICKNAME_MAX } from "../nickname";
 import { useRanking } from "../ranking";
+import { toast } from "../toast";
 import { blockComposingEnter } from "../utils/ime";
 
 type Props = { submitLabel: string; onSaved?: () => void };
@@ -10,7 +11,8 @@ export function NicknameForm({ submitLabel, onSaved }: Props) {
   const saved = useRanking((s) => s.nickname);
   const saveNickname = useRanking((s) => s.saveNickname);
   const [name, setName] = useState(saved);
-  const [status, setStatus] = useState({ text: "", ok: false });
+  // Only mistakes stay under the field; a saved name shows as a toast.
+  const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   return (
     <form
@@ -18,13 +20,13 @@ export function NicknameForm({ submitLabel, onSaved }: Props) {
       onSubmit={async (e) => {
         e.preventDefault();
         setPending(true);
-        setStatus({ text: "", ok: false });
+        setError("");
         try {
           await saveNickname(name);
-          setStatus({ text: "닉네임을 저장했어요.", ok: true });
+          toast("닉네임을 저장했어요.");
           onSaved?.();
-        } catch (error) {
-          setStatus({ text: (error as Error).message, ok: false });
+        } catch (e) {
+          setError((e as Error).message);
         } finally {
           setPending(false);
         }
@@ -40,8 +42,8 @@ export function NicknameForm({ submitLabel, onSaved }: Props) {
         maxLength={NICKNAME_MAX + 8}
         autoComplete="nickname"
       />
-      <p className={status.ok ? "error saved" : "error"} role="status">
-        {status.text}
+      <p className="error" role="status">
+        {error}
       </p>
       <button className="primary" disabled={pending || !name.trim()}>
         {pending ? "저장 중…" : submitLabel}

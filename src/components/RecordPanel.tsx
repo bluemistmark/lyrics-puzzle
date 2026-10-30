@@ -1,50 +1,42 @@
-import { useState } from "react";
-import { RotateCcw } from "lucide-react";
-import { calendarWeeks, playLevel } from "../calendar";
-import { dailySummary, type DailySummary } from "../daily";
-import { ACHIEVEMENTS, useGame, type Stats } from "../store";
+import { useMemo, useState } from "react";
+import { RotateCcw } from "./icons";
+import { buildCollection, recentSongIds } from "../collection";
+import { dailySummary } from "../daily";
+import { questions, songs } from "../game";
+import { useGame } from "../store";
 import { useAccount } from "../account";
 import { Achievements } from "./Achievements";
-import { ShareActions } from "./play/ShareActions";
-import { recordShareText } from "../share";
-import { drawRecordCard } from "../share-image";
+import { Collection } from "./Collection";
+import { RecordDashboard } from "./RecordDashboard";
+import { Segmented } from "./Segmented";
 
-type Tile = [label: string, value: string];
+type View = "stats" | "collection" | "achievements";
+const VIEWS = [
+  ["stats", "요약"],
+  ["collection", "도감"],
+  ["achievements", "업적"],
+] as const;
+type Props = {
+  hidden: boolean;
+  onReset: () => void;
+  /** 첫 문제 풀기 on an empty record: goes to the play tab. */
+  onPlay: () => void;
+  /** The 데일리 widget's 더보기: goes to the daily tab. */
+  onDaily: () => void;
+  /** A 도감 playlist's play button: a question from that unit in the play tab. */
+  onPlayUnit: (unit: string) => void;
+};
 
-const playTiles = (s: Stats): Tile[] => [
-  ["가사 완성", `${s.completed}문제`],
-  ["단어 공개 없이 완성", `${s.direct}문제`],
-  ["현재 연속 정답", `${s.streak}문제`],
-  ["최고 연속 정답", `${s.best}문제`],
-];
-
-const dailyTiles = (s: DailySummary): Tile[] => [
-  ["참여", `${s.played}일`],
-  ["정답률", `${s.played ? Math.round((s.solved / s.played) * 100) : 0}%`],
-  ["정답까지 평균 입력", s.average === null ? "-" : `${s.average}단어`],
-  ["최고 연속 정답", `${s.best}일`],
-];
-
-const GRASS_WEEKS = 16;
-
-type View = "stats" | "achievements";
-type Props = { hidden: boolean; onReset: () => void };
-
-function Tiles({ tiles }: { tiles: Tile[] }) {
-  return (
-    <div className="record-grid stat-tiles">
-      {tiles.map(([label, value]) => (
-        <div className="record-item stat-tile" key={label}>
-          <span>{label}</span>
-          <strong>{value}</strong>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export function RecordPanel({ hidden, onReset }: Props) {
+export function RecordPanel({
+  hidden,
+  onReset,
+  onPlay,
+  onDaily,
+  onPlayUnit,
+}: Props) {
   const [view, setView] = useState<View>("stats");
+  // The unit a 도감 cover was pressed for: its playlist opens in the 도감 tab.
+  const [focusUnit, setFocusUnit] = useState<string | null>(null);
   const stats = useGame((s) => s.stats);
   const history = useGame((s) => s.dailyHistory);
   const today = useGame((s) => s.daily.date);
@@ -53,36 +45,16 @@ export function RecordPanel({ hidden, onReset }: Props) {
   const earned = useGame((s) => s.achievements);
   const signedIn = useAccount((s) => s.status === "signedIn");
   const daily = dailySummary(history, today);
-  const weeks = calendarWeeks(today, GRASS_WEEKS);
-  const days = weeks.flat();
-  const played = days.filter((d) => playLog[d.date]);
-  const total = played.reduce((n, d) => n + playLog[d.date], 0);
-  const achieved = ACHIEVEMENTS.filter((a) => earned[a.id]).length;
-  const shareText = recordShareText({
-    solved: stats.solved,
-    best: stats.best,
-    dailyStreak: daily.current,
-    achieved,
-    achievements: ACHIEVEMENTS.length,
-  });
-  const drawCard = () =>
-    drawRecordCard({
-      headline: [
-        ["제목 정답", `${stats.solved}`],
-        ["데일리 연속", `${daily.current}일`],
-        ["업적", `${achieved}/${ACHIEVEMENTS.length}`],
-      ],
-      details: [
-        ["가사 완성", `${stats.completed}문제`],
-        ["최고 연속 정답", `${stats.best}문제`],
-        ["데일리 퀴즈 참여", `${daily.played}일`],
-        ["최근 16주 플레이", `${played.length}일`],
-      ],
-      grass: weeks.map((week) =>
-        week.map((d) => (d.future ? null : playLevel(playLog[d.date] ?? 0))),
-      ),
-      footer: `${today.replaceAll("-", ".")} 기준`,
-    });
+  const collected = useGame((s) => s.collected);
+  const units = useMemo(
+    () => buildCollection(songs, questions, collected),
+    [collected],
+  );
+  // Nothing played in any mode yet: one way in instead of a page of zeros.
+  const empty =
+    !Object.keys(playLog).length &&
+    !Object.keys(history).length &&
+    !Object.values(modeStats).some((m) => m.solved || m.givenUp);
   return (
     <section
       id="record-panel"
@@ -93,116 +65,93 @@ export function RecordPanel({ hidden, onReset }: Props) {
     >
       <h1>나의 기록</h1>
 
-      {/* The three numbers most players look for, each linking to its detail. */}
-      <div className="record-item record-hero">
-        <div>
-          <span>제목 정답</span>
-          <strong>{stats.solved}</strong>
-        </div>
-        <div>
-          <span>데일리 연속</span>
-          <strong>{daily.current}일</strong>
-        </div>
-        <button type="button" onClick={() => setView("achievements")}>
-          <span>업적</span>
-          <strong>
-            {achieved}
-            <small> / {ACHIEVEMENTS.length}</small>
-          </strong>
-        </button>
-      </div>
-
-      <div className="record-views" role="group" aria-label="기록 보기">
-        {(
-          [
-            ["stats", "통계"],
-            ["achievements", "업적"],
-          ] as const
-        ).map(([key, label]) => (
-          <button
-            key={key}
-            type="button"
-            className="filter"
-            aria-pressed={view === key}
-            onClick={() => setView(key)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {view === "achievements" ? (
-        <Achievements today={today} />
+      {empty ? (
+        <EmptyState onPlay={onPlay} />
       ) : (
         <>
-          <h2 className="record-subtitle">플레이</h2>
-          <div className="record-grid">
-            <div className="record-item play-grass">
-              <span>
-                최근 {GRASS_WEEKS}주 · {played.length}일 · {total}문제
-              </span>
-              <div
-                className="grass-grid"
-                style={{ gridTemplateColumns: `repeat(${GRASS_WEEKS}, 1fr)` }}
-                role="img"
-                aria-label={`최근 ${GRASS_WEEKS}주 동안 ${played.length}일, ${total}문제 플레이`}
-              >
-                {days.map((d) => (
-                  <i
-                    key={d.date}
-                    className={`grass-cell level-${playLevel(playLog[d.date] ?? 0)}${d.future ? " future" : ""}${d.date === today ? " today" : ""}`}
-                    title={
-                      d.future
-                        ? undefined
-                        : `${d.date} ${playLog[d.date] ?? 0}문제`
-                    }
-                  />
-                ))}
-              </div>
-              <div className="grass-legend" aria-hidden="true">
-                적음
-                {[0, 1, 2, 3, 4].map((level) => (
-                  <i key={level} className={`grass-cell level-${level}`} />
-                ))}
-                많음
-              </div>
-            </div>
-          </div>
-          <Tiles tiles={playTiles(stats)} />
-
-          <h2 className="record-subtitle">데일리 퀴즈</h2>
-          <Tiles tiles={dailyTiles(daily)} />
-
-          <h2 className="record-subtitle">다른 모드</h2>
-          <Tiles
-            tiles={[
-              ["심플 · 제목 정답", `${modeStats.simple.solved}문제`],
-              ["이지 · 가사 완성", `${modeStats.easy.solved}문제`],
-            ]}
-          />
-
-          <div className="share-results">
-            <h2>기록 공유</h2>
-            <p>클래식 기록과 잔디를 이미지 카드로 공유해요.</p>
-            <ShareActions
-              text={shareText}
-              link={new URL("/", window.location.href).href}
-              draw={drawCard}
+          {/* 요약·도감·업적 (기록 공유 is in the top bar). */}
+          <div className="record-views">
+            <Segmented
+              label="기록 보기"
+              items={VIEWS}
+              value={view}
+              onChange={setView}
             />
           </div>
 
-          <p className="record-note">
-            {signedIn
-              ? "기록은 계정에 저장돼 로그인한 다른 기기에서도 이어져요."
-              : "기록은 현재 브라우저에 저장돼요. 브라우저 데이터를 지우면 기록도 삭제되니, 오른쪽 위 계정 메뉴에서 로그인하면 계정에 저장할 수 있어요."}{" "}
-            플레이 기록·잔디·도감·업적은 클래식 모드만 반영해요. 데일리 퀴즈는
-            하루를 건너뛰거나 포기하면 연속 정답이 끊겨요.
-          </p>
-          <button className="reset-btn" onClick={onReset}>
-            <RotateCcw size={14} /> 기록 초기화
-          </button>
+          {view === "achievements" ? (
+            <Achievements today={today} />
+          ) : view === "collection" ? (
+            <Collection
+              units={units}
+              focus={focusUnit}
+              onPlayUnit={onPlayUnit}
+            />
+          ) : (
+            <>
+              {!hidden && (
+                <RecordDashboard
+                  stats={stats}
+                  daily={daily}
+                  history={history}
+                  today={today}
+                  units={units}
+                  recent={recentSongIds(questions, collected)}
+                  earned={earned}
+                  onCollection={() => {
+                    setFocusUnit(null);
+                    setView("collection");
+                  }}
+                  onUnit={(unit) => {
+                    setFocusUnit(unit);
+                    setView("collection");
+                  }}
+                  onAchievements={() => setView("achievements")}
+                  onDaily={onDaily}
+                />
+              )}
+
+              {!signedIn && (
+                <p className="record-note">
+                  기록은 이 브라우저에만 저장돼요. 로그인하면 계정에 저장돼요.
+                </p>
+              )}
+              <button className="reset-btn" onClick={onReset}>
+                <RotateCcw size={14} /> 기록 초기화
+              </button>
+            </>
+          )}
         </>
       )}
     </section>
+  );
+}
+
+/** An empty 기록: a line and the way to start filling it. */
+export function EmptyState({ onPlay }: { onPlay: () => void }) {
+  return (
+    <div className="record-item empty-state">
+      {/* The logo's bars rising from an empty shelf. */}
+      <svg className="empty-art" viewBox="0 0 120 96" aria-hidden="true">
+        <rect
+          className="empty-art-shelf"
+          x="14"
+          y="80"
+          width="92"
+          height="6"
+          rx="3"
+        />
+        <rect x="28" y="52" width="10" height="24" rx="5" />
+        <rect x="44" y="34" width="10" height="42" rx="5" />
+        <rect x="60" y="46" width="10" height="30" rx="5" />
+        <rect x="76" y="22" width="10" height="54" rx="5" />
+        <circle className="empty-art-spark" cx="98" cy="18" r="4" />
+        <circle className="empty-art-spark" cx="20" cy="36" r="3" />
+      </svg>
+      <strong>아직 기록이 없어요</strong>
+      <button type="button" className="primary" onClick={onPlay}>
+        첫 문제 풀기
+      </button>
+    </div>
   );
 }

@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#F7F8F4" />
+    <meta name="theme-color" content="#F2F3F0" />
     <!-- Google Search Console ownership (needed for the Google login consent screen) -->
     <meta
       name="google-site-verification"
@@ -48,40 +48,15 @@
     <script>
       try {
         var t = localStorage.getItem("lyrics-theme");
-        var custom =
-          t === "excel" ||
-          t === "notebook" ||
-          t === "console" ||
-          t === "space" ||
-          t === "exam";
         var d =
           t === "dark" ||
-          (t !== "light" &&
-            !custom &&
-            matchMedia("(prefers-color-scheme: dark)").matches);
-        var active = custom ? t : d ? "dark" : "light";
+          (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+        var active = d ? "dark" : "light";
         document.documentElement.dataset.theme = active;
-        document.documentElement.style.colorScheme =
-          active === "dark" || active === "console" || active === "space"
-            ? "dark"
-            : "light";
-        document.querySelector('meta[name="theme-color"]').content = {
-          light: "#f7f8f4",
-          dark: "#141a16",
-          excel: "#e8ede9",
-          notebook: "#fff6ef",
-          console: "#17132b",
-          space: "#070a1c",
-          exam: "#fbfbf8",
-        }[active];
-        if (t === "excel") {
-          document.title = "Sheet1 - 문서";
-          document.querySelector('link[rel="icon"]').href =
-            "/favicon-excel.svg";
-        }
-        if (t === "notebook")
-          document.querySelector('link[rel="icon"]').href =
-            "/favicon-notebook.svg";
+        document.documentElement.style.colorScheme = active;
+        document.querySelector('meta[name="theme-color"]').content = d
+          ? "#0f110f"
+          : "#f2f3f0";
       } catch (e) {
         document.documentElement.dataset.theme = matchMedia(
           "(prefers-color-scheme: dark)",

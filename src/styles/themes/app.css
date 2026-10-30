@@ -1,0 +1,737 @@
+/* App shell for 라이트 and 다크: a sticky top bar, a bottom tab bar, the input pinned above
+   it while lyrics scroll, and areas told apart by fills (surfaces on a tinted page, tinted
+   fields on surfaces) instead of lines. Colors come from each theme's --rp-* variables.
+   Imported last so it wins ties with rhythm.css and dark.css. */
+
+:is([data-theme="light"], [data-theme="dark"]) {
+  &:root {
+    --app-width: 480px;
+    --app-gutter: 16px;
+    /* The tab bar floats: its height plus the gap under it (the rest of the page clears this). */
+    --tabbar-bar: 64px;
+    --tabbar-gap: 12px;
+    --tabbar-height: calc(
+      var(--tabbar-bar) + var(--tabbar-gap) + env(safe-area-inset-bottom)
+    );
+    /* One scale for spacing and corners. */
+    --space-section: 24px;
+    --space-card: 12px;
+    --pad-card: 20px;
+    --radius-card: 20px;
+    --radius-button: 14px;
+    background: var(--rp-bg);
+    /* Sideways swipes change tabs (App); keep the browser from reading them as back/forward. */
+    overscroll-behavior-x: none;
+  }
+
+  .puzzle-card,
+  .record-item,
+  .news-item,
+  .share-results,
+  .success-box,
+  .account-section {
+    border-radius: var(--radius-card);
+  }
+
+  .success-box,
+  .news-item,
+  .share-results {
+    padding: var(--pad-card);
+  }
+
+  .record-grid,
+  .news-list,
+  .achievement-grid {
+    gap: var(--space-card);
+  }
+
+  .record-grid,
+  .record-views {
+    margin-top: var(--space-card);
+  }
+
+  .record-subtitle,
+  .achievement-group h3 {
+    margin-top: var(--space-section);
+  }
+
+  /* Main buttons all the same; inputs and options share the button corner; chips are round. */
+  .primary,
+  .custom-submit {
+    min-height: 52px;
+    border-radius: var(--radius-button);
+    box-shadow: none;
+    font-weight: 700;
+  }
+
+  /* A main button that can't be pressed yet: a quiet gray, not a faded accent. */
+  :is(.primary, .custom-submit):disabled {
+    background: var(--rp-disabled-bg);
+    box-shadow: none;
+    color: var(--rp-disabled-text);
+    opacity: 1;
+  }
+
+  .input-wrap,
+  .unit-options button,
+  .report-kinds label,
+  .menu-list button,
+  .account-buttons button,
+  .share-actions :is(button, a) {
+    border-radius: var(--radius-button);
+  }
+
+  .filter,
+  .hints button {
+    border-radius: 999px;
+  }
+
+  /* Tabs: the baseline in the line color, the current tab underlined in the accent. */
+  .segmented {
+    box-shadow: inset 0 -1px 0 var(--rp-line);
+  }
+
+  .segmented button {
+    color: var(--rp-ink);
+  }
+
+  .segmented button[aria-selected="true"] {
+    box-shadow: inset 0 -2px 0 var(--rp-accent-text);
+  }
+
+  .record-item strong small {
+    color: var(--rp-ink-sub);
+    opacity: 1;
+  }
+
+  /* No lines in this theme: fills alone separate areas. Selected states below get a fill
+     instead of the border color they would otherwise change. */
+  *,
+  *::before,
+  *::after {
+    border-color: transparent !important;
+  }
+
+  .app-shell {
+    max-width: var(--app-width);
+    padding: 0 var(--app-gutter) calc(var(--tabbar-height) + 8px);
+  }
+
+  main {
+    max-width: none;
+    margin: 0;
+  }
+
+  /* Top bar: sticks while scrolling, content shows through a blur. */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: calc(56px + env(safe-area-inset-top));
+    margin: 0 calc(var(--app-gutter) * -1);
+    padding: env(safe-area-inset-top) var(--app-gutter) 0;
+    background: color-mix(in srgb, var(--rp-bg) 85%, transparent);
+    backdrop-filter: blur(16px) saturate(1.4);
+  }
+
+  .brand {
+    gap: 8px;
+    font-size: 17px;
+  }
+
+  .brand-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  .top-actions {
+    gap: 2px;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-btn:hover {
+    background: var(--rp-fill-strong);
+  }
+
+  /* Bottom tab bar: a rounded surface floating above the page edge; the current tab sits in
+     a tinted rounded square, icon over label. */
+  .game-tabs {
+    position: fixed;
+    left: var(--app-gutter);
+    right: var(--app-gutter);
+    bottom: calc(var(--tabbar-gap) + env(safe-area-inset-bottom));
+    z-index: 20;
+    max-width: calc(var(--app-width) - var(--app-gutter) * 2);
+    height: var(--tabbar-bar);
+    margin: 0 auto;
+    padding: 6px;
+    align-items: stretch;
+    gap: 4px;
+    border-radius: 24px;
+    background: var(--rp-surface);
+    box-shadow: 0 8px 28px var(--rp-dialog-shadow);
+  }
+
+  .game-tabs button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 0;
+    border-radius: 18px;
+    background: none;
+    box-shadow: none;
+    color: var(--rp-tab-text);
+    font-family: var(--body-font);
+    font-size: 11px;
+    font-weight: 600;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+
+  .game-tabs button[aria-selected="true"] {
+    background: none;
+    box-shadow: none;
+    color: var(--rp-accent-text);
+    font-weight: 800;
+  }
+
+  /* The current tab's background slides from tab to tab (GameTabs' indicator). Buttons sit
+     6px in from the bar's edges, 4px apart. */
+  .tab-indicator {
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: calc(
+      (100% - 12px - (var(--tab-count) - 1) * 4px) / var(--tab-count)
+    );
+    border-radius: 18px;
+    background: var(--rp-selected-bg);
+    transform: translateX(calc(var(--tab-index) * (100% + 4px)));
+    transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .game-tabs button {
+    z-index: 1;
+  }
+
+  .game-tabs .tab-icon {
+    display: block;
+  }
+
+  .game-tabs .tab-dot {
+    position: absolute;
+    top: 8px;
+    left: calc(50% + 9px);
+    margin: 0;
+  }
+
+  .achievement-toast-region {
+    bottom: calc(var(--tabbar-height) + 12px);
+  }
+
+  /* Each screen starts right under the top bar. */
+  .game-toolbar {
+    margin: 14px 0 12px;
+  }
+
+  .daily-panel,
+  .record-panel,
+  .news-panel {
+    padding-top: 14px;
+  }
+
+  /* Surfaces on the page: white, no shadow. */
+  .filter,
+  .puzzle-card,
+  .input-wrap,
+  .hints button,
+  .bottom-actions .skip.solo,
+  .record-item,
+  .news-item,
+  .share-results,
+  .custom-open,
+  .custom-pager button,
+  .custom-form textarea {
+    background: var(--rp-surface);
+    box-shadow: none;
+  }
+
+  .filter:hover:not(:disabled),
+  .hints button:hover:not(:disabled) {
+    background: var(--rp-hover-bg);
+  }
+
+  /* Lyrics card: the lyrics sit on the card itself, a thin bar at the bottom shows progress,
+     and the song row appears only once something about the song is known. */
+  .puzzle-card {
+    padding: var(--pad-card);
+  }
+
+  .lyrics {
+    margin: 0 0 var(--pad-card);
+    padding: 4px 0;
+    background: none;
+  }
+
+  .lyrics p {
+    font-size: 20px;
+    line-height: 1.75;
+  }
+
+  /* The gauge: a rounded bar inside the card's padding, clear of the lyrics. */
+  .puzzle-card > .progress-track {
+    height: 6px;
+    margin: 0;
+    border-radius: 999px;
+  }
+
+  .song-reveal:not([data-empty="true"]) + .lyrics {
+    margin-top: 14px;
+  }
+
+  .song-reveal[data-empty="true"],
+  .song-reveal.unknown strong,
+  .progress-label,
+  .progress-track::after {
+    display: none;
+  }
+
+  .progress-track {
+    height: 4px;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .input-wrap:focus-within {
+    box-shadow: 0 0 0 4px var(--rp-focus-ring);
+  }
+
+  /* Neon fills: the submit arrow and the progress bar. */
+  .input-wrap button,
+  .input-wrap button:hover:not(:disabled) {
+    background: var(--rp-neon);
+    color: var(--rp-on-neon);
+  }
+
+  .input-wrap button:disabled {
+    background: var(--rp-disabled-bg);
+    color: var(--rp-disabled-text);
+  }
+
+  /* The title box: a lime fill tells it apart from the word box. */
+  .input-wrap.title-mode,
+  .input-wrap.title-mode input {
+    background: var(--rp-selected-bg);
+  }
+
+  /* Progress bars fill with a green-to-neon gradient. */
+  .progress-track > :is(div, span) {
+    background: linear-gradient(90deg, var(--rp-gauge-start), var(--rp-neon));
+    box-shadow: none;
+  }
+
+  .daily-badge {
+    background: var(--rp-selected-bg);
+    color: var(--rp-ink);
+  }
+
+  /* The lyrics card already names the song: the result box keeps only the votes. */
+  .success-box {
+    background: var(--rp-surface);
+    color: var(--rp-ink);
+  }
+
+  .success-box .success-icon,
+  .success-box > div > strong,
+  .success-box > div > p,
+  .success-box:not(:has(.difficulty-vote)) {
+    display: none;
+  }
+
+  .success-box > div > .difficulty-vote:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  /* The top bar already says 데일리 퀴즈, so the date is this screen's heading. */
+  .daily-date {
+    display: block;
+    color: var(--rp-ink);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Nothing left to type or no hint left: only what still works stays pinned. */
+  .play-dock:has(.word-form input:disabled) > .word-form,
+  .play-dock > .hints:not(:has(button:not(:disabled))) {
+    display: none;
+  }
+
+  :is(button, a, summary):focus-visible {
+    outline-color: var(--rp-accent-text);
+  }
+
+  /* Input, hints and actions stay above the tab bar while the lyrics scroll. */
+  .play-dock {
+    position: sticky;
+    bottom: var(--tabbar-height);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 4px calc(var(--app-gutter) * -1) 0;
+    padding: 16px var(--app-gutter) 12px;
+    background: linear-gradient(transparent, var(--rp-bg) 16px);
+  }
+
+  .play-dock > * {
+    margin: 0;
+  }
+
+  .play-dock > .feedback {
+    order: 2;
+  }
+
+  .play-dock > .hints {
+    order: 3;
+  }
+
+  .play-dock > .word-form {
+    order: 4;
+  }
+
+  .play-dock > .bottom-actions {
+    order: 5;
+  }
+
+  .hints {
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  /* Hint chips share the row equally. */
+  .hints button {
+    flex: 1 1 0;
+    justify-content: center;
+    min-height: 36px;
+    padding: 6px 8px;
+  }
+
+  /* Inside white surfaces (modals, cards): tinted fields and options. */
+  dialog {
+    box-shadow: 0 20px 50px var(--rp-dialog-shadow);
+  }
+
+  :is(dialog, .success-box, .record-item) :is(.input-wrap, input, textarea),
+  .unit-options button,
+  .report-kinds label,
+  .menu-list button,
+  .account-buttons button,
+  .share-actions :is(button, a),
+  .ranking-me button,
+  .ranking-error button,
+  .ranking-more {
+    background: var(--rp-fill);
+  }
+
+  /* In a share sheet the sheet itself is the surface: no box around the buttons. */
+  dialog .share-results {
+    margin: 0;
+    padding: 0;
+    background: none;
+  }
+
+  dialog .share-results :is(pre, .share-actions button, .share-actions a) {
+    background: var(--rp-fill);
+    color: var(--rp-ink);
+  }
+
+  /* 설문 (체감 난이도·아는 곡): each answer row a segmented control on a tinted track, the
+     chosen answer lit in neon; no rules between the two questions. */
+  .success-box > div {
+    flex: 1;
+  }
+
+  .success-box .difficulty-vote {
+    margin-top: 20px;
+    padding-top: 0;
+  }
+
+  .difficulty-vote > span {
+    margin-bottom: 8px;
+    color: var(--rp-ink-sub);
+    font-weight: 600;
+  }
+
+  .difficulty-vote [role="group"] {
+    gap: 2px;
+    padding: 3px;
+    border-radius: var(--radius-button);
+    background: var(--rp-fill);
+  }
+
+  .difficulty-vote button {
+    min-height: 40px;
+    border-radius: 11px;
+    background: none;
+    color: var(--rp-ink-sub);
+    font-size: 13px;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+
+  .difficulty-vote button:hover:not([aria-pressed="true"]) {
+    background: var(--rp-fill-strong);
+  }
+
+  .difficulty-vote button[aria-pressed="true"] {
+    background: var(--rp-neon);
+    color: var(--rp-on-neon);
+    font-weight: 800;
+  }
+
+  /* 설정 > 화면 (테마·글자 크기): the same segmented look as the 설문 answers. The radios
+     stay in the page for the keyboard and screen readers, out of sight. */
+  .theme-options,
+  .size-options {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: var(--radius-button);
+    background: var(--rp-fill);
+  }
+
+  .theme-settings legend {
+    margin-bottom: 8px;
+    color: var(--rp-ink-sub);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .theme-options label {
+    position: relative;
+    flex: 1;
+    min-height: 40px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: none;
+    color: var(--rp-ink-sub);
+    font-size: 13px;
+    font-weight: 600;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+
+  .theme-options label:hover:not(.selected) {
+    background: var(--rp-fill-strong);
+  }
+
+  .theme-options label.selected {
+    background: var(--rp-neon);
+    color: var(--rp-on-neon);
+    font-weight: 800;
+  }
+
+  .theme-options input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Selected and current states: a lime fill. */
+  .unit-options button.chosen,
+  .report-kinds label.selected,
+  .custom-pager .custom-pages button[aria-current="page"] {
+    background: var(--rp-selected-bg);
+    color: var(--rp-ink);
+  }
+
+  .custom-pager .custom-pages button.done {
+    background: var(--rp-fill-strong);
+  }
+
+  /* 기록 위젯 colors: unit cards in three tones. */
+  .widget-head h2 {
+    color: var(--rp-ink);
+  }
+
+  /* 데일리: a faint warm glow from the flame's corner. */
+  .widget[aria-label="데일리"] {
+    background:
+      radial-gradient(
+        circle at 100% 100%,
+        color-mix(in srgb, #ff7a45 14%, transparent),
+        transparent 60%
+      ),
+      var(--rp-surface);
+  }
+
+  .ring-track {
+    stroke: var(--rp-fill-strong);
+  }
+
+  .ring {
+    color: var(--rp-ink);
+  }
+
+  /* 도감 covers and tracks without art: a quiet tile. */
+  .playlist-cover,
+  .track-art {
+    background-color: var(--rp-fill-strong);
+    color: var(--rp-ink-sub);
+  }
+
+  /* Inside a widget the .record-item text colors would win: the card's own color instead. */
+  .record-item .unit-card-meta :is(span, strong, small) {
+    color: inherit;
+  }
+
+  .record-item.achievement.secret {
+    opacity: 0.7;
+  }
+
+  .entered-mark {
+    color: var(--rp-ink-sub);
+    opacity: 1;
+  }
+
+  /* 기록: no 업적 count heading (the 업적 widget shows it). */
+  .record-panel .record-subtitle:has(.achievement-count) {
+    display: none;
+  }
+
+  /* 업적: reached ones are white cards with a neon medal; the rest lie flat on the page. */
+  .record-item.achievement svg {
+    filter: none;
+  }
+
+  .record-item.achievement:not(.earned) {
+    background: none;
+    color: var(--rp-ink-sub);
+    opacity: 1;
+  }
+
+  /* 도감: ink on the page; numbers and counts in the quieter ink. */
+  .playlist-detail,
+  .playlist-card,
+  .recent-row,
+  .playlist-back {
+    color: var(--rp-ink);
+  }
+
+  .playlist-meta small,
+  .library-count span,
+  .recent-track small,
+  .tracklist small,
+  .playlist-hero p,
+  .unit-card-meta small {
+    color: var(--rp-ink-sub);
+  }
+
+  :is(.library-head, .playlist-actions) .progress-track {
+    border-radius: 999px;
+    background: var(--rp-fill-strong);
+  }
+
+  /* Hairlines between tracks, starting after the covers. */
+  .tracklist li + li {
+    background: linear-gradient(var(--rp-fill-strong), var(--rp-fill-strong))
+      no-repeat 58px 0 / calc(100% - 58px) 1px;
+  }
+
+  .tracklist .locked .track-art {
+    color: color-mix(in srgb, var(--rp-ink-sub) 70%, transparent);
+  }
+
+  /* The top bar names each screen (the play tab keeps the brand), so the screens' own
+     headings step aside. */
+  .topbar:has(.screen-title) .brand,
+  .daily-heading h1,
+  .record-panel > h1,
+  .news-panel > h1,
+  .custom-panel .game-toolbar > h1 {
+    display: none;
+  }
+
+  .screen-title {
+    display: block;
+    margin: 0;
+    color: var(--rp-ink);
+    font: 800 20px/1.3 var(--body-font);
+    letter-spacing: -0.5px;
+  }
+
+  /* One typeface: the display font stays on the brand only. */
+  :is(main h1, h2, .success-box strong, .song-reveal strong) {
+    font-family: var(--body-font);
+    font-weight: 800;
+  }
+
+  /* Taps act at once (no double-tap zoom) and a long press doesn't select button text. */
+  :is(button, a, summary, label) {
+    touch-action: manipulation;
+  }
+
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Presses shrink a little; screens fade in when their tab opens. */
+  button:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* A new tab slides in from its side of the tab bar. */
+  main > [role="tabpanel"]:not([hidden]) {
+    animation: panel-in 0.22s ease-out;
+  }
+
+  main[data-dir="back"] > [role="tabpanel"]:not([hidden]) {
+    animation-name: panel-in-back;
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@keyframes panel-in-back {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is([data-theme="light"], [data-theme="dark"]) main > [role="tabpanel"] {
+    animation: none;
+  }
+
+  :is([data-theme="light"], [data-theme="dark"]) .tab-indicator {
+    transition: none;
+  }
+}

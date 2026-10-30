@@ -12,13 +12,7 @@ export function SongPrefVote({ songId }: { songId: string }) {
   const markSong = useGame((s) => s.markSong);
   return (
     <div className="difficulty-vote song-pref">
-      <span id={`song-pref-${songId}`}>
-        {mine === "known"
-          ? "아는 곡으로 표시했어요."
-          : mine === "unknown"
-            ? "모르는 곡으로 표시했어요."
-            : "이 곡, 알고 있었나요?"}
-      </span>
+      <span id={`song-pref-${songId}`}>이 곡, 알고 있었나요?</span>
       <div role="group" aria-labelledby={`song-pref-${songId}`}>
         {CHOICES.map(([pref, label]) => (
           <button

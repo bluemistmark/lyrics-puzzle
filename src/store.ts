@@ -59,6 +59,17 @@ export type Round = {
 export type GameMode = "play" | "daily";
 /** 단어 공개 hints per question in classic rules (the play tab's classic and the daily challenge). */
 export const WORD_HINT_LIMIT = 5;
+/** What a guessed word did; the screen shows it (reveal or a shake), so it isn't a notice. */
+export type GuessResult = "added" | "revealed" | "miss" | "entered" | "ignored";
+/** Words for screen readers and the WebMCP tool. */
+export const GUESS_MESSAGES: Record<GuessResult, string> = {
+  added: "일치하는 가사가 공개됐어요.",
+  revealed: "이미 공개된 부분이에요.",
+  miss: "일치하는 단어가 없어요.",
+  entered: "이미 입력한 단어예요.",
+  ignored: "지금은 단어를 입력할 수 없어요.",
+};
+
 export type DailyState = { date: string; round: Round; notice: string };
 /** Progress of one non-classic play mode (classic keeps `round`/`seen` from older saves). */
 export type ModeState = { round: Round; seen: string[] };
@@ -263,8 +274,9 @@ type Store = {
   achievements: Record<string, string>;
   /** Achievements reached during this visit, for the toast (not persisted). */
   justUnlocked: string[];
+  /** Only what the screen doesn't already show (a lap of the pool, a missing shared question). */
   notice: string;
-  guess: (word: string, mode?: GameMode) => void;
+  guess: (word: string, mode?: GameMode) => GuessResult;
   solve: (title: string, mode?: GameMode) => boolean;
   hint: (type: "english" | "word" | "artist", mode?: GameMode) => void;
   giveUp: (mode?: GameMode) => void;
@@ -332,13 +344,9 @@ export const useGame = create<Store>()(
           const s = get();
           const current = mode === "daily" ? s.daily.round : playRound(s);
           const style = mode === "daily" ? "classic" : s.playMode;
-          if (style === "simple") {
-            set({ notice: "심플 모드는 가사가 모두 공개돼 있어요." });
-            return;
-          }
-          if (current.givenUp) return;
+          if (style === "simple" || current.givenUp) return "ignored";
           const text = word.trim().slice(0, 60);
-          if (!text) return;
+          if (!text) return "ignored";
           const found = matches(
             questions.find((q) => q.id === current.id)!,
             text,
@@ -348,13 +356,8 @@ export const useGame = create<Store>()(
           if (
             !added.length &&
             current.words.some((w) => normalize(w.word) === normalize(text))
-          ) {
-            const notice = "이미 입력한 단어예요.";
-            set(
-              mode === "daily" ? { daily: { ...s.daily, notice } } : { notice },
-            );
-            return;
-          }
+          )
+            return "entered";
           const round = {
             ...current,
             revealed: [...new Set([...current.revealed, ...found])],
@@ -367,11 +370,7 @@ export const useGame = create<Store>()(
               },
             ],
           };
-          const notice = added.length
-            ? "일치하는 가사가 공개됐어요."
-            : found.length
-              ? "이미 공개된 부분이에요."
-              : "일치하는 단어가 없어요.";
+          const notice = "";
           if (mode === "daily") set({ daily: { ...s.daily, round, notice } });
           else if (style === "classic") {
             const stats = { ...s.stats };
@@ -384,9 +383,10 @@ export const useGame = create<Store>()(
               ...(round.solved && !current.solved
                 ? { modeStats: tally(s.modeStats, "easy", "solved") }
                 : {}),
-              notice: round.solved ? "가사를 모두 채웠어요." : notice,
+              notice,
             });
           }
+          return added.length ? "added" : found.length ? "revealed" : "miss";
         },
         solve: (title, mode = "play") => {
           const s = get();
@@ -395,18 +395,13 @@ export const useGame = create<Store>()(
           if (current.solved || current.givenUp || style === "easy")
             return false;
           const q = questions.find((q) => q.id === current.id)!;
-          if (!titleMatches(q, title)) {
-            const notice = "제목이 일치하지 않아요.";
-            set(
-              mode === "daily" ? { daily: { ...s.daily, notice } } : { notice },
-            );
-            return false;
-          }
+          // WordForm shows a wrong title itself (a shake).
+          if (!titleMatches(q, title)) return false;
           if (style === "simple") {
             set({
               ...playPatch(s, { ...current, solved: true }),
               modeStats: tally(s.modeStats, "simple", "solved"),
-              notice: "제목 정답. 다음 문제로 넘어갈 수 있어요.",
+              notice: "",
             });
             return true;
           }
@@ -433,7 +428,7 @@ export const useGame = create<Store>()(
               daily: {
                 ...s.daily,
                 round,
-                notice: "제목 정답. 결과를 공유할 수 있어요.",
+                notice: "",
               },
             });
             return true;
@@ -450,7 +445,7 @@ export const useGame = create<Store>()(
               streak,
               best: Math.max(streak, s.stats.best),
             },
-            notice: "제목 정답. 남은 가사도 풀 수 있어요.",
+            notice: "",
           });
           return true;
         },
@@ -459,6 +454,8 @@ export const useGame = create<Store>()(
           const current = mode === "daily" ? s.daily.round : playRound(s);
           const style = mode === "daily" ? "classic" : s.playMode;
           if (current.givenUp) return;
+          // Once the title is known the artist is shown anyway: no hint to count.
+          if (type === "artist" && current.solved) return;
           // 심플 shows the lyrics and 이지 the artist, so those hints don't apply.
           if (style === "simple" && type !== "artist") return;
           if (style === "easy" && type === "artist") return;
@@ -479,12 +476,7 @@ export const useGame = create<Store>()(
             round.wordHints++;
           }
           round.hints++;
-          const notice =
-            type === "english"
-              ? "영어 구간을 표시했어요."
-              : type === "artist"
-                ? "가수명을 공개했어요."
-                : "단어 하나를 공개했어요.";
+          const notice = "";
           if (mode === "daily") set({ daily: { ...s.daily, round, notice } });
           else if (style === "classic") {
             const stats = { ...s.stats };
@@ -497,7 +489,7 @@ export const useGame = create<Store>()(
               ...(round.solved && !current.solved
                 ? { modeStats: tally(s.modeStats, "easy", "solved") }
                 : {}),
-              notice: round.solved ? "가사를 모두 채웠어요." : notice,
+              notice,
             });
           }
         },
@@ -512,7 +504,7 @@ export const useGame = create<Store>()(
               daily: {
                 ...s.daily,
                 round,
-                notice: "데일리 퀴즈가 종료됐어요.",
+                notice: "",
               },
             });
             return;
@@ -521,7 +513,7 @@ export const useGame = create<Store>()(
             set({
               ...playPatch(s, { ...current, givenUp: true }),
               modeStats: tally(s.modeStats, s.playMode, "givenUp"),
-              notice: "정답을 확인했어요.",
+              notice: "",
             });
             return;
           }
@@ -530,7 +522,7 @@ export const useGame = create<Store>()(
             feats: recordGiveUp(s.feats),
             round: { ...current, givenUp: true },
             stats: { ...s.stats, skipped: s.stats.skipped + 1, streak: 0 },
-            notice: "정답을 확인했어요.",
+            notice: "",
           });
         },
         syncDaily: (date) => {
@@ -584,13 +576,12 @@ export const useGame = create<Store>()(
               newRound(id),
               seen.includes(id) ? seen : [...seen, id],
             ),
-            notice: "공유받은 문제예요. 같은 문제에 도전해 보세요!",
+            notice: "",
           });
           return true;
         },
         select: (selected) => {
-          if (selected.length)
-            set({ selected, notice: "선택한 범위는 다음 문제부터 적용돼요." });
+          if (selected.length) set({ selected });
         },
         markSong: (songId, pref) =>
           set({
@@ -622,7 +613,7 @@ export const useGame = create<Store>()(
             modes: newModes(),
             selected: mainUnits,
             seen: [q.id],
-            notice: "기록을 초기화했어요.",
+            notice: "",
           });
         },
         dismissUnlocked: () => rawSet({ justUnlocked: [] }),
