@@ -1868,6 +1868,15 @@ main [hidden] {
   opacity: 0.7;
 }
 
+/* How many of the group are reached, after its name. */
+.achievement-group-count {
+  margin-left: 4px;
+  font-family: var(--number-font);
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
 .record-item.achievement.secret {
   border-style: dashed;
 }
@@ -2433,11 +2442,6 @@ main [hidden] {
 
 /* A playlist page: the cover on the left, its name, count and progress beside it, then
    the tracks. */
-.playlist-detail,
-.playlist-library {
-  scroll-margin-top: 72px;
-}
-
 .playlist-back {
   display: inline-flex;
   align-items: center;
@@ -2511,6 +2515,30 @@ main [hidden] {
   font-size: 15px;
 }
 
+/* Songs not guessed yet, folded into one row: their count, then the list when opened. */
+.tracklist-more {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+}
+
+.tracklist-more svg {
+  flex: none;
+  transition: transform 0.2s ease;
+}
+
+.tracklist-more[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
 /* A guessed track is a button that opens its lyrics. */
 .tracklist .track-row {
   display: flex;
@@ -2556,12 +2584,35 @@ main [hidden] {
   opacity: 0.6;
 }
 
+/* Each guessed part on its own soft card, so parts read apart. */
 .track-lyrics {
+  box-sizing: border-box;
   width: 100%;
-  margin-top: 18px;
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--rp-fill, #f2f3f0);
   font-size: 15px;
   line-height: 1.7;
   word-break: keep-all;
+}
+
+.track-sheet-unit + .track-lyrics {
+  margin-top: 18px;
+}
+
+/* No news yet: a bell and one line in the middle of the page. */
+.news-empty {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 120px 0 40px;
+  color: var(--rp-ink-sub);
+  font-size: 14px;
+}
+
+.news-empty p {
+  margin: 0;
 }
 
 .track-lyrics p {
@@ -2623,6 +2674,15 @@ main [hidden] {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 14px;
+}
+
+/* Players who finished today so far, under the date. */
+.daily-participants {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rp-ink-sub);
 }
 
 .daily-heading h1 {

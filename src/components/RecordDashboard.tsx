@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { unitArts, type UnitEntry } from "../collection";
+import { unitArts, unitsByRecent, type UnitEntry } from "../collection";
 import type { DailyHistory, DailySummary } from "../daily";
 import { ACHIEVEMENTS, type Stats } from "../store";
 import { useCountUp } from "../hooks/useCountUp";
@@ -82,7 +82,7 @@ export function RecordDashboard({
         onMore={onCollection}
       >
         <ScrollRow className="unit-cards">
-          {units.map((u) => (
+          {unitsByRecent(units, recent).map((u) => (
             <button
               key={u.unit}
               type="button"

@@ -51,39 +51,51 @@ export function Achievements({ today }: { today: string }) {
           {count} / {ACHIEVEMENTS.length}
         </span>
       </h2>
-      {ACHIEVEMENT_GROUPS.map((group) => (
-        <section key={group} className="achievement-group">
-          <h3>{group}</h3>
-          <ul className="achievement-grid">
-            {ACHIEVEMENTS.filter((a) => a.group === group).map((a) => {
-              const secret = a.hidden && !earned[a.id];
-              // A hidden one not reached yet doesn't tell even that.
-              const rare = !secret && isRare(rates, a.id);
-              return (
-                <li key={a.id}>
-                  <button
-                    type="button"
-                    className={`record-item achievement${earned[a.id] ? " earned" : ""}${secret ? " secret" : ""}${rare ? " rare" : ""}`}
-                    onClick={() => {
-                      setClosing(false);
-                      setOpen(a);
-                    }}
-                  >
-                    <span className="medal">
-                      <AchievementIcon
-                        name={secret ? "lock" : a.icon}
-                        size={18}
-                      />
-                    </span>
-                    <strong>{secret ? "???" : a.title}</strong>
-                    {rare && <span className="sr-only">희귀 업적</span>}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      ))}
+      {ACHIEVEMENT_GROUPS.map((group) => {
+        // Reached ones first (in their order), then the rest.
+        const list = ACHIEVEMENTS.filter((a) => a.group === group).sort(
+          (a, b) => Number(!earned[a.id]) - Number(!earned[b.id]),
+        );
+        const reached = list.filter((a) => earned[a.id]).length;
+        return (
+          <section key={group} className="achievement-group">
+            <h3>
+              {group}{" "}
+              <span className="achievement-group-count">
+                {reached}/{list.length}
+              </span>
+            </h3>
+            <ul className="achievement-grid">
+              {list.map((a) => {
+                const secret = a.hidden && !earned[a.id];
+                // A hidden one not reached yet doesn't tell even that.
+                const rare = !secret && isRare(rates, a.id);
+                return (
+                  <li key={a.id}>
+                    <button
+                      type="button"
+                      className={`record-item achievement${earned[a.id] ? " earned" : ""}${secret ? " secret" : ""}${rare ? " rare" : ""}`}
+                      onClick={() => {
+                        setClosing(false);
+                        setOpen(a);
+                      }}
+                    >
+                      <span className="medal">
+                        <AchievementIcon
+                          name={secret ? "lock" : a.icon}
+                          size={18}
+                        />
+                      </span>
+                      <strong>{secret ? "???" : a.title}</strong>
+                      {rare && <span className="sr-only">희귀 업적</span>}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        );
+      })}
       <Modal
         open={open !== null}
         closing={closing}

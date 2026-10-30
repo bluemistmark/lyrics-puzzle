@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { recentSongIds, unitArts, type UnitEntry } from "../collection";
 import { useCollectionSeen } from "../collectionSeen";
 import { questions, songs, type Song } from "../game";
 import { useGame } from "../store";
 import { AlbumArt } from "./AlbumArt";
-import { ArrowLeft, Music } from "./icons";
+import { ArrowLeft, ChevronDown, Music } from "./icons";
 import { Modal } from "./Modal";
 import { PlaylistCover } from "./PlaylistCover";
 import { ScrollRow } from "./ScrollRow";
@@ -25,7 +25,6 @@ export function Collection({
   focus?: string | null;
 }) {
   const [open, setOpen] = useState(focus);
-  const top = useRef<HTMLDivElement>(null);
   const collected = useGame((s) => s.collected);
   // Songs guessed since the last visit get a NEW mark; opening the 도감 counts as a visit.
   const [seenBefore] = useState(() => useCollectionSeen.getState().seen);
@@ -39,9 +38,10 @@ export function Collection({
   );
   const hasNew = (u: UnitEntry) => u.songs.some((s) => newSongs.has(s.song.id));
   const isComplete = (u: UnitEntry) => u.collected === u.songs.length;
-  // Opening or leaving a playlist starts at its top.
+  // Opening or leaving a playlist starts at the top of the page (the record tab's own tabs
+  // stay in view).
   useEffect(() => {
-    top.current?.scrollIntoView({ block: "start" });
+    window.scrollTo({ top: 0 });
   }, [open]);
   const unit = units.find((u) => u.unit === open);
   const recentSongs = recentSongIds(questions, collected);
@@ -52,11 +52,19 @@ export function Collection({
     setClosing(false);
     setTrack(null);
   }, []);
+  // The playlist whose songs not guessed yet are shown (folded away otherwise).
+  const [lockedOpen, setLockedOpen] = useState<string | null>(null);
 
   if (unit) {
     const arts = unitArts(unit, recentSongs);
+    // Guessed songs first; the rest fold into one row (a long list of blanks says little).
+    const guessed = unit.songs.filter((s) => s.solved);
+    const missing = unit.songs
+      .map((s, i) => ({ ...s, number: i + 1 }))
+      .filter((s) => !s.solved);
+    const showMissing = lockedOpen === unit.unit;
     return (
-      <div ref={top} className="playlist-detail">
+      <div className="playlist-detail">
         <button
           type="button"
           className="playlist-back"
@@ -74,10 +82,10 @@ export function Collection({
             <Progress label={`${unit.unit} 수집률`} unit={unit} />
           </div>
         </header>
-        <ol className="tracklist">
-          {unit.songs.map(({ song, total, solved }, i) => (
-            <li key={song.id} className={solved ? "solved" : "locked"}>
-              {solved ? (
+        {guessed.length > 0 && (
+          <ol className="tracklist">
+            {guessed.map(({ song, total, solved }) => (
+              <li key={song.id} className="solved">
                 <button
                   type="button"
                   className="track-row"
@@ -108,19 +116,40 @@ export function Collection({
                     </small>
                   )}
                 </button>
-              ) : (
-                <>
-                  <span className="track-art" aria-hidden="true">
-                    {i + 1}
-                  </span>
-                  <span className="sr-only">
-                    {i + 1}번째, 아직 맞히지 않은 곡
-                  </span>
-                </>
-              )}
-            </li>
-          ))}
-        </ol>
+              </li>
+            ))}
+          </ol>
+        )}
+        {missing.length > 0 && (
+          <>
+            <button
+              type="button"
+              className="tracklist-more"
+              aria-expanded={showMissing}
+              onClick={() => setLockedOpen(showMissing ? null : unit.unit)}
+            >
+              <span className="track-art" aria-hidden="true">
+                {missing.length}
+              </span>
+              <span className="track-title">아직 못 맞힌 곡</span>
+              <ChevronDown size={18} aria-hidden="true" />
+            </button>
+            {showMissing && (
+              <ol className="tracklist">
+                {missing.map(({ song, number }) => (
+                  <li key={song.id} className="locked">
+                    <span className="track-art" aria-hidden="true">
+                      {number}
+                    </span>
+                    <span className="sr-only">
+                      {number}번째, 아직 맞히지 않은 곡
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </>
+        )}
         <Modal
           open={track !== null}
           closing={closing}
@@ -169,7 +198,7 @@ export function Collection({
   const main = units.filter((u) => u.main);
   const others = units.filter((u) => !u.main);
   return (
-    <div ref={top} className="playlist-library">
+    <div className="playlist-library">
       <header className="library-head">
         <p className="library-count">
           <b>{found}</b>

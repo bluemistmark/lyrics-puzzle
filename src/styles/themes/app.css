@@ -420,6 +420,21 @@
     order: 5;
   }
 
+  /* After the title is known: a slimmer box for the rest of the lyrics, so the result and the
+     next step lead. The font stays 16px (smaller zooms the page on iPhone). */
+  .play-dock.finished .input-wrap {
+    padding: 3px;
+  }
+
+  .play-dock.finished .input-wrap input {
+    padding: 6px 10px;
+  }
+
+  .play-dock.finished .input-wrap button {
+    width: 38px;
+    min-height: 34px;
+  }
+
   .hints {
     justify-content: flex-start;
     gap: 6px;
@@ -654,7 +669,9 @@
   }
 
   /* Hairlines between tracks, starting after the covers. */
-  .tracklist li + li {
+  .tracklist li + li,
+  .tracklist + .tracklist-more,
+  .tracklist-more + .tracklist li:first-child {
     background: linear-gradient(var(--rp-fill-strong), var(--rp-fill-strong))
       no-repeat 58px 0 / calc(100% - 58px) 1px;
   }
