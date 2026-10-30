@@ -1,8 +1,8 @@
-import "../src/testing/fake-storage.ts";
+import "../../src/testing/fake-storage.ts";
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { clientAddress, parseIds } from "./achievements.ts";
-import { ACHIEVEMENTS } from "../src/store.ts";
+import { clientAddress, parseIds } from "../../api/achievements.ts";
+import { ACHIEVEMENTS } from "../../src/store.ts";
 
 test("업적 달성 전송: 게임의 모든 업적 ID를 받아들임", () => {
   assert.deepEqual(

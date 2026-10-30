@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import * as api from "./difficulty.ts";
+import * as api from "../../api/difficulty.ts";
 
 process.env.SUPABASE_URL = "https://db.test";
 process.env.SUPABASE_SERVICE_ROLE_KEY = "service-key";

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { isAllowed } from "./lookup.ts";
-import { DEEZER_API, itunesUrls, queryUrl } from "../src/data/artwork.ts";
+import { isAllowed } from "../../api/lookup.ts";
+import { DEEZER_API, itunesUrls, queryUrl } from "../../src/data/artwork.ts";
 
 test("앨범 찾기 프록시: 어드민이 만드는 Deezer·iTunes 주소만 허용", () => {
   const song = {
