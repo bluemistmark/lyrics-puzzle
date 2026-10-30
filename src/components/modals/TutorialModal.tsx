@@ -3,11 +3,10 @@ import {
   ArrowRight,
   AudioLines,
   CalendarDays,
-  GraduationCap,
   Mic2,
   Palette,
   Sparkles,
-} from "lucide-react";
+} from "../icons";
 import { matches, progress } from "../../game";
 import {
   markTutorialDone,
@@ -55,12 +54,12 @@ export function TutorialModal({ onClose, onStart }: Props) {
 
   return (
     <>
-      <span className="modal-icon">
-        <GraduationCap />
-      </span>
-      <p className="tutorial-step" aria-live="polite">
-        {step + 1} / 3
-      </p>
+      {/* Where in the three steps: the current dot is long. */}
+      <div className="step-dots" role="status" aria-label={`${step + 1} / 3`}>
+        {[0, 1, 2].map((i) => (
+          <i key={i} className={i === step ? "current" : undefined} />
+        ))}
+      </div>
       {step === 0 && (
         <>
           <h2>가사 초성을 풀어 보세요</h2>
@@ -151,13 +150,13 @@ export function TutorialModal({ onClose, onStart }: Props) {
             <li>
               <Palette size={18} aria-hidden="true" />
               <span>
-                <b>테마와 글자 크기</b> 위쪽 테마 버튼에서 화면 분위기와 가사
-                글자 크기를 바꿀 수 있어요.
+                <b>테마와 글자 크기</b> 오른쪽 위 설정의 화면 탭에서 바꿀 수
+                있어요.
               </span>
             </li>
           </ul>
           <p className="feedback">
-            이 안내는 도움말(게임 방법)에서 다시 볼 수 있어요.
+            이 안내는 설정 › 정보 › 게임 방법에서 다시 볼 수 있어요.
           </p>
         </>
       )}

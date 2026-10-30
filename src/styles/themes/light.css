@@ -1,38 +1,52 @@
-/* 라이트: colors for the rhythm-puzzle layout (rhythm.css). */
+/* 라이트: NCT black and neon lime on a light gray page. Colors only: the layout is
+   rhythm.css (the lyrics puzzle) and app.css (the app shell), shared with 다크. */
 
 [data-theme="light"] {
-  /* Rhythm puzzle: light and dark share this layout; each only sets the colors below. */
   &:root {
-    --rp-bg: #f7f8f4;
+    --rp-bg: #f2f3f0;
     --rp-grid: #e6eddf5c;
     --rp-glow: #e9f1dcad;
-    --rp-ink: #183d2d;
-    --rp-ink-sub: #648157;
-    --rp-line: #dce5d5;
+    --rp-ink: #111311;
+    --rp-ink-sub: #5f6660;
+    --rp-line: #e2e4df;
     --rp-tabs-bg: #edf1e9;
     --rp-tabs-border: #e1e8dc;
-    --rp-tab-text: #627463;
-    --rp-accent: #1e4a35;
-    --rp-accent-hover: #286442;
-    --rp-on-accent: #fff;
+    --rp-tab-text: #8a908b;
+    /* NCT colors: black with neon lime. Neon is a fill only; it is unreadable as text on white. */
+    --rp-neon: #c4f53a;
+    --rp-accent: #111311;
+    --rp-accent-hover: #2a2e2a;
+    --rp-on-accent: var(--rp-neon);
+    --rp-accent-text: var(--rp-ink);
     --rp-surface: #fff;
-    --rp-surface-border: #dfe8d9;
-    --rp-shadow: #183d2d0d;
-    --rp-lyrics-bg: #f4f8ee;
-    --rp-lyrics-border: #e3ecd9;
-    --rp-revealed-bg: #d9f2a3;
-    --rp-revealed-text: #183d2d;
-    --rp-track-bg: #e9eee3;
-    --rp-track-border: #d8e6c9;
-    --rp-input-border: #cdddc7;
-    --rp-placeholder: #879a81;
-    --rp-disabled-bg: #e8efe0;
-    --rp-disabled-text: #789070;
-    --rp-control-text: #244934;
-    --rp-control-border: #d8e6cc;
-    --rp-control-edge: #d9e5ce;
-    --rp-control-icon: #6da72f;
-    --rp-hover-bg: #ecf8d8;
-    --rp-hover-border: #b9d89c;
+    --rp-surface-border: #e2e4df;
+    --rp-shadow: #1113110d;
+    --rp-lyrics-bg: #f2f3f0;
+    --rp-lyrics-border: #e2e4df;
+    --rp-revealed-bg: #dcfa86;
+    --rp-revealed-text: #111311;
+    --rp-track-bg: #e6e8e3;
+    --rp-track-border: #e2e4df;
+    --rp-input-border: #e2e4df;
+    --rp-placeholder: #8f948f;
+    --rp-disabled-bg: #e6e8e3;
+    --rp-disabled-text: #8f948f;
+    --rp-control-text: #111311;
+    --rp-control-border: #e2e4df;
+    --rp-control-edge: #e2e4df;
+    --rp-control-icon: #111311;
+    --rp-hover-bg: #eefbd0;
+    --rp-hover-border: #e2e4df;
+
+    --rp-fill: #f2f3f0;
+    --rp-fill-strong: #e6e8e3;
+    --rp-selected-bg: #e3fb9f;
+    --logo-bg: var(--rp-ink);
+    --logo-ink: var(--rp-neon);
+    --rp-on-neon: #111311;
+    --rp-focus-ring: #c4f53a80;
+    --rp-dialog-shadow: #11131126;
+    --rp-grass-on: #8cc414;
+    --rp-gauge-start: #6fbf2a;
   }
 }

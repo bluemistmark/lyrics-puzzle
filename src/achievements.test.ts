@@ -64,7 +64,15 @@ test("업적 ID는 겹치지 않고, 모두 분류가 있으며 유닛마다 도
   assert.equal(progress("collect-100", empty).goal, 3);
   assert.deepEqual(
     list.filter((a) => a.hidden).map((a) => a.id),
-    ["give-up-10", "fast", "night", "all-themes"],
+    [
+      "give-up-10",
+      "busy-day-100",
+      "fast",
+      "fast-10",
+      "night",
+      "night-10",
+      "all-themes",
+    ],
   );
 });
 
@@ -115,6 +123,64 @@ test("완곡은 구간이 여러 개인 곡의 모든 구간을 맞혀야 달성
     progress("full-song", { ...empty, collected: ["a1", "a1b"] }).current,
     1,
   );
+});
+
+test("완곡 컬렉터는 구간이 여러 개인 곡 수를 넘지 않고, 골고루·새로운 취향은 유닛별로 셈", () => {
+  // Only A1 has several parts in the fixture.
+  assert.deepEqual(
+    progress("full-song-5", { ...empty, collected: ["a1", "a1b"] }),
+    { current: 1, goal: 1 },
+  );
+  assert.deepEqual(progress("collect-units", { ...empty, collected: ["a2"] }), {
+    current: 1,
+    goal: 1,
+  });
+  assert.equal(
+    progress("collect-units", { ...empty, collected: ["b1"] }).current,
+    0,
+  );
+  assert.equal(
+    progress("collect-other", { ...empty, collected: ["a1"] }).current,
+    0,
+  );
+  assert.equal(
+    progress("collect-other", { ...empty, collected: ["b1"] }).current,
+    1,
+  );
+  // Song goals shrink to the catalog so they stay reachable.
+  assert.equal(progress("collect-10", empty).goal, 3);
+  assert.equal(progress("collect-50", empty).goal, 3);
+});
+
+test("다른 가수가 없으면 새로운 취향 업적이 없음", () => {
+  const ids = achievementList({
+    songs: catalog.songs.filter((s) => s.main),
+    questions: catalog.questions.filter((q) => q.songId !== "B1"),
+  }).map((a) => a.id);
+  assert.ok(!ids.includes("collect-other"));
+});
+
+test("데일리 한 방에는 힌트 없이 1개 이하, 출석왕은 못 맞힌 날도 셈", () => {
+  const dailyHistory = {
+    "2026-09-27": { solved: false, guesses: 12, hints: 3 },
+    "2026-09-28": { solved: true, guesses: 2, hints: 0 },
+    "2026-09-29": { solved: true, guesses: 1, hints: 0 },
+  };
+  assert.equal(progress("daily-ace", { ...empty, dailyHistory }).current, 1);
+  assert.equal(
+    progress("daily-played-50", { ...empty, dailyHistory }).current,
+    3,
+  );
+  assert.equal(
+    progress("daily-solved-100", { ...empty, dailyHistory }).current,
+    2,
+  );
+});
+
+test("단골손님은 연속이 아니어도 플레이한 날을 모두 셈", () => {
+  const playLog = { "2026-09-01": 2, "2026-09-10": 1, "2026-09-11": 0 };
+  assert.equal(progress("play-total-30", { ...empty, playLog }).current, 2);
+  assert.equal(progress("play-days-3", { ...empty, playLog }).current, 1);
 });
 
 test("꾸준함은 비어 있는 날에 끊기는 가장 긴 연속 플레이 일수", () => {

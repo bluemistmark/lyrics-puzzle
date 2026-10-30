@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -7,11 +7,12 @@ import {
   ChevronRight,
   RotateCcw,
   Sparkles,
-} from "lucide-react";
+} from "../icons";
 import { customQuestion, pageDone, pageRanges } from "../../custom";
 import { useCustom, type CustomPuzzle } from "../../customStore";
 import { progress } from "../../game";
 import { blockComposingEnter } from "../../utils/ime";
+import { shake } from "../../utils/shake";
 import { Lyrics } from "../play/Lyrics";
 
 type Props = { puzzle: CustomPuzzle; onBack: () => void };
@@ -21,7 +22,9 @@ export function CustomPlay({ puzzle, onBack }: Props) {
   const hint = useCustom((s) => s.hint);
   const resetProgress = useCustom((s) => s.resetProgress);
   const [word, setWord] = useState("");
+  // The result in words, for screen readers only: the screen shows a reveal or a shake.
   const [notice, setNotice] = useState("");
+  const wrap = useRef<HTMLDivElement>(null);
   const [confirming, setConfirming] = useState(false);
   const [page, setPage] = useState(0);
   const question = customQuestion(puzzle.id, puzzle.title, puzzle.lines);
@@ -35,22 +38,19 @@ export function CustomPlay({ puzzle, onBack }: Props) {
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { matched, gained } = guess(puzzle.id, word);
+    if (gained === 0) shake(wrap.current);
     setNotice(
       matched === 0
         ? "가사에 없는 단어예요."
         : gained === 0
           ? "이미 열린 글자예요."
-          : `${gained}글자가 열렸어요!`,
+          : `${gained}글자가 열렸어요.`,
     );
     setWord("");
   };
   const useHint = () => {
     // 지금 보는 쪽에서 아직 안 열린 단어 중 하나가 무작위로 열린다.
-    setNotice(
-      hint(puzzle.id, ranges[page])
-        ? "이 쪽의 단어 하나를 열었어요."
-        : "이 쪽에는 열 단어가 없어요.",
-    );
+    hint(puzzle.id, ranges[page]);
   };
 
   return (
@@ -124,7 +124,7 @@ export function CustomPlay({ puzzle, onBack }: Props) {
         </p>
       )}
       <form className="word-form" onSubmit={submit}>
-        <div className="input-wrap">
+        <div className="input-wrap" ref={wrap}>
           <input
             value={word}
             onChange={(e) => setWord(e.target.value)}
@@ -143,9 +143,9 @@ export function CustomPlay({ puzzle, onBack }: Props) {
           </button>
         </div>
       </form>
-      <div className="feedback" role="status">
+      <span className="sr-only" role="status">
         {notice}
-      </div>
+      </span>
       <div className="hints">
         <button disabled={complete || done[page]} onClick={useHint}>
           <Sparkles size={14} /> 단어 공개 · 사용 {puzzle.hints}회

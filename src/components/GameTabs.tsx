@@ -1,13 +1,25 @@
-export type Tab =
-  "play" | "daily" | "custom" | "record" | "collection" | "news";
+import type { CSSProperties } from "react";
+import {
+  CalendarCheck,
+  ChartColumn,
+  Gamepad2,
+  Newspaper,
+  PenLine,
+  type Icon,
+} from "./icons";
 
-const tabs: [Tab, string][] = [
-  ["play", "플레이"],
-  ["daily", "데일리"],
-  ["custom", "내 가사"],
-  ["record", "기록"],
-  ["collection", "도감"],
+export type Tab = "play" | "daily" | "custom" | "record" | "news";
+
+const tabs: [Tab, string, Icon][] = [
+  ["play", "플레이", Gamepad2],
+  ["daily", "데일리", CalendarCheck],
+  ["custom", "내 가사", PenLine],
+  ["record", "기록", ChartColumn],
+  ["news", "소식", Newspaper],
 ];
+
+/** Tabs left to right: tab transitions and swipes move along this order. */
+export const TAB_ORDER = tabs.map(([tab]) => tab);
 
 type Props = {
   active: Tab;
@@ -16,11 +28,22 @@ type Props = {
   pending?: Partial<Record<Tab, string>>;
 };
 
-/** Panels must use the ids `${tab}-panel` and label themselves with `${tab}-tab`. 소식(news)은 탭이 아니라 헤더 버튼으로 연다. */
+/** Panels must use the ids `${tab}-panel` and label themselves with `${tab}-tab`. */
 export function GameTabs({ active, onChange, pending = {} }: Props) {
   return (
     <div className="game-tabs" role="tablist" aria-label="화면 선택">
-      {tabs.map(([tab, label]) => (
+      {/* The current tab's background: one block that slides between tabs. */}
+      <span
+        className="tab-indicator"
+        aria-hidden="true"
+        style={
+          {
+            "--tab-count": tabs.length,
+            "--tab-index": Math.max(0, TAB_ORDER.indexOf(active)),
+          } as CSSProperties
+        }
+      />
+      {tabs.map(([tab, label, Icon]) => (
         <button
           key={tab}
           id={`${tab}-tab`}
@@ -29,6 +52,7 @@ export function GameTabs({ active, onChange, pending = {} }: Props) {
           aria-controls={`${tab}-panel`}
           onClick={() => onChange(tab)}
         >
+          <Icon className="tab-icon" size={22} aria-hidden="true" />
           {label}
           {pending[tab] && active !== tab && (
             <>

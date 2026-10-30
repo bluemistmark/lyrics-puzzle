@@ -1,4 +1,4 @@
-import { Music, Sparkles } from "lucide-react";
+import { Music, Sparkles } from "./icons";
 import { news } from "../game";
 
 const SONGS_SHOWN = 8;
@@ -15,7 +15,8 @@ export function NewsPanel({ hidden }: { hidden: boolean }) {
   return (
     <section
       id="news-panel"
-      aria-label="새 소식"
+      role="tabpanel"
+      aria-labelledby="news-tab"
       hidden={hidden}
       className="news-panel"
     >

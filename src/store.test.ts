@@ -115,6 +115,24 @@ test("가수명 힌트는 각 모드에서 한 번만 사용됨", () => {
   assert.equal(useGame.getState().round.hints, 1);
 });
 
+test("가사를 다 채워도 제목 전이면 가수명 힌트를 쓰고, 제목을 맞힌 뒤에는 세지 않음", () => {
+  useGame.getState().reset();
+  const q = questions.find((q) => q.id === useGame.getState().round.id)!;
+  for (const line of q.lines)
+    for (const t of line) useGame.getState().guess(t.text);
+  assert.equal(useGame.getState().round.revealed.length, allKeys(q).length);
+  useGame.getState().hint("artist");
+  assert.equal(useGame.getState().round.artist, true);
+
+  useGame.getState().next();
+  useGame.getState().reset();
+  const next = questions.find((q) => q.id === useGame.getState().round.id)!;
+  assert.ok(useGame.getState().solve(next.title));
+  useGame.getState().hint("artist");
+  assert.equal(useGame.getState().round.artist, false);
+  assert.equal(useGame.getState().round.hints, 0);
+});
+
 test("제목을 맞힌 문제만 도감에 한 번씩 등록되고 초기화하면 비워짐", () => {
   useGame.getState().reset();
   useGame.getState().giveUp();

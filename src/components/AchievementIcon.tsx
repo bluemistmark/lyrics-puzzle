@@ -5,13 +5,15 @@ import {
   Flame,
   Lock,
   Moon,
+  Music,
   Palette,
   Sparkles,
   Star,
+  Target,
   Trophy,
   Zap,
-  type LucideProps,
-} from "lucide-react";
+  type IconProps,
+} from "./icons";
 import type { AchievementIcon as Icon } from "../achievements";
 
 const icons = {
@@ -25,13 +27,15 @@ const icons = {
   moon: Moon,
   palette: Palette,
   star: Star,
+  target: Target,
+  music: Music,
   lock: Lock,
 } satisfies Record<Icon | "lock", unknown>;
 
 export function AchievementIcon({
   name,
   ...props
-}: { name: Icon | "lock" } & LucideProps) {
+}: { name: Icon | "lock" } & IconProps) {
   const Component = icons[name];
   return <Component aria-hidden="true" {...props} />;
 }

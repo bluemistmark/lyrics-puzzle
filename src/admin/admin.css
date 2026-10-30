@@ -602,3 +602,120 @@ td button.link.warn-text {
   text-decoration: none;
   color: var(--ok);
 }
+
+/* 정렬할 수 있는 표 머리글 */
+th:has(> .sort-header) {
+  padding: 0;
+}
+.sort-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-weight: inherit;
+  text-align: left;
+}
+.sort-header span {
+  font-size: 10px;
+  opacity: 0.45;
+}
+.sort-header.active {
+  color: var(--text);
+}
+.sort-header.active span {
+  opacity: 1;
+}
+.nowrap {
+  white-space: nowrap;
+}
+
+/* 검색할 수 있는 곡 선택 (SongSelect) */
+.combo {
+  position: relative;
+  display: grid;
+}
+.toolbar .combo {
+  width: 240px;
+}
+.combo-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  width: max(100%, 280px);
+  max-height: 300px;
+  overflow: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.16);
+}
+.combo-group {
+  padding: 8px 8px 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.combo-list [role="option"] {
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.combo-list [role="option"][aria-selected="true"] {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.combo-list [role="option"].current {
+  font-weight: 700;
+}
+.combo-empty {
+  padding: 8px;
+  color: var(--muted);
+}
+
+.form-shortcut {
+  margin-right: auto;
+  align-self: center;
+  font-size: 12px;
+}
+.form-actions {
+  flex-wrap: wrap;
+}
+@media (max-width: 640px) {
+  .form-shortcut {
+    display: none;
+  }
+}
+.form-dialog .form-note {
+  display: block;
+  margin: -4px 0 12px;
+}
+
+/* 앨범아트 thumbnails (songs table and form). */
+.song-art {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--bg);
+  object-fit: cover;
+}
+.song-art.large {
+  width: 72px;
+  height: 72px;
+  flex: none;
+}
+.art-field {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.art-field input {
+  flex: 1;
+}

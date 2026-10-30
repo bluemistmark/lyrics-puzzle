@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { RotateCw, Trophy } from "lucide-react";
+import { RotateCw, Trophy } from "../icons";
 import type { DailyResult } from "../../daily";
+import { toast } from "../../toast";
 import {
   useRanking,
   type RankingBoard,
@@ -44,6 +45,8 @@ export function DailyRanking({ date, result, onOpenModal }: Props) {
     let live = true;
     (async () => {
       let error: string | undefined;
+      // This visit sends today's result for the first time: its place gets a toast.
+      const first = Boolean(result) && useRanking.getState().submitted !== date;
       if (result)
         await submit({ date, ...result }).catch((e: Error) => {
           error = `결과를 랭킹에 등록하지 못했어요. ${e.message}`;
@@ -51,6 +54,8 @@ export function DailyRanking({ date, result, onOpenModal }: Props) {
       try {
         const board = await load(date);
         if (live) setView({ board, error });
+        if (live && first && !error && board.me)
+          toast(`오늘 랭킹 ${board.me.rank}위`);
       } catch (e) {
         if (live) setView((v) => ({ ...v, error: (e as Error).message }));
       }
@@ -86,7 +91,18 @@ export function DailyRanking({ date, result, onOpenModal }: Props) {
           </button>
         </div>
       )}
-      {!board && !error && <p>랭킹을 불러오는 중…</p>}
+      {/* While loading: gray rows where the ranking will be. */}
+      {!board && !error && (
+        <ol className="ranking-list skeleton" aria-label="랭킹을 불러오는 중">
+          {[0, 1, 2].map((i) => (
+            <li key={i} aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </li>
+          ))}
+        </ol>
+      )}
       {board && (
         <>
           <p className="ranking-me">
@@ -131,10 +147,6 @@ export function DailyRanking({ date, result, onOpenModal }: Props) {
           ) : (
             <p>아직 순위에 오른 사람이 없어요.</p>
           )}
-          <p className="ranking-rule">
-            힌트를 적게 쓴 순, 같으면 입력한 단어가 적은 순, 그래도 같으면 먼저
-            맞힌 순이에요.
-          </p>
         </>
       )}
     </section>

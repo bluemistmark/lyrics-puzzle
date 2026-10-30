@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Flag } from "lucide-react";
 import {
   GENERAL_KINDS,
   QUESTION_KINDS,
@@ -9,6 +8,7 @@ import {
   type ReportKind,
 } from "../../report";
 import { playRound, useGame, type GameMode } from "../../store";
+import { toast } from "../../toast";
 
 type Props = {
   /** Set when opened from a question screen: that question is attached. */
@@ -28,27 +28,9 @@ export function ReportModal({ mode, onClose }: Props) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-  const [sent, setSent] = useState(false);
-
-  if (sent)
-    return (
-      <>
-        <span className="modal-icon">
-          <Flag />
-        </span>
-        <h2>제보해 줘서 고마워요!</h2>
-        <p>확인해서 고칠게요. 반영되면 소식으로 알려 드려요.</p>
-        <button className="primary" onClick={onClose}>
-          닫기
-        </button>
-      </>
-    );
 
   return (
     <>
-      <span className="modal-icon">
-        <Flag />
-      </span>
       <h2>{mode ? "이 문제 오류 제보" : "오류·의견 보내기"}</h2>
       <p>
         {mode
@@ -64,7 +46,8 @@ export function ReportModal({ mode, onClose }: Props) {
           setError("");
           try {
             await sendReport({ kind, message, questionId, mode });
-            setSent(true);
+            toast("제보를 보냈어요. 반영되면 소식으로 알려 드려요.");
+            onClose();
           } catch (err) {
             setError((err as Error).message);
           } finally {

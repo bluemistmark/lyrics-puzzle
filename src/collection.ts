@@ -44,3 +44,33 @@ export function buildCollection(
   }
   return [...units.values()];
 }
+
+/** Ids of the songs whose title was guessed, most recent first (`collected` grows in the
+ *  order titles were guessed). */
+export function recentSongIds(
+  questions: readonly Pick<Question, "id" | "songId">[],
+  collected: readonly string[],
+): string[] {
+  const songOf = new Map(questions.map((q) => [q.id, q.songId]));
+  const ids = [...collected]
+    .reverse()
+    .map((id) => songOf.get(id))
+    .filter((id) => id !== undefined);
+  return [...new Set(ids)];
+}
+
+/** Up to `max` different 앨범아트 of the unit's guessed songs, the latest first (songs of one
+ *  album share a cover). Songs not guessed yet never give theirs: it would give them away. */
+export function unitArts(
+  unit: UnitEntry,
+  recent: readonly string[],
+  max = 4,
+): string[] {
+  const art = new Map(
+    unit.songs.filter((s) => s.solved).map((s) => [s.song.id, s.song.art]),
+  );
+  const arts = recent
+    .map((id) => art.get(id))
+    .filter((src) => src !== undefined);
+  return [...new Set(arts)].slice(0, max);
+}

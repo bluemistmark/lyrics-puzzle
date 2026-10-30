@@ -25,14 +25,31 @@ export type SongRow = {
   title: string;
   aliases: string[];
   sort_order: number;
+  // Admin only (not in the catalog); missing in rows from before the columns.
+  album?: string;
+  title_track?: boolean;
+  /** `YYYY-MM-DD`, or null when unknown. */
+  released_on?: string | null;
+  /** Set by the DB on every write; the admin sorts by it. */
+  updated_at?: string;
 };
 export type QuestionRow = {
   id: string;
   song_id: string;
   lines: string[];
   active: boolean;
+  updated_at?: string;
 };
-export type DictionaryRow = DictionaryEntry;
+export type DictionaryRow = DictionaryEntry & { updated_at?: string };
+/** A song's 앨범아트 (song_artwork): filled by the build, or set in the admin. */
+export type ArtworkRow = {
+  song_id: string;
+  /** Cover address; empty when the lookup found nothing. */
+  url: string;
+  /** Set in the admin: the build never replaces it. */
+  manual: boolean;
+  checked_at: string;
+};
 /** The single game_settings row (출제 설정). */
 export type SettingsRow = {
   id: string;
@@ -69,6 +86,8 @@ export type Catalog = {
     main: boolean;
     title: string;
     aliases: string[];
+    /** Path of its 앨범아트 in the build (scripts/artwork.ts); missing when there is none. */
+    art?: string;
   }[];
   questions: { id: string; songId: string; lines: string[] }[];
   dictionary: DictionaryEntry[];

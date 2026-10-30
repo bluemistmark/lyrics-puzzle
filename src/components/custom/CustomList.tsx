@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2 } from "../icons";
 import { customQuestion, MAX_LINES, MAX_TITLE_LENGTH } from "../../custom";
 import { useCustom, type CustomPuzzle } from "../../customStore";
 import { progress } from "../../game";
@@ -27,13 +27,11 @@ export function CustomList({ puzzles, onOpen }: Props) {
       <div className="game-toolbar">
         <h1>내 가사로 초성 퍼즐</h1>
         <p className="custom-note">
-          가사를 붙여 넣으면 한글은 초성으로 가려지고, 영어는 그대로 보여요.
-          <br />
-          입력한 가사는 이 기기에만 저장되고 서버로 보내지지 않아요.
+          붙여 넣은 가사가 초성 퍼즐이 돼요. 이 기기에만 저장돼요.
         </p>
       </div>
       <form className="custom-form" onSubmit={submit}>
-        <label htmlFor="custom-title">곡 제목 (선택)</label>
+        <label htmlFor="custom-title">곡 제목</label>
         <div className="input-wrap">
           <input
             id="custom-title"

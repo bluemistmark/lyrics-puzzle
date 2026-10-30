@@ -1,13 +1,8 @@
-import { Lightbulb } from "lucide-react";
-
 type Props = { onClose: () => void; onTutorial: () => void };
 
 export function HelpModal({ onClose, onTutorial }: Props) {
   return (
     <>
-      <span className="modal-icon">
-        <Lightbulb />
-      </span>
       <h2>게임 방법</h2>
       <ol className="instructions">
         <li>

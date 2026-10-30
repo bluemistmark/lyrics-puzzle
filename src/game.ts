@@ -17,6 +17,8 @@ export type Song = {
   main: boolean;
   title: string;
   aliases: string[];
+  /** Path of its 앨범아트 in the build; missing when none was found (a plain tile shows instead). */
+  art?: string;
 };
 export type Question = {
   id: string;

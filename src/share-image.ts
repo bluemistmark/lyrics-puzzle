@@ -12,60 +12,20 @@ type Palette = {
 
 const PALETTES: Record<string, Palette> = {
   light: {
-    bg: "#f7f8f4",
+    bg: "#f2f3f0",
     card: "#ffffff",
-    ink: "#183d2d",
-    sub: "#648157",
-    hit: "#83bd39",
-    miss: "#e3ead9",
+    ink: "#111311",
+    sub: "#5f6660",
+    hit: "#a8dc1f",
+    miss: "#e6e8e3",
   },
   dark: {
-    bg: "#111712",
-    card: "#1c251d",
-    ink: "#e3f0da",
-    sub: "#9fbf86",
-    hit: "#bce583",
-    miss: "#2a3529",
-  },
-  excel: {
-    bg: "#ffffff",
-    card: "#ffffff",
-    ink: "#202b25",
-    sub: "#5f6f66",
-    hit: "#217346",
-    miss: "#e8ede9",
-  },
-  notebook: {
-    bg: "#fff8f2",
-    card: "#fffdfb",
-    ink: "#6f3d58",
-    sub: "#967787",
-    hit: "#e89bb9",
-    miss: "#f6e3ea",
-  },
-  console: {
-    bg: "#17132b",
-    card: "#24203e",
-    ink: "#e9e5ff",
-    sub: "#b8abd8",
-    hit: "#7cf5d8",
-    miss: "#302a50",
-  },
-  space: {
-    bg: "#070a1c",
-    card: "#121a3f",
-    ink: "#eef1ff",
-    sub: "#9fb0e8",
-    hit: "#8ecbff",
-    miss: "#1f2750",
-  },
-  exam: {
-    bg: "#fbfbf8",
-    card: "#ffffff",
-    ink: "#111111",
-    sub: "#666666",
-    hit: "#111111",
-    miss: "#e2e2e2",
+    bg: "#0f110f",
+    card: "#1b1e1b",
+    ink: "#f1f3ef",
+    sub: "#a3aaa4",
+    hit: "#c4f53a",
+    miss: "#2a2e2a",
   },
 };
 
@@ -110,22 +70,6 @@ const toPng = (canvas: HTMLCanvasElement) =>
       "image/png",
     ),
   );
-
-/** `#rrggbb` blend of two palette colors (t = 0 → a, 1 → b). */
-function mix(a: string, b: string, t: number) {
-  const ch = (h: string, i: number) =>
-    parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
-  return (
-    "#" +
-    [0, 1, 2]
-      .map((i) =>
-        Math.round(ch(a, i) + (ch(b, i) - ch(a, i)) * t)
-          .toString(16)
-          .padStart(2, "0"),
-      )
-      .join("")
-  );
-}
 
 /** `lines` is the share text split into lines; the first is the heading. */
 export async function drawShareCard(
@@ -184,15 +128,15 @@ export async function drawShareCard(
 export type RecordCard = {
   /** Big numbers across the top: [label, value]. */
   headline: [string, string][];
-  /** Smaller figures beside the grass: [label, value]. */
+  /** Smaller figures beside the rings: [label, value]. */
   details: [string, string][];
-  /** Grass levels 0–4 by week (columns) then day (rows); null for future days. */
-  grass: (number | null)[][];
+  /** Rings like the 기록 dashboard's: [label, percent 0–100]. */
+  rings: [string, number][];
   /** Line at the bottom, e.g. the date the card was made. */
   footer: string;
 };
 
-/** 기록 탭 share card: headline numbers, recent grass and a few details. */
+/** 기록 탭 share card: headline numbers, three rings (as on the dashboard) and a few details. */
 export async function drawRecordCard(r: RecordCard): Promise<Blob> {
   const { canvas, ctx, p } = await startCard();
   ctx.fillStyle = p.ink;
@@ -211,29 +155,43 @@ export async function drawRecordCard(r: RecordCard): Promise<Blob> {
     ctx.fillText(value, x, 262);
   });
 
-  // Grass: weeks left to right, days top to bottom, shaded from miss to hit.
+  // Rings: a track with the share done in the accent, the percent inside, a label below.
   const top = 320;
-  const cell = 26;
-  const gap = 6;
-  r.grass.forEach((week, w) =>
-    week.forEach((level, d) => {
-      if (level === null) return;
-      ctx.fillStyle = level
-        ? mix(p.miss, p.hit, 0.25 + level * 0.1875)
-        : p.miss;
-      roundRect(
-        ctx,
-        96 + w * (cell + gap),
-        top + d * (cell + gap),
-        cell,
-        cell,
-        6,
+  const radius = 62;
+  const spacing = 172;
+  r.rings.forEach(([label, percent], i) => {
+    const cx = 96 + radius + i * spacing;
+    const cy = top + radius + 8;
+    ctx.lineWidth = 16;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = p.miss;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.stroke();
+    if (percent > 0) {
+      ctx.strokeStyle = p.hit;
+      ctx.beginPath();
+      ctx.arc(
+        cx,
+        cy,
+        radius,
+        -Math.PI / 2,
+        -Math.PI / 2 + (Math.PI * 2 * Math.min(percent, 100)) / 100,
       );
-    }),
-  );
+      ctx.stroke();
+    }
+    ctx.textAlign = "center";
+    ctx.fillStyle = p.ink;
+    ctx.font = `800 34px ${FONT}`;
+    ctx.fillText(`${percent}%`, cx, cy + 12);
+    ctx.fillStyle = p.sub;
+    ctx.font = `600 22px ${FONT}`;
+    ctx.fillText(label, cx, cy + radius + 44);
+    ctx.textAlign = "left";
+  });
 
-  // Details to the right of the grass.
-  const dx = 96 + r.grass.length * (cell + gap) + 40;
+  // Details to the right of the rings.
+  const dx = 96 + spacing * r.rings.length + 24;
   r.details.forEach(([label, value], i) => {
     const y = top + 22 + i * 56;
     ctx.fillStyle = p.sub;

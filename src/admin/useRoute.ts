@@ -8,6 +8,8 @@ type RouteStore = Route & {
   setParam: (key: string, value: string) => void;
   /** Rewrites the URL without a history entry (e.g. to fix an unknown tab). */
   replace: (tab: string, params?: Record<string, string>) => void;
+  /** Clears the current tab's filters, keeping the listed params (e.g. the sort). */
+  clearParams: (keep?: string[]) => void;
 };
 
 const read = () => parseHash(location.hash);
@@ -21,6 +23,13 @@ export const useRoute = create<RouteStore>()((set, get) => ({
   replace: (tab, params = {}) => {
     history.replaceState(null, "", formatHash({ tab, params }));
     set({ tab, params });
+  },
+  clearParams: (keep = []) => {
+    const params = Object.fromEntries(
+      Object.entries(get().params).filter(([key]) => keep.includes(key)),
+    );
+    history.replaceState(null, "", formatHash({ tab: get().tab, params }));
+    set({ params });
   },
   setParam: (key, value) => {
     const params = { ...get().params, [key]: value };

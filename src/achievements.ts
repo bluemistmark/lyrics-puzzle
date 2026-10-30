@@ -99,7 +99,9 @@ export type AchievementIcon =
   | "crown"
   | "moon"
   | "palette"
-  | "star";
+  | "star"
+  | "target"
+  | "music";
 export const ACHIEVEMENT_GROUPS = [
   "정답",
   "가사",
@@ -169,6 +171,20 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
   const daily = (i: AchievementInput) => dailySummary(i.dailyHistory, i.today);
   const busiest = (i: AchievementInput) =>
     Math.max(0, ...Object.values(i.playLog));
+  const playedDays = (i: AchievementInput) =>
+    Object.keys(i.playLog).filter((d) => i.playLog[d] > 0);
+  const fullSongs = (i: AchievementInput) =>
+    collection(i.collected).reduce(
+      (n, u) =>
+        n + u.songs.filter((s) => s.total > 1 && s.solved === s.total).length,
+      0,
+    );
+  const fullSongGoal = units.reduce(
+    (n, u) => n + u.songs.filter((s) => s.total > 1).length,
+    0,
+  );
+  const mainUnits = units.filter((u) => u.main);
+  const others = units.filter((u) => !u.main);
 
   const make =
     (group: AchievementGroup, hidden = false) =>
@@ -229,6 +245,14 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       (i) => i.stats.solved,
     ),
     solve(
+      "solve-300",
+      "살아있는 가사집",
+      "제목을 300번 맞혀요.",
+      "crown",
+      300,
+      (i) => i.stats.solved,
+    ),
+    solve(
       "streak-5",
       "연속 5곡",
       "일반 모드에서 5곡 연속으로 맞혀요.",
@@ -253,11 +277,27 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       (i) => i.stats.best,
     ),
     solve(
+      "streak-30",
+      "무한 질주",
+      "일반 모드에서 30곡 연속으로 맞혀요.",
+      "flame",
+      30,
+      (i) => i.stats.best,
+    ),
+    solve(
       "no-word",
       "첫눈에 알아봤어",
       "단어를 하나도 입력하지 않고 제목을 맞혀요.",
       "star",
       1,
+      (i) => i.feats.noWord,
+    ),
+    solve(
+      "no-word-10",
+      "이미 다 외웠어",
+      "단어를 하나도 입력하지 않고 제목을 10번 맞혀요.",
+      "target",
+      10,
       (i) => i.feats.noWord,
     ),
     solve(
@@ -284,6 +324,14 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       10,
       (i) => i.feats.unitBest,
     ),
+    solve(
+      "unit-run-20",
+      "찐팬",
+      "같은 유닛 곡을 20곡 연속으로 맞혀요.",
+      "flame",
+      20,
+      (i) => i.feats.unitBest,
+    ),
 
     lyrics(
       "complete-1",
@@ -291,6 +339,14 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       "가사를 처음으로 끝까지 복원해요.",
       "sparkles",
       1,
+      (i) => i.stats.completed,
+    ),
+    lyrics(
+      "complete-10",
+      "가사 수집가",
+      "가사를 10번 끝까지 복원해요.",
+      "sparkles",
+      10,
       (i) => i.stats.completed,
     ),
     lyrics(
@@ -302,11 +358,35 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       (i) => i.stats.completed,
     ),
     lyrics(
+      "complete-100",
+      "걸어 다니는 가사집",
+      "가사를 100번 끝까지 복원해요.",
+      "music",
+      100,
+      (i) => i.stats.completed,
+    ),
+    lyrics(
+      "direct-1",
+      "내 힘으로",
+      "단어 공개 없이 가사를 처음 완성해요.",
+      "zap",
+      1,
+      (i) => i.stats.direct,
+    ),
+    lyrics(
       "direct-10",
       "힌트는 필요 없어",
       "단어 공개 없이 가사를 10번 완성해요.",
       "zap",
       10,
+      (i) => i.stats.direct,
+    ),
+    lyrics(
+      "direct-50",
+      "노 힌트 장인",
+      "단어 공개 없이 가사를 50번 완성해요.",
+      "crown",
+      50,
       (i) => i.stats.direct,
     ),
 
@@ -335,6 +415,14 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       (i) => daily(i).best,
     ),
     day(
+      "daily-streak-14",
+      "2주 개근",
+      "데일리 퀴즈를 14일 연속으로 맞혀요.",
+      "calendar",
+      14,
+      (i) => daily(i).best,
+    ),
+    day(
       "daily-streak-30",
       "한 달 개근",
       "데일리 퀴즈를 30일 연속으로 맞혀요.",
@@ -351,6 +439,22 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       (i) => daily(i).solved,
     ),
     day(
+      "daily-played-50",
+      "출석왕",
+      "데일리 퀴즈에 50일 참여해요. (못 맞혀도 돼요)",
+      "calendar",
+      50,
+      (i) => daily(i).played,
+    ),
+    day(
+      "daily-solved-100",
+      "데일리 터줏대감",
+      "데일리 퀴즈를 모두 100일 맞혀요.",
+      "crown",
+      100,
+      (i) => daily(i).solved,
+    ),
+    day(
       "daily-perfect",
       "완벽한 하루",
       "데일리 퀴즈를 힌트 없이 단어 3개 이하로 맞혀요.",
@@ -361,19 +465,41 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
           (r) => r.solved && !r.hints && r.guesses <= 3,
         ).length,
     ),
+    day(
+      "daily-ace",
+      "한 방에",
+      "데일리 퀴즈를 힌트 없이 단어 1개 이하로 맞혀요.",
+      "target",
+      1,
+      (i) =>
+        Object.values(i.dailyHistory).filter(
+          (r) => r.solved && !r.hints && r.guesses <= 1,
+        ).length,
+    ),
 
+    book(
+      "collect-10",
+      "수집 시작",
+      "도감에 10곡을 모아요.",
+      "book",
+      Math.min(10, totalSongs),
+      songsCollected,
+    ),
     book(
       "full-song",
       "완곡",
       "구간이 여러 개인 곡의 모든 구간을 맞혀요.",
       "book",
       1,
-      (i) =>
-        collection(i.collected).some((u) =>
-          u.songs.some((s) => s.total > 1 && s.solved === s.total),
-        )
-          ? 1
-          : 0,
+      (i) => Math.min(fullSongs(i), 1),
+    ),
+    book(
+      "full-song-5",
+      "완곡 컬렉터",
+      "구간이 여러 개인 곡 5곡의 모든 구간을 맞혀요.",
+      "music",
+      Math.max(1, Math.min(5, fullSongGoal)),
+      fullSongs,
     ),
     book(
       "collect-half",
@@ -384,6 +510,23 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       mainCollected,
     ),
     book(
+      "collect-units",
+      "골고루",
+      "NCT 유닛마다 1곡 이상 도감에 모아요.",
+      "target",
+      mainUnits.length,
+      (i) =>
+        collection(i.collected).filter((u) => u.main && u.collected > 0).length,
+    ),
+    book(
+      "collect-50",
+      "도감 50곡",
+      "도감에 50곡을 모아요.",
+      "book",
+      Math.min(50, totalSongs),
+      songsCollected,
+    ),
+    book(
       "collect-100",
       "도감 100곡",
       "도감에 100곡을 모아요.",
@@ -391,6 +534,21 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       Math.min(100, totalSongs),
       songsCollected,
     ),
+    ...(others.length
+      ? [
+          book(
+            "collect-other",
+            "새로운 취향",
+            "다른 가수의 곡을 도감에 모아요.",
+            "music",
+            1,
+            (i) =>
+              collection(i.collected).some((u) => !u.main && u.collected > 0)
+                ? 1
+                : 0,
+          ),
+        ]
+      : []),
     ...units.map((unit) =>
       book(
         `collect-${unit.unit}`,
@@ -413,6 +571,14 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
     ),
 
     play(
+      "play-days-3",
+      "작심삼일 탈출",
+      "3일 연속으로 일반 모드를 플레이해요.",
+      "calendar",
+      3,
+      (i) => longestRun(playedDays(i)),
+    ),
+    play(
       "busy-day",
       "열정의 하루",
       "하루에 20문제를 끝내요.",
@@ -434,7 +600,15 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       "7일 연속으로 일반 모드를 플레이해요.",
       "calendar",
       7,
-      (i) => longestRun(Object.keys(i.playLog).filter((d) => i.playLog[d] > 0)),
+      (i) => longestRun(playedDays(i)),
+    ),
+    play(
+      "play-total-30",
+      "단골손님",
+      "일반 모드를 모두 30일 플레이해요. (연속이 아니어도 돼요)",
+      "calendar",
+      30,
+      (i) => playedDays(i).length,
     ),
     play(
       "votes-20",
@@ -442,6 +616,14 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       "체감 난이도에 20번 응답해요.",
       "star",
       20,
+      (i) => i.votes,
+    ),
+    play(
+      "votes-100",
+      "난이도 감별사",
+      "체감 난이도에 100번 응답해요.",
+      "star",
+      100,
       (i) => i.votes,
     ),
     play(
@@ -462,6 +644,14 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       (i) => i.stats.skipped,
     ),
     secret(
+      "busy-day-100",
+      "폐인 모드",
+      "하루에 100문제를 끝내요.",
+      "zap",
+      100,
+      busiest,
+    ),
+    secret(
       "fast",
       "번개",
       `문제가 나오고 ${FAST_MS / 1000}초 안에 제목을 맞혀요.`,
@@ -470,11 +660,27 @@ export function achievementList({ songs, questions }: Catalog): Achievement[] {
       (i) => i.feats.fast,
     ),
     secret(
+      "fast-10",
+      "광속",
+      `문제가 나오고 ${FAST_MS / 1000}초 안에 제목을 10번 맞혀요.`,
+      "zap",
+      10,
+      (i) => i.feats.fast,
+    ),
+    secret(
       "night",
       "올빼미",
       "자정부터 새벽 4시 사이에 제목을 맞혀요.",
       "moon",
       1,
+      (i) => i.feats.night,
+    ),
+    secret(
+      "night-10",
+      "밤의 주인",
+      "자정부터 새벽 4시 사이에 제목을 10번 맞혀요.",
+      "moon",
+      10,
       (i) => i.feats.night,
     ),
     secret(

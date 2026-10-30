@@ -13,6 +13,7 @@
 :root {
   --body-font: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
   --title-font: "Jalnan", var(--body-font);
+  --number-font: "Barlow Condensed", var(--body-font);
   font-family: var(--body-font);
   color: #20241f;
   background: #f7f8f4;
@@ -56,7 +57,7 @@ button:disabled {
 button:focus-visible,
 a:focus-visible,
 summary:focus-visible {
-  outline: 3px solid #709948;
+  outline: 3px solid var(--rp-accent-text);
   outline-offset: 4px;
 }
 
@@ -124,10 +125,6 @@ button:active:not(:disabled) {
   stroke-linecap: round;
 }
 
-.logo-mark .logo-doodle {
-  display: none;
-}
-
 .brand-sub {
   display: block;
   font-size: 9px;
@@ -147,7 +144,7 @@ button:active:not(:disabled) {
   height: 32px;
   display: grid;
   place-items: center;
-  color: #62695e;
+  color: var(--rp-ink-sub);
   border-radius: 50%;
 }
 
@@ -155,15 +152,9 @@ button:active:not(:disabled) {
   background: #e9edde;
 }
 
-.theme-trigger {
-  width: auto;
-  padding: 0 10px;
-  display: flex;
-  gap: 5px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
+/* The current screen's name in the top bar: only themes that use it (라이트) show it. */
+.screen-title {
+  display: none;
 }
 
 main {
@@ -187,7 +178,7 @@ h1 {
 }
 
 h1 span {
-  color: #757c6c;
+  color: var(--rp-ink-sub);
   font-weight: 500;
 }
 
@@ -207,7 +198,7 @@ h1 span {
   padding: 10px 14px;
   font-size: 13px;
   font-weight: 600;
-  color: #354c36;
+  color: var(--rp-ink);
 }
 
 .streak {
@@ -219,11 +210,11 @@ h1 span {
 }
 
 .streak svg {
-  color: #698947;
+  color: var(--rp-ink-sub);
 }
 
 .streak b {
-  color: #354c36;
+  color: var(--rp-ink);
 }
 
 .puzzle-card {
@@ -240,12 +231,12 @@ h1 span {
   display: flex;
   justify-content: flex-end;
   font-size: 12px;
-  color: #7b8374;
+  color: var(--rp-ink-sub);
 }
 
 .progress-label b {
   font-size: 18px;
-  color: #286442;
+  color: var(--rp-accent-text);
   letter-spacing: -0.7px;
 }
 
@@ -256,9 +247,9 @@ h1 span {
   margin-top: 10px;
 }
 
-.progress-track > div {
+.progress-track > :is(div, span) {
   height: 100%;
-  background: #86ab4e;
+  background: var(--rp-neon);
   border-radius: 4px;
   transition: width 0.3s;
 }
@@ -289,7 +280,7 @@ h1 span {
   font-weight: 600;
   line-height: 1.8;
   letter-spacing: 1.2px;
-  color: #747b6b;
+  color: var(--rp-ink-sub);
   word-spacing: 6px;
   overflow-wrap: anywhere;
 }
@@ -300,8 +291,8 @@ h1 span {
 }
 
 .revealed {
-  color: #243c25;
-  background: #edfacf;
+  color: var(--rp-ink);
+  background: var(--rp-revealed-bg);
   border-radius: 3px;
   animation: reveal 0.45s ease;
 }
@@ -344,7 +335,7 @@ form label {
 input {
   min-width: 0;
   font-size: 16px;
-  color: #273d26;
+  color: var(--rp-ink);
 }
 
 input::placeholder {
@@ -362,8 +353,8 @@ input::placeholder {
 
 .input-wrap button {
   border-radius: 10px;
-  background: #286442;
-  color: #e5f6ce;
+  background: var(--rp-accent);
+  color: var(--rp-on-accent);
   width: 46px;
   min-height: 46px;
   display: grid;
@@ -372,44 +363,10 @@ input::placeholder {
 
 .feedback {
   font-size: 12px;
-  color: #77806b;
+  color: var(--rp-ink-sub);
   min-height: 21px;
   margin: 9px 3px 0;
   line-height: 1.7;
-}
-
-.word-history {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-  min-height: 46px;
-  padding: 12px 2px 6px;
-  align-items: flex-start;
-}
-
-.word-history > span {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  border-radius: 7px;
-  font-size: 12px;
-  padding: 5px 9px;
-}
-
-.word-history .hit {
-  background: #e7efd9;
-  color: #456033;
-}
-
-.word-history .miss {
-  background: #eeefea;
-  color: #919588;
-}
-
-.word-history .empty-history {
-  padding: 2px 0;
-  color: #9a9f91;
-  font-size: 11px;
 }
 
 .hints {
@@ -419,7 +376,7 @@ input::placeholder {
   justify-content: space-between;
   margin: 19px 0 24px;
   font-size: 12px;
-  color: #8a917f;
+  color: var(--rp-ink-sub);
 }
 
 .hints > span {
@@ -433,7 +390,7 @@ input::placeholder {
   background: #eef1e7;
   border: 1px solid #e3e7da;
   border-radius: 8px;
-  color: #627050;
+  color: var(--rp-ink-sub);
   display: flex;
   align-items: center;
   gap: 5px;
@@ -455,7 +412,7 @@ input::placeholder {
 
 .primary {
   border-radius: 13px;
-  background: #286442;
+  background: var(--rp-accent);
   color: white;
   display: flex;
   align-items: center;
@@ -469,7 +426,7 @@ input::placeholder {
 }
 
 .primary:hover:not(:disabled) {
-  background: #205738;
+  background: var(--rp-accent-hover);
 }
 
 .bottom-actions .primary {
@@ -488,7 +445,7 @@ footer {
   text-align: center;
   border-top: 1px solid #e6eadd;
   padding: 23px 0 26px;
-  color: #969d8b;
+  color: var(--rp-ink-sub);
   font-size: 11px;
 }
 
@@ -496,7 +453,7 @@ footer small {
   display: block;
   font-size: 10px;
   margin-top: 10px;
-  color: #969d8b;
+  color: var(--rp-ink-sub);
 }
 
 .success-box {
@@ -504,14 +461,14 @@ footer small {
   align-items: center;
   gap: 12px;
   padding: 16px;
-  background: #eaf2de;
+  background: var(--rp-selected-bg);
   border: 1px solid #d7e8bf;
   border-radius: 13px;
   margin-top: 16px;
 }
 
 .success-icon {
-  color: #286442;
+  color: var(--rp-accent-text);
 }
 
 .success-box strong {
@@ -520,7 +477,7 @@ footer small {
 
 .success-box p {
   font-size: 12px;
-  color: #657755;
+  color: var(--rp-ink-sub);
   margin: 4px 0 0;
   line-height: 1.7;
 }
@@ -576,10 +533,6 @@ footer small {
   font-weight: 800;
 }
 
-.success-box p.difficulty-error {
-  margin-top: 6px;
-}
-
 dialog {
   border: 1px solid #e0e6d6;
   border-radius: 24px;
@@ -587,7 +540,7 @@ dialog {
   max-width: 440px;
   width: calc(100% - 32px);
   max-height: 85dvh;
-  color: #253421;
+  color: var(--rp-ink);
   box-shadow: 0 20px 100px #17261130;
 }
 
@@ -617,9 +570,9 @@ dialog::-webkit-scrollbar-thumb:hover {
   background-color: color-mix(in srgb, currentColor 45%, transparent);
 }
 
+/* A plain dim (no blur): blurring the page under a moving sheet makes it stutter. */
 dialog::backdrop {
-  background: #20302066;
-  backdrop-filter: blur(5px);
+  background: #11131166;
 }
 
 .modal-inner {
@@ -633,15 +586,72 @@ dialog::backdrop {
   top: 12px;
 }
 
-.modal-icon {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  background: #eef4e4;
-  color: #456c35;
-  border-radius: 15px;
-  margin-bottom: 20px;
+/* Bottom sheet (모드·유닛 선택): pinned to the bottom edge, full width up to the app column. */
+dialog.sheet {
+  margin: auto auto 0;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 24px 24px 0 0;
+}
+
+/* Opening slides up (transform only); closing slides down in Modal (Web Animations). */
+dialog.sheet[open] {
+  animation: sheet-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+dialog.sheet[open]::backdrop {
+  animation: backdrop-in 0.28s ease-out;
+}
+
+.sheet .modal-inner {
+  padding: 30px 20px calc(20px + env(safe-area-inset-bottom));
+}
+
+/* Grip: the bar at the top; pulling it down closes the sheet (Modal). */
+.sheet-grip {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 60px);
+  width: 120px;
+  height: 28px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.sheet-grip::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: calc(50% - 18px);
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.18;
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.sheet[open],
+  dialog.sheet[open]::backdrop {
+    animation: none;
+  }
+}
+
+/* The title starts at the top now, beside the close button. */
+.modal-inner > h2 {
+  padding-right: 32px;
 }
 
 h2 {
@@ -658,7 +668,7 @@ h3 {
 .modal-inner > p {
   font-size: 14px;
   line-height: 1.8;
-  color: #7b8372;
+  color: var(--rp-ink-sub);
   margin-bottom: 24px;
 }
 
@@ -682,7 +692,7 @@ h3 {
 
 .modal-inner details {
   font-size: 12px;
-  color: #8a917e;
+  color: var(--rp-ink-sub);
   margin-top: 22px;
 }
 
@@ -698,6 +708,11 @@ h3 {
 
 .unit-options.single {
   grid-template-columns: 1fr;
+}
+
+/* The first section heading right under the tabs needs no extra space. */
+.modal-inner .segmented + .unit-group {
+  margin-top: 0;
 }
 
 .modal-inner .unit-group {
@@ -720,31 +735,23 @@ h3 {
 }
 
 .unit-options button.chosen {
-  background: #edf5df;
-  color: #34552b;
+  background: var(--rp-selected-bg);
+  color: var(--rp-ink);
   border-color: #b7cd99;
 }
 
+/* 모드: three names side by side; the chosen mode's description below. */
 .mode-options {
-  grid-template-columns: 1fr;
-  margin-bottom: 4px;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .mode-options button {
-  gap: 10px;
+  justify-content: center;
+  gap: 6px;
 }
 
-.mode-options b {
-  display: block;
-  font-size: 14px;
-}
-
-.mode-options small {
-  display: block;
-  margin-top: 3px;
-  font-size: 12px;
-  line-height: 1.45;
-  opacity: 0.75;
+.modal-inner .mode-description {
+  margin: 10px 2px 0;
   white-space: pre-line;
 }
 
@@ -753,6 +760,61 @@ h3 {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 6px;
+}
+
+/* 결과 공유 · 오류 제보: icon buttons pushed to the right of the filters or the daily title. */
+.question-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.question-actions .filter {
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+}
+
+.question-actions .filter.give-up {
+  padding: 0 12px;
+}
+
+.daily-heading-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 제목 맞히기 turns the word box into a title box; this X goes back. Plain, unlike the submit
+   button (and specific enough to beat the themes' .input-wrap button rules). */
+.word-form .input-wrap button.title-cancel,
+.word-form .input-wrap button.title-cancel:hover:not(:disabled) {
+  width: 36px;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  opacity: 0.55;
+}
+
+/* The draft word was already guessed. */
+.entered-mark {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0.6;
+}
+
+/* 저작권·수집 안내 at the bottom of the account modal. */
+dialog .modal-inner .site-footer {
+  max-width: none;
+  margin: 22px 0 0;
+  padding: 14px 0 0;
+  text-align: left;
 }
 
 .song-reveal {
@@ -777,9 +839,42 @@ h3 {
   opacity: 0.45;
 }
 
-@media (max-width: 380px) {
-  .filter-prefix {
-    display: none;
+/* The revealed song's 앨범아트 beside its title and artist, popping in as it appears. */
+.song-reveal:has(> .reveal-art) {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  column-gap: 12px;
+  align-items: center;
+}
+
+.song-reveal:has(> .reveal-art) strong {
+  align-self: end;
+}
+
+.song-reveal:has(> .reveal-art) span {
+  align-self: start;
+}
+
+.reveal-art {
+  grid-row: span 2;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.18);
+  animation: reveal-art 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+}
+
+@keyframes reveal-art {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotate(-6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-art {
+    animation: none;
   }
 }
 
@@ -802,7 +897,7 @@ h3 {
 .secondary {
   display: block;
   background: none;
-  color: #7f8972;
+  color: var(--rp-ink-sub);
   padding: 16px;
   width: 100%;
   font-size: 14px;
@@ -821,21 +916,21 @@ h3 {
 }
 
 .instructions li::marker {
-  color: #83a357;
+  color: var(--rp-ink-sub);
   font-weight: bold;
 }
 
 .instructions p {
   font-size: 13px;
-  color: #7b8372;
+  color: var(--rp-ink-sub);
   line-height: 1.8;
   margin: 7px 0;
 }
 
 .help-example {
   font-size: 13px;
-  color: #6f7e5e;
-  background: #f0f5e8;
+  color: var(--rp-ink-sub);
+  background: var(--rp-fill);
   border-radius: 10px;
   padding: 15px;
   line-height: 1.9;
@@ -844,11 +939,11 @@ h3 {
 
 @keyframes reveal {
   from {
-    background: #dfff80;
+    background: var(--rp-neon);
   }
 
   to {
-    background: #edfacf;
+    background: var(--rp-revealed-bg);
   }
 }
 
@@ -1071,7 +1166,7 @@ h3 {
 .theme-settings {
   border: 0;
   padding: 0;
-  margin: 25px 0;
+  margin: 0 0 22px;
 }
 
 .theme-settings legend {
@@ -1097,13 +1192,13 @@ h3 {
   font-size: 14px;
   cursor: pointer;
   background: #fafbf8;
-  color: #627050;
+  color: var(--rp-ink-sub);
 }
 
 .theme-options label.selected {
-  background: #edf5df;
+  background: var(--rp-selected-bg);
   border-color: #7b9b59;
-  color: #34552b;
+  color: var(--rp-ink);
 }
 
 .size-options {
@@ -1117,14 +1212,14 @@ h3 {
 }
 
 .theme-options input {
-  accent-color: #286442;
+  accent-color: var(--rp-accent-text);
   margin: 0;
   width: 14px;
   height: 14px;
 }
 
 .theme-options label:focus-within {
-  outline: 3px solid #709948;
+  outline: 3px solid var(--rp-accent-text);
   outline-offset: 2px;
 }
 
@@ -1144,7 +1239,7 @@ main {
 
 .game-tabs button {
   background: none;
-  color: #7b8374;
+  color: var(--rp-ink-sub);
   border-bottom: 2px solid transparent;
   padding: 20px 0 13px;
   font-size: 14px;
@@ -1181,7 +1276,7 @@ main [hidden] {
 }
 
 .puzzle-card {
-  background: #eaf2de;
+  background: var(--rp-selected-bg);
   border: 0;
   border-radius: 16px;
   box-shadow: none;
@@ -1198,29 +1293,29 @@ main [hidden] {
   font-size: 18px;
   line-height: 1.8;
   letter-spacing: 0.6px;
-  color: #354c36;
+  color: var(--rp-ink);
   word-spacing: 4px;
 }
 
 .progress-track {
   height: 7px;
   margin: 0;
-  background: #d8e0cc;
+  background: var(--rp-fill-strong);
 }
 
-.progress-track > div {
-  background: #86ab4e;
+.progress-track > :is(div, span) {
+  background: var(--rp-neon);
 }
 
 .progress-label {
   margin-top: 8px;
   font-size: 12px;
-  color: #66795a;
+  color: var(--rp-ink-sub);
 }
 
 .progress-label b {
   font-size: 13px;
-  color: #286442;
+  color: var(--rp-accent-text);
 }
 
 .word-form {
@@ -1249,11 +1344,6 @@ main [hidden] {
 
 .feedback:empty {
   display: none;
-}
-
-.word-history {
-  min-height: 0;
-  padding: 9px 2px 3px;
 }
 
 .hints {
@@ -1307,17 +1397,17 @@ main [hidden] {
 
 .record-item span {
   font-size: 13px;
-  color: #627050;
+  color: var(--rp-ink-sub);
 }
 
 .record-item strong {
   font-size: 16px;
-  color: #243c25;
+  color: var(--rp-ink);
 }
 
 .record-note {
   font-size: 12px;
-  color: #7b8374;
+  color: var(--rp-ink-sub);
   line-height: 1.7;
   margin: 18px 2px;
 }
@@ -1336,160 +1426,432 @@ main [hidden] {
   margin-top: 10px;
 }
 
-/* 기록 tab: a summary card, a 통계/업적 switch and 2-column stat tiles. */
-.record-hero {
+/* 기록 요약: widget cards, each a title row (a short note or 더보기 at its end) and content. */
+.bento {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-  margin-top: 14px;
-  padding: 18px 8px;
-  text-align: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
 }
 
-.record-hero > * {
+.record-item.widget {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  align-items: stretch;
+  justify-content: flex-start;
   min-width: 0;
-  padding: 0 4px;
+  padding: 18px;
 }
 
-.record-hero > * + * {
-  border-left: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+.widget.wide {
+  grid-column: 1 / -1;
 }
 
-.record-hero button {
-  background: none;
-  border-top: 0;
-  border-right: 0;
-  border-bottom: 0;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
+/* Dashboard numbers share one condensed numeral face. */
+:is(.big-number, .streak-line, .ring, .unit-card) b,
+.unit-card strong {
+  font-family: var(--number-font);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
 }
 
-.record-hero span {
-  font-size: 12px;
-  word-break: keep-all;
-}
-
-.record-hero strong {
-  font-size: 26px;
-  line-height: 1.2;
+.big-number {
+  margin: auto;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
-.record-hero small {
+.big-number small {
+  margin-left: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.widget-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.widget-head h2 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+}
+
+.widget-head span {
+  font-size: 12px;
+  opacity: 0.55;
+}
+
+/* A card that opens its tab: the title's button covers the card; the arrow only shows it. */
+.widget.linked {
+  position: relative;
+}
+
+.widget-link {
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+.widget-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.widget-chevron {
+  align-self: center;
+  margin-left: auto;
+  opacity: 0.4;
+}
+
+/* Buttons inside a linked card (도감's unit cards) stay above the card-wide one. */
+.widget.linked .unit-cards {
+  position: relative;
+  z-index: 1;
+}
+
+/* A half-width block's content, centered in the space under its title. */
+.widget-center {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.ring {
+  position: relative;
+  flex: none;
+  width: 88px;
+  height: 88px;
+}
+
+.ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring circle {
+  fill: none;
+  stroke-width: 8;
+}
+
+.ring-track {
+  stroke: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.ring-value {
+  stroke: var(--rp-neon, #c4f53a);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.ring > span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.ring b {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.ring small {
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.status-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-chip.done {
+  background: var(--rp-neon, #c4f53a);
+  color: #111311;
+}
+
+.streak-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.streak-line svg {
+  color: #ff7a45;
+}
+
+.streak-line b {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.streak-line small {
   font-size: 14px;
   opacity: 0.6;
 }
 
+/* 요약 도감: a row of playlist covers to swipe through, one per unit. */
+.unit-cards {
+  display: flex;
+  gap: 14px;
+  margin: 0 -18px;
+  padding: 2px 22px 6px 18px;
+  overflow-x: auto;
+  cursor: grab;
+  user-select: none;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 18px;
+  scrollbar-width: none;
+}
+
+/* 요약 도감: each unit's cover with its name and how much is collected under it. */
+.unit-card {
+  display: grid;
+  flex: 0 0 112px;
+  gap: 6px;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  scroll-snap-align: start;
+}
+
+.unit-card-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+
+.unit-card-meta span {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unit-card-meta strong {
+  flex: none;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.unit-card-meta strong small {
+  font-size: 0.65em;
+}
+
 .record-views {
   display: flex;
+  align-items: center;
   gap: 6px;
   margin-top: 16px;
 }
 
-.record-views .filter[aria-pressed="true"] {
-  border-color: currentColor;
-  font-weight: 800;
-}
-
-.record-views .filter[aria-pressed="false"] {
-  opacity: 0.7;
-}
-
-.stat-tiles {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.record-grid + .stat-tiles {
-  margin-top: 10px;
-}
-
-.record-item.stat-tile {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 6px;
-  padding: 14px;
-}
-
-.stat-tile span {
-  font-size: 12px;
-  word-break: keep-all;
-}
-
-.stat-tile strong {
-  font-size: 20px;
-  font-variant-numeric: tabular-nums;
-}
-
-.record-item.play-grass {
-  display: block;
-  --grass-on: #4f7a2a;
-  --grass-empty: #d8e0cc;
-}
-
-.grass-grid {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(7, auto);
-  gap: 3px;
-  margin-top: 12px;
-}
-
-.grass-cell {
-  display: block;
-  aspect-ratio: 1;
-  border-radius: 3px;
-  background: var(--grass-empty);
-}
-
-.grass-cell.level-1 {
-  background: color-mix(in srgb, var(--grass-on) 30%, var(--grass-empty));
-}
-
-.grass-cell.level-2 {
-  background: color-mix(in srgb, var(--grass-on) 55%, var(--grass-empty));
-}
-
-.grass-cell.level-3 {
-  background: color-mix(in srgb, var(--grass-on) 78%, var(--grass-empty));
-}
-
-.grass-cell.level-4 {
-  background: var(--grass-on);
-}
-
-.grass-cell.future {
-  visibility: hidden;
-}
-
-.grass-cell.today {
-  outline: 2px solid currentColor;
-}
-
-.grass-legend {
+/* Tabs inside a screen or sheet (Segmented): a faint baseline, the current tab underlined.
+   The lines are inset shadows, since app.css makes every border transparent. */
+.segmented {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 3px;
-  margin-top: 10px;
-  font-size: 11px;
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, currentColor 12%, transparent);
 }
 
-.grass-legend .grass-cell {
-  width: 10px;
+.modal-inner .segmented {
+  margin-bottom: 18px;
 }
 
-.grass-legend .grass-cell:first-child {
-  margin-left: 3px;
+.segmented button {
+  flex: 1;
+  min-width: 64px;
+  padding: 10px 12px;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.5;
 }
 
-.grass-legend .grass-cell:last-child {
-  margin-right: 3px;
+.segmented button[aria-selected="true"] {
+  box-shadow: inset 0 -2px 0 currentColor;
+  font-weight: 800;
+  opacity: 1;
+}
+
+.record-views .segmented {
+  flex: 1;
+}
+
+/* A number and its unit (기록): the unit small beside the number. */
+.record-item strong small {
+  margin-left: 2px;
+  font-size: 0.6em;
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+/* An empty 기록: one line and the way to start. */
+.record-item.empty-state {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  gap: 18px;
+  margin-top: 14px;
+  padding: 36px 20px;
+  text-align: center;
+}
+
+.empty-state .primary {
+  width: auto;
+  padding: 13px 28px;
+}
+
+.empty-art {
+  width: 120px;
+  height: 96px;
+}
+
+.empty-art rect {
+  fill: var(--rp-neon, #c4f53a);
+}
+
+.empty-art .empty-art-shelf {
+  fill: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.empty-art-spark {
+  fill: currentColor;
+  opacity: 0.25;
+}
+
+/* A title guessed: a neon check pops in the middle of the screen, two rings spread out,
+   and it all fades. */
+.celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  animation: celebration-out 0.35s ease-in 0.85s forwards;
+}
+
+.celebration > * {
+  grid-area: 1 / 1;
+}
+
+.celebration-check {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--rp-neon, #c4f53a);
+  color: #111311;
+  box-shadow: 0 10px 30px #11131133;
+  animation: celebration-pop 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.celebration-ring {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--rp-neon, #c4f53a);
+  animation: celebration-ring 0.8s ease-out both;
+}
+
+.celebration-ring.later {
+  animation-delay: 0.15s;
+}
+
+/* A fill inside a progress bar may be a span (inside buttons): it still fills as a block. */
+.progress-track > span {
+  display: block;
+  height: 100%;
+}
+
+/* With a caption there is more to read: the burst stays a little longer. */
+.celebration.has-caption {
+  animation-delay: 1.6s;
+}
+
+/* A song new to the 도감: the playlist it joined, under the check. */
+.celebration-caption {
+  align-self: center;
+  margin: 150px 0 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #111311;
+  color: var(--rp-neon, #c4f53a);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  animation: celebration-pop 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) 0.15s both;
+}
+
+@keyframes celebration-pop {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes celebration-ring {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes celebration-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration,
+  .celebration > * {
+    animation-duration: 0.01s;
+    animation-delay: 0s;
+  }
 }
 
 /* 업적: cards reuse .record-item so every theme applies */
@@ -1519,13 +1881,19 @@ main [hidden] {
   list-style: none;
 }
 
+/* 업적 list: icon and name only; the sheet holds the rest. */
 .record-item.achievement {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 14px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
   min-width: 0;
+  padding: 12px 14px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
 }
 
 .record-item.achievement:not(.earned) {
@@ -1537,27 +1905,102 @@ main [hidden] {
 }
 
 .record-item.achievement strong {
-  margin-top: 4px;
+  min-width: 0;
   font-size: 14px;
-}
-
-.record-item.achievement span {
-  font-size: 11px;
-  line-height: 1.5;
   word-break: keep-all;
 }
 
-.record-item.achievement small {
-  margin-top: auto;
-  padding-top: 4px;
-  font-size: 11px;
-  opacity: 0.8;
+/* 업적 sheet: the badge, how to reach it, then its date or progress. */
+.achievement-sheet {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding-top: 8px;
+  text-align: center;
 }
 
-.record-item.achievement .progress-track {
+.achievement-sheet h2 {
+  margin: 0;
+}
+
+.achievement-sheet p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.75;
+  word-break: keep-all;
+}
+
+/* 업적 medal: a disc with an inner rim, a ribbon hanging below. Reached: neon disc and a
+   green ribbon; the rest gray. */
+.medal {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.medal::after {
+  content: "";
+  position: absolute;
+  top: 82%;
+  left: calc(50% - 8px);
+  width: 16px;
+  height: 11px;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 62%, 0 100%);
+}
+
+.medal.large {
+  width: 76px;
+  height: 76px;
+  margin-bottom: 14px;
+  box-shadow: inset 0 0 0 5px color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.medal.large::after {
+  left: calc(50% - 16px);
+  width: 32px;
+  height: 22px;
+}
+
+:is(.achievement.earned, .achievement-sheet.earned) .medal {
+  background: var(--rp-neon, #c4f53a);
+  box-shadow: inset 0 0 0 3px #11131118;
+  color: #111311;
+}
+
+:is(.achievement.earned, .achievement-sheet.earned) .medal::after {
+  background: var(--rp-gauge-start, #6fbf2a);
+}
+
+.achievement-sheet.earned .medal.large {
+  box-shadow: inset 0 0 0 5px #11131118;
+}
+
+.achievement-progress {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
   width: 100%;
-  height: 5px;
-  margin: 6px 0 0;
+  margin-top: 4px;
+}
+
+.achievement-progress .progress-track {
+  width: 100%;
+  height: 8px;
+  margin: 0;
+}
+
+.achievement-progress b {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
 }
 
 .achievement-toast-region {
@@ -1685,6 +2128,16 @@ main [hidden] {
   position: relative;
 }
 
+/* Bottom-bar parts: hidden unless a theme lays the tabs and dock out as an app (라이트). */
+.tab-icon,
+.tab-indicator {
+  display: none;
+}
+
+.play-dock {
+  display: contents;
+}
+
 .tab-dot {
   position: absolute;
   top: 17px;
@@ -1723,7 +2176,7 @@ main [hidden] {
 .news-item time {
   display: block;
   font-size: 12px;
-  color: #7b8374;
+  color: var(--rp-ink-sub);
   margin-bottom: 8px;
 }
 
@@ -1739,7 +2192,7 @@ main [hidden] {
   align-items: center;
   gap: 5px;
   font-size: 13px;
-  color: #243c25;
+  color: var(--rp-ink);
 }
 
 .news-block ul {
@@ -1747,12 +2200,12 @@ main [hidden] {
   padding-left: 19px;
   font-size: 14px;
   line-height: 1.7;
-  color: #354c36;
+  color: var(--rp-ink);
 }
 
 .news-block li span {
   font-size: 12px;
-  color: #7b8374;
+  color: var(--rp-ink-sub);
 }
 
 .news-stats,
@@ -1760,90 +2213,307 @@ main [hidden] {
   margin: 0;
   font-size: 13px;
   line-height: 1.7;
-  color: #627050;
+  color: var(--rp-ink-sub);
 }
 
 .news-note {
   white-space: pre-line;
-  color: #354c36;
+  color: var(--rp-ink);
 }
 
-/* 도감 tab: reuses record styles so every theme applies; colors below inherit. */
-.collection-summary {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: #627050;
+/* 도감 as a streaming app's library, plain on the page: the covers carry the color. A cover
+   without art is a quiet tile with a note (colors in the theme). */
+.playlist-cover {
+  position: relative;
+  display: grid;
+  grid-template: 1fr / 1fr;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
-.collection-summary b {
-  font-size: 15px;
-  color: #286442;
+.playlist-cover.cover-art-4 {
+  grid-template: 1fr 1fr / 1fr 1fr;
 }
 
-.record-item.collection-unit {
+.playlist-cover img {
   display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
 }
 
-.collection-head {
+.playlist-cover.large {
+  width: 128px;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 0.16);
+}
+
+/* Every song collected: a check in the corner. */
+.cover-complete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--rp-neon, #c4f53a);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
+  color: #111311;
+}
+
+/* Songs added since the last visit: a dot by the song and by its playlist. */
+.new-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: #ff7a45;
+  vertical-align: 3px;
+}
+
+/* Library: how much is collected, then the covers. */
+.library-head {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 4px;
+}
+
+.library-count {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  list-style: none;
-  cursor: pointer;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0;
 }
 
-.collection-head::-webkit-details-marker {
-  display: none;
+.library-count b {
+  font-family: var(--number-font);
+  font-size: 44px;
+  line-height: 1;
 }
 
-.collection-head span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.library-count span {
+  font-size: 15px;
 }
 
-.collection-head svg {
-  transition: transform 0.2s;
+.library-head .progress-track {
+  height: 4px;
+  margin: 0;
+  border-radius: 999px;
 }
 
-.collection-unit[open] .collection-head svg {
-  transform: rotate(180deg);
-}
-
-.collection-unit .progress-track {
-  margin: 10px 0 0;
-}
-
-.collection-songs {
+/* Playlists two by two: cover, then the name and how many are in. */
+.playlist-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px 14px;
-  margin: 14px 0 0;
+  gap: 20px 14px;
+  margin: 12px 0 0;
   padding: 0;
   list-style: none;
-  font-size: 14px;
-  line-height: 1.6;
 }
 
-.collection-songs li {
+.playlist-card {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.playlist-meta {
   display: flex;
-  justify-content: space-between;
   align-items: baseline;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 8px;
   min-width: 0;
+}
+
+.playlist-meta strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playlist-meta small {
+  flex: none;
+  font-family: var(--number-font);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* 최근 맞힌 곡: a shelf of covers with the title under each. */
+.recent-row {
+  display: flex;
+  gap: 12px;
+  margin: 12px -16px 0;
+  padding: 0 16px 4px;
+  overflow-x: auto;
+  cursor: grab;
+  user-select: none;
+  scrollbar-width: none;
+}
+
+.recent-track {
+  display: grid;
+  flex: none;
+  align-content: start;
+  gap: 2px;
+  width: 124px;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.recent-art,
+.recent-track .playlist-cover {
+  width: 124px;
+  height: 124px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.recent-track strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-track small {
+  font-size: 12px;
+}
+
+/* A playlist page: the cover on the left, its name, count and play button beside it, then
+   the tracks. */
+.playlist-detail,
+.playlist-library {
+  scroll-margin-top: 72px;
+}
+
+.playlist-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 6px 2px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.playlist-hero {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  grid-template-rows: 1fr auto auto;
+  align-items: end;
+  gap: 2px 16px;
+  padding: 14px 0 22px;
+  text-align: left;
+}
+
+.playlist-hero .playlist-cover {
+  grid-row: 1 / 4;
+}
+
+.playlist-hero h2 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.15;
+  word-break: keep-all;
+}
+
+.playlist-hero p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.playlist-hero p b {
+  font-family: var(--number-font);
+  font-size: 18px;
+}
+
+.playlist-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.playlist-actions .progress-track {
+  flex: 1;
+  height: 4px;
+  margin: 0;
+}
+
+.play-button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--rp-neon, #c4f53a);
+  color: #111311;
+}
+
+/* Tracks: plain rows, each led by its cover (or its number while not guessed). */
+.tracklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tracklist li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  font-size: 15px;
+}
+
+.track-art {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  object-fit: cover;
+  font-family: var(--number-font);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.track-title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
 
-.collection-songs small {
+.tracklist small {
   flex: none;
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.collection-songs .locked {
-  opacity: 0.45;
-  letter-spacing: 2px;
+  font-family: var(--number-font);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 /* Rights notice under every tab */
@@ -1854,7 +2524,7 @@ main [hidden] {
   border-top: 1px solid #e2e7d9;
   font-size: 11px;
   line-height: 1.7;
-  color: #8a9282;
+  color: var(--rp-ink-sub);
   word-break: keep-all;
 }
 
@@ -1885,14 +2555,14 @@ main [hidden] {
 .daily-date {
   font-size: 11px;
   font-weight: 700;
-  color: #66795a;
+  color: var(--rp-ink-sub);
 }
 
 .daily-badge {
   padding: 7px 10px;
   border-radius: 8px;
   background: #eef1e7;
-  color: #456033;
+  color: var(--rp-ink);
   font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
@@ -1913,7 +2583,7 @@ main [hidden] {
 
 .share-results > p {
   margin: 0;
-  color: #66795a;
+  color: var(--rp-ink-sub);
   font-size: 12px;
 }
 
@@ -1923,7 +2593,7 @@ main [hidden] {
   overflow-wrap: anywhere;
   white-space: pre-wrap;
   font: 12px/1.7 var(--body-font);
-  color: #304532;
+  color: var(--rp-ink);
   background: white;
   border: 1px solid #d8e4d1;
   border-radius: 8px;
@@ -1948,20 +2618,14 @@ main [hidden] {
   border: 1px solid #bfd2b7;
   border-radius: 8px;
   background: white;
-  color: #315b39;
+  color: var(--rp-ink);
   font-size: 12px;
   font-weight: 700;
 }
 
 .share-actions button:hover,
 .share-actions a:hover {
-  background: #eaf2e3;
-}
-
-.share-results .share-status {
-  min-height: 18px;
-  margin-top: 11px;
-  line-height: 1.5;
+  background: var(--rp-selected-bg);
 }
 
 /* 오늘의 랭킹 (reuses the share box so every theme styles it) */
@@ -2025,6 +2689,37 @@ main [hidden] {
   font-weight: 700;
 }
 
+/* Loading: gray bars shimmering where the rows will be. */
+.ranking-list.skeleton i {
+  display: block;
+  height: 12px;
+  border-radius: 6px;
+  background:
+    linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, currentColor 8%, transparent),
+        transparent
+      )
+      0 0 / 200% 100%,
+    color-mix(in srgb, currentColor 8%, transparent);
+  animation: shimmer 1.2s linear infinite;
+}
+
+.ranking-list.skeleton i:nth-child(2) {
+  width: 60%;
+}
+
+.ranking-list.skeleton i:nth-child(3) {
+  width: 64px;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
 .ranking-list li.ranking-gap {
   display: block;
   padding: 0;
@@ -2063,11 +2758,6 @@ main [hidden] {
   opacity: 0.75;
 }
 
-.ranking-rule {
-  margin-top: 12px !important;
-  line-height: 1.6;
-}
-
 .nickname-form {
   margin-top: 0 !important;
 }
@@ -2079,39 +2769,37 @@ main [hidden] {
   font-weight: 700;
 }
 
-/* 오류 제보 */
-.report-link {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin: 14px auto 0;
-  padding: 6px 8px;
-  border: 0;
-  background: none;
-  color: inherit;
-  font-size: 12px;
-  opacity: 0.6;
+/* No message yet: no gap for it above the button. */
+.nickname-form .error:empty {
+  display: none;
 }
 
-.report-link:hover {
-  opacity: 0.9;
+.nickname-form .primary {
+  margin-top: 12px;
 }
 
-.report-general {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
+/* Rows of actions in a sheet or the settings modal (⋯ 메뉴, 게임 방법·화면 테마·오류 제보). */
+.menu-list {
+  display: grid;
+  gap: 8px;
   margin-top: 18px;
-  padding: 12px;
-  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-  border-radius: 10px;
-  background: none;
-  color: inherit;
-  font-size: 13px;
-  font-weight: 600;
 }
+
+.menu-list button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  color: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+}
+
+/* 오류 제보 */
 
 .report-form fieldset {
   margin: 0 0 16px;
@@ -2133,7 +2821,9 @@ main [hidden] {
   gap: 6px;
 }
 
+/* Chips, not field labels: no form-label spacing. */
 .report-kinds label {
+  margin: 0;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -2196,18 +2886,7 @@ main [hidden] {
   margin-top: 18px;
 }
 
-/* Four header buttons: on the narrowest phones the theme button keeps only its icon. */
 @media (max-width: 359px) {
-  .theme-trigger span {
-    display: none;
-  }
-
-  .theme-trigger {
-    width: 42px;
-    padding: 0;
-    justify-content: center;
-  }
-
   .top-actions .icon-btn {
     width: 38px;
   }
@@ -2262,6 +2941,23 @@ main [hidden] {
 }
 
 /* Provider colors follow Kakao/Google login button guidelines. */
+/* Login buttons: one per row, the provider's mark before the label. */
+.account-buttons.account-logins {
+  grid-template-columns: 1fr;
+}
+
+.account-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.account-section p.account-note {
+  margin: 12px 0 0;
+  text-align: center;
+}
+
 .account-buttons .account-login.kakao {
   border-color: #fee500;
   background: #fee500;
@@ -2289,9 +2985,74 @@ main [hidden] {
   background: color-mix(in srgb, #b3452c 8%, transparent);
 }
 
-.error.saved {
+/* Toasts (Toaster): one short dark pill above the tab bar, over sheets too (a popover in
+   the top layer); raised when an achievement toast is showing. */
+.toast-region {
+  position: fixed;
+  inset: auto 0 calc(var(--tabbar-height, 0px) + 12px);
+  z-index: 60;
+  display: flex;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0 16px;
+  overflow: visible;
+  border: 0;
+  background: none;
   color: inherit;
-  opacity: 0.75;
+  pointer-events: none;
+}
+
+.toast-region.lifted {
+  bottom: calc(var(--tabbar-height, 0px) + 80px);
+}
+
+.toast {
+  touch-action: none;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: #111311;
+  box-shadow: 0 10px 30px #0004;
+  color: #f1f3ef;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  pointer-events: auto;
+  animation: toast-in 0.25s ease-out;
+}
+
+.toast.error {
+  background: #5c2416;
+}
+
+.toast button {
+  flex: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--rp-neon, #c4f53a);
+  color: #111311;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
 }
 
 /* 헤더 소식 버튼의 새 소식 점 */
@@ -2315,7 +3076,7 @@ main [hidden] {
 /* 내 가사 (직접 입력) */
 .custom-note {
   font-size: 12px;
-  color: #77806b;
+  color: var(--rp-ink-sub);
   line-height: 1.7;
   margin: 8px 0 0;
 }
@@ -2330,7 +3091,7 @@ main [hidden] {
   resize: vertical;
   font: inherit;
   font-size: 16px;
-  color: #273d26;
+  color: var(--rp-ink);
   background: #fff;
   border: 1.5px solid #d8e0cc;
   border-radius: 15px;
@@ -2339,10 +3100,11 @@ main [hidden] {
 
 .custom-submit {
   width: 100%;
+  margin-top: 16px;
   min-height: 46px;
   border-radius: 12px;
-  background: #286442;
-  color: #e5f6ce;
+  background: var(--rp-accent);
+  color: var(--rp-on-accent);
   font-weight: 600;
 }
 
@@ -2374,7 +3136,7 @@ main [hidden] {
   border: 1px solid #e3e7da;
   border-radius: 10px;
   padding: 12px;
-  color: #3d4a33;
+  color: var(--rp-ink);
   text-align: left;
 }
 
@@ -2387,7 +3149,7 @@ main [hidden] {
 .custom-remove,
 .custom-confirm {
   background: none;
-  color: #8a917f;
+  color: var(--rp-ink-sub);
   border-radius: 10px;
   padding: 0 10px;
   font-size: 12px;
@@ -2416,7 +3178,7 @@ main [hidden] {
 .custom-done {
   font-size: 13px;
   font-weight: 600;
-  color: #286442;
+  color: var(--rp-accent-text);
   margin: 14px 3px 0;
 }
 
@@ -2433,7 +3195,7 @@ main [hidden] {
   gap: 8px;
   margin-top: 14px;
   font-size: 13px;
-  color: #627050;
+  color: var(--rp-ink-sub);
 }
 
 .custom-pager button {
@@ -2445,7 +3207,7 @@ main [hidden] {
   background: #eef1e7;
   border: 1px solid #e3e7da;
   border-radius: 8px;
-  color: #627050;
+  color: var(--rp-ink-sub);
   font-size: 13px;
 }
 
@@ -2479,9 +3241,9 @@ main [hidden] {
 }
 
 .custom-pager .custom-pages button.done {
-  background: #286442;
+  background: var(--rp-accent);
   border-color: #286442;
-  color: #e5f6ce;
+  color: var(--rp-on-accent);
 }
 
 /* 쪽 번호 칩과 진행바 사이 간격 */
@@ -2490,10 +3252,28 @@ main [hidden] {
 }
 
 /* 첫 방문 튜토리얼 (TutorialModal). 색은 테마를 따르도록 currentColor만 쓴다. */
-.modal-inner > p.tutorial-step {
-  margin: -8px 0 6px;
-  font-size: 12px;
-  opacity: 0.7;
+/* Tutorial steps: dots, the current one long. */
+.step-dots {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+.step-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: currentColor;
+  opacity: 0.2;
+  transition:
+    width 0.25s,
+    opacity 0.25s;
+}
+
+.step-dots i.current {
+  width: 20px;
+  background: var(--rp-neon, #c4f53a);
+  opacity: 1;
 }
 .tutorial-card .lyrics {
   min-height: 0;

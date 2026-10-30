@@ -12,7 +12,7 @@ type Props = {
   playMode: PlayMode;
 };
 
-/** Share a finished play-tab question: text + spoiler-free card image + a link to the same question. */
+/** Share buttons for a finished play-tab question (in ShareModal): text + spoiler-free card image + a link to the same question. */
 export function PlayShare({ question, round, percent, playMode }: Props) {
   const text = playResultText({
     mode: playMode,
@@ -23,21 +23,15 @@ export function PlayShare({ question, round, percent, playMode }: Props) {
     hints: round.hints,
   });
   return (
-    <div className="share-results play-share">
-      <h2>결과 공유</h2>
-      <p>
-        제목과 가사는 공유되지 않아요. 링크를 받은 사람은 같은 문제를 풀어요.
-      </p>
-      <ShareActions
-        text={text}
-        link={questionLink(window.location.href, question.id, playMode)}
-        draw={() =>
-          drawShareCard(
-            playMode === "simple" ? null : shareGrid(question, round.revealed),
-            text.split("\n"),
-          )
-        }
-      />
-    </div>
+    <ShareActions
+      text={text}
+      link={questionLink(window.location.href, question.id, playMode)}
+      draw={() =>
+        drawShareCard(
+          playMode === "simple" ? null : shareGrid(question, round.revealed),
+          text.split("\n"),
+        )
+      }
+    />
   );
 }

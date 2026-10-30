@@ -1,32 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
+import { IconContext } from "@phosphor-icons/react";
 import { beforeSend } from "./analytics";
 import { AchievementToast } from "./components/AchievementToast";
-import { CollectionPanel } from "./components/CollectionPanel";
+import { Toaster } from "./components/Toaster";
 import { CustomPanel } from "./components/custom/CustomPanel";
-import { Footer } from "./components/Footer";
-import { GameTabs, type Tab } from "./components/GameTabs";
+import { GameTabs, TAB_ORDER, type Tab } from "./components/GameTabs";
 import { Header } from "./components/Header";
 import { Modal, type ModalName } from "./components/Modal";
 import { NewsPanel } from "./components/NewsPanel";
 import { GiveUpModal } from "./components/modals/GiveUpModal";
 import { HelpModal } from "./components/modals/HelpModal";
 import { ResetModal } from "./components/modals/ResetModal";
+import { RecordShareModal } from "./components/modals/RecordShareModal";
+import { ShareModal } from "./components/modals/ShareModal";
 import { SharedModal } from "./components/modals/SharedModal";
 import { NicknameModal } from "./components/modals/NicknameModal";
 import { ReportModal } from "./components/modals/ReportModal";
 import { AccountModal } from "./components/modals/AccountModal";
-import { ThemeModal } from "./components/modals/ThemeModal";
-import { TitleModal } from "./components/modals/TitleModal";
 import { TutorialModal } from "./components/modals/TutorialModal";
-import { ModeModal } from "./components/modals/ModeModal";
-import { UnitModal } from "./components/modals/UnitModal";
+import { PlayOptionsModal } from "./components/modals/PlayOptionsModal";
+import { QuestionMenuModal } from "./components/modals/QuestionMenuModal";
 import { DailyPanel } from "./components/play/DailyPanel";
 import { PlayPanel } from "./components/play/PlayPanel";
 import { RecordPanel } from "./components/RecordPanel";
 import { useModelContextTools } from "./hooks/useModelContextTools";
 import { useNewsSeen } from "./hooks/useNewsSeen";
 import { news, questions } from "./game";
+import { useAccount } from "./account";
+import { useCollectionSeen } from "./collectionSeen";
+import { toast } from "./toast";
 import { koreaDate } from "./daily";
 import { useRanking } from "./ranking";
 import { parseSharedLink } from "./share";
@@ -34,6 +37,17 @@ import { replacesProgress, useGame } from "./store";
 import { useTextSize } from "./textSize";
 import { useTheme } from "./theme";
 import { isNewPlayer, tutorialDone } from "./tutorial";
+
+const LINE_ICONS = { weight: "regular" } as const;
+
+/** The top bar's screen name; the play tab shows the brand instead. */
+const TAB_TITLES: Record<Tab, string | undefined> = {
+  play: undefined,
+  daily: "데일리 퀴즈",
+  custom: "내 가사",
+  record: "기록",
+  news: "새 소식",
+};
 
 export function App() {
   const { theme, setTheme } = useTheme();
@@ -56,7 +70,7 @@ export function App() {
         !missing && replacesProgress(useGame.getState(), link.id, link.mode),
     };
   });
-  const [modal, setModal] = useState<ModalName | null>(() =>
+  const [modal, setModalName] = useState<ModalName | null>(() =>
     shared?.confirm
       ? "shared"
       : !tutorialDone() && isNewPlayer(useGame.getState())
@@ -85,15 +99,70 @@ export function App() {
   const noteTheme = useGame((s) => s.noteTheme);
   useEffect(() => noteTheme(theme), [noteTheme, theme]);
   const { unread, markSeen } = useNewsSeen(news[0]?.id ?? 0);
+  // Account sync runs out of sight: its failures come up as a toast.
+  const accountError = useAccount((s) => s.error);
+  useEffect(() => {
+    if (accountError) toast(accountError, { error: true });
+  }, [accountError]);
+  // Songs guessed since the 도감 was last opened put a dot on the 기록 tab.
+  const collectedCount = useGame((s) => s.collected.length);
+  const collectionSeen = useCollectionSeen((s) => s.seen);
+  useEffect(() => {
+    useCollectionSeen.getState().startFrom(useGame.getState().collected.length);
+  }, []);
+  useEffect(() => {
+    // After a reset there are fewer songs than were seen: start counting again from there.
+    if (collectedCount < collectionSeen)
+      useCollectionSeen.getState().markSeen(collectedCount);
+  }, [collectedCount, collectionSeen]);
+  // A new tab starts at its top (sliding in from its side); pressing the current tab again
+  // scrolls back up.
+  const [tabDir, setTabDir] = useState<"forward" | "back">("forward");
   const changeTab = (tab: Tab) => {
+    if (tab === activeTab) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    setTabDir(
+      TAB_ORDER.indexOf(tab) < TAB_ORDER.indexOf(activeTab)
+        ? "back"
+        : "forward",
+    );
     setActiveTab(tab);
+    window.scrollTo(0, 0);
     if (tab === "news") markSeen();
   };
-  const close = () => setModal(null);
+  // A 도감 playlist's play button: a classic question from that unit (one not guessed yet
+  // when there is one), opened in the play tab.
+  const playUnit = (unit: string) => {
+    const { collected } = useGame.getState();
+    const pool = questions.filter((q) => q.unit === unit);
+    const fresh = pool.filter((q) => !collected.includes(q.id));
+    const list = fresh.length ? fresh : pool;
+    const pick = list[Math.floor(Math.random() * list.length)];
+    if (!pick) return;
+    useGame.getState().openQuestion(pick.id, "classic");
+    changeTab("play");
+  };
+  // A clear sideways swipe moves to the next or previous tab (not from inputs or rows that
+  // scroll sideways themselves).
+  const swipe = useRef<{ x: number; y: number } | null>(null);
+  const SWIPE_MIN = 70;
+  // Closing first slides the sheet down (Modal), and only then clears what it shows.
+  const [closing, setClosing] = useState(false);
+  const setModal = (name: ModalName | null) => {
+    setClosing(false);
+    setModalName(name);
+  };
+  const close = () => setClosing(true);
+  const closed = useCallback(() => {
+    setClosing(false);
+    setModalName(null);
+  }, []);
   // The first daily title guess asks for a ranking nickname (once, skippable).
   const afterDailySolve = () => {
     const { nickname, asked } = useRanking.getState();
-    setModal(nickname || asked ? null : "nickname");
+    if (!nickname && !asked) setModal("nickname");
   };
   // The link applies once: clean the URL so a refresh doesn't open it again.
   useEffect(() => {
@@ -111,100 +180,111 @@ export function App() {
   }, [shared]);
   useModelContextTools();
   return (
-    <>
-      {theme === "excel" && (
-        <div className="sheet-grid" aria-hidden="true">
-          <div className="sheet-corner" />
-          <div className="sheet-columns">
-            {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((letter) => (
-              <span key={letter}>{letter}</span>
-            ))}
-          </div>
-          <div className="sheet-rows">
-            {Array.from({ length: 60 }, (_, index) => (
-              <span key={index}>{index + 1}</span>
-            ))}
-          </div>
-        </div>
-      )}
+    // Every game icon is a thin line (components/icons.ts).
+    <IconContext.Provider value={LINE_ICONS}>
       <div className="app-shell">
         <Header
-          discreet={theme === "excel"}
-          newsOpen={activeTab === "news"}
-          newsUnread={unread && activeTab !== "news"}
-          onNews={() => changeTab(activeTab === "news" ? "play" : "news")}
-          onHelp={() => setModal("help")}
-          onTheme={() => setModal("theme")}
+          title={TAB_TITLES[activeTab]}
           onAccount={() => setModal("account")}
+          onShare={
+            activeTab === "record" ? () => setModal("record-share") : undefined
+          }
         />
-        <main>
-          {theme === "console" && (
-            <div className="console-screen-label" aria-hidden="true">
-              <span className="console-power">● POWER</span>
-              <span>LYRICS QUEST</span>
-              <span>★ 01</span>
-            </div>
-          )}
+        <main
+          data-dir={tabDir}
+          onTouchStart={(e) => {
+            const target = e.target as Element;
+            const touch = e.touches[0];
+            swipe.current =
+              e.touches.length === 1 &&
+              !target.closest("input, textarea, .unit-cards, .grass-grid")
+                ? { x: touch.clientX, y: touch.clientY }
+                : null;
+          }}
+          onTouchEnd={(e) => {
+            const start = swipe.current;
+            swipe.current = null;
+            if (!start) return;
+            const touch = e.changedTouches[0];
+            const dx = touch.clientX - start.x;
+            const dy = touch.clientY - start.y;
+            if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy) * 1.5)
+              return;
+            const next =
+              TAB_ORDER[TAB_ORDER.indexOf(activeTab) + (dx < 0 ? 1 : -1)];
+            if (next) changeTab(next);
+          }}
+        >
           <GameTabs
             active={activeTab}
             onChange={changeTab}
-            pending={dailyOpen ? { daily: "오늘 문제 아직 안 풂" } : {}}
+            pending={{
+              ...(dailyOpen && { daily: "오늘 문제 아직 안 풂" }),
+              ...(unread && { news: "새 소식 있음" }),
+              ...(collectedCount > collectionSeen && {
+                record: "도감에 새 곡",
+              }),
+            }}
           />
           <PlayPanel hidden={activeTab !== "play"} onOpenModal={setModal} />
-          <DailyPanel hidden={activeTab !== "daily"} onOpenModal={setModal} />
+          <DailyPanel
+            hidden={activeTab !== "daily"}
+            onOpenModal={setModal}
+            onSolve={afterDailySolve}
+          />
           <CustomPanel hidden={activeTab !== "custom"} />
           <RecordPanel
             hidden={activeTab !== "record"}
             onReset={() => setModal("reset")}
+            onPlay={() => changeTab("play")}
+            onDaily={() => changeTab("daily")}
+            onPlayUnit={playUnit}
           />
-          <CollectionPanel hidden={activeTab !== "collection"} />
           <NewsPanel hidden={activeTab !== "news"} />
         </main>
-        {theme === "console" && (
-          <div className="console-controls" aria-hidden="true">
-            <div className="console-dpad">
-              <span className="console-dpad-up" />
-              <span className="console-dpad-left" />
-              <span className="console-dpad-center" />
-              <span className="console-dpad-right" />
-              <span className="console-dpad-down" />
-            </div>
-            <div className="console-start">SELECT&nbsp;&nbsp; START</div>
-            <div className="console-ab">
-              <span>B</span>
-              <span>A</span>
-            </div>
-          </div>
-        )}
-        <Footer />
         <AchievementToast />
+        <Toaster />
         {/* Page-view statistics; the admin page doesn't include this. */}
         <Analytics beforeSend={beforeSend} />
       </div>
-      <Modal open={modal !== null} onClose={close}>
-        {modal === "title" && <TitleModal onClose={close} />}
-        {modal === "daily-title" && (
-          <TitleModal onClose={afterDailySolve} mode="daily" />
+      <Modal
+        open={modal !== null}
+        closing={closing}
+        onClose={close}
+        onClosed={closed}
+      >
+        {modal === "play-options" && <PlayOptionsModal onClose={close} />}
+        {modal === "menu" && (
+          <QuestionMenuModal
+            onGiveUp={() => setModal("giveup")}
+            onReport={() => setModal("report")}
+          />
         )}
-        {modal === "units" && <UnitModal onClose={close} />}
-        {modal === "modes" && <ModeModal onClose={close} />}
-        {modal === "theme" && (
-          <ThemeModal
+        {modal === "daily-menu" && (
+          <QuestionMenuModal
+            mode="daily"
+            onGiveUp={() => setModal("daily-giveup")}
+            onReport={() => setModal("daily-report")}
+          />
+        )}
+        {modal === "account" && (
+          <AccountModal
             theme={theme}
             onThemeChange={setTheme}
             textSize={textSize}
             onTextSizeChange={setTextSize}
-            onClose={close}
+            onHelp={() => setModal("help")}
+            onReport={() => setModal("general-report")}
           />
-        )}
-        {modal === "account" && (
-          <AccountModal onReport={() => setModal("general-report")} />
         )}
         {modal === "report" && <ReportModal mode="play" onClose={close} />}
         {modal === "daily-report" && (
           <ReportModal mode="daily" onClose={close} />
         )}
         {modal === "general-report" && <ReportModal onClose={close} />}
+        {modal === "share" && <ShareModal />}
+        {modal === "daily-share" && <ShareModal mode="daily" />}
+        {modal === "record-share" && <RecordShareModal />}
         {modal === "nickname" && <NicknameModal onClose={close} />}
         {modal === "help" && (
           <HelpModal onClose={close} onTutorial={() => setModal("tutorial")} />
@@ -235,6 +315,6 @@ export function App() {
           />
         )}
       </Modal>
-    </>
+    </IconContext.Provider>
   );
 }

@@ -43,8 +43,7 @@ export function ShareResults({
   ].join("\n");
 
   return (
-    <div className="share-results">
-      <h2>데일리 결과</h2>
+    <>
       <pre>{`${cardText}\n${link.href}`}</pre>
       <ShareActions
         text={cardText}
@@ -56,6 +55,6 @@ export function ShareResults({
           )
         }
       />
-    </div>
+    </>
   );
 }

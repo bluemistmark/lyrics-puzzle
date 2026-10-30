@@ -9,8 +9,13 @@ import { BulkQuestionForm } from "./BulkQuestionForm";
 import { CsvButton } from "./CsvButton";
 import { DeleteQuestionDialog } from "./DeleteQuestionDialog";
 import { QuestionForm } from "./QuestionForm";
+import { SongSelect } from "./SongSelect";
+import { SortHeader, useSortParam } from "./SortHeader";
 import { useAdmin } from "./store";
+import { byCode, matchesQuery, shortTime, sortRows } from "./table.ts";
 import { useRoute, useRouteParam } from "./useRoute";
+
+const SORT_KEYS = ["id", "song", "active", "status", "updated"] as const;
 
 export function QuestionsTab({ issues }: { issues: Issue[] }) {
   const questions = useAdmin((s) => s.questions);
@@ -31,14 +36,20 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
   const [bulk, setBulk] = useState(false);
   const [deleting, setDeleting] = useState<QuestionRow | null>(null);
   const go = useRoute((s) => s.go);
+  const clearParams = useRoute((s) => s.clearParams);
+  const [sort, setSort] = useSortParam(SORT_KEYS, { key: "id", desc: false });
+  const filtered = Boolean(artist || songId || query || onlyIssues);
   const releases = useAdmin((s) => s.releases);
   const published = useMemo(
     () => new Set(releases[0]?.question_ids ?? []),
     [releases],
   );
 
-  const sortedSongs = useMemo(
-    () => [...songs].sort(compareSongs(artistRows)),
+  const songOrder = useMemo(
+    () =>
+      new Map(
+        [...songs].sort(compareSongs(artistRows)).map((s, i) => [s.id, i]),
+      ),
     [songs, artistRows],
   );
   const songById = useMemo(() => new Map(songs.map((s) => [s.id, s])), [songs]);
@@ -54,22 +65,40 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
     return map;
   }, [issues]);
   const visible = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return [...questions]
-      .sort((a, b) => (a.id < b.id ? -1 : 1))
+    const rows = [...questions]
+      .sort((a, b) => byCode(a.id, b.id))
       .filter((row) => {
         const song = songById.get(row.song_id);
         if (artist && song?.artist !== artist) return false;
         if (songId && row.song_id !== songId) return false;
         if (onlyIssues && !issuesById.has(row.id)) return false;
-        return (
-          !q ||
-          [row.id, song?.title ?? "", ...row.lines].some((v) =>
-            v.toLowerCase().includes(q),
-          )
-        );
+        return matchesQuery([row.id, song?.title, ...row.lines], query);
       });
-  }, [questions, songById, artist, songId, onlyIssues, issuesById, query]);
+    const compare = {
+      id: (a: QuestionRow, b: QuestionRow) => byCode(a.id, b.id),
+      song: (a: QuestionRow, b: QuestionRow) =>
+        (songOrder.get(a.song_id) ?? -1) - (songOrder.get(b.song_id) ?? -1),
+      // 사용 first, then 미사용.
+      active: (a: QuestionRow, b: QuestionRow) =>
+        Number(!a.active) - Number(!b.active),
+      // Questions with issues first.
+      status: (a: QuestionRow, b: QuestionRow) =>
+        Number(!issuesById.has(a.id)) - Number(!issuesById.has(b.id)),
+      updated: (a: QuestionRow, b: QuestionRow) =>
+        byCode(a.updated_at, b.updated_at),
+    }[sort.key];
+    return sortRows(rows, compare, sort.desc);
+  }, [
+    questions,
+    songById,
+    songOrder,
+    artist,
+    songId,
+    onlyIssues,
+    issuesById,
+    query,
+    sort,
+  ]);
 
   // Bulk actions apply to picked rows that the current filter still shows.
   const pickedVisible = visible.filter((row) => picked.has(row.id));
@@ -137,19 +166,15 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
             <option key={a}>{a}</option>
           ))}
         </select>
-        <select value={songId} onChange={(e) => setSongId(e.target.value)}>
-          <option value="">전체 곡</option>
-          {sortedSongs
-            .filter((s) => !artist || s.artist === artist)
-            .map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.title}
-              </option>
-            ))}
-        </select>
+        <SongSelect
+          value={songId}
+          onChange={setSongId}
+          emptyLabel="전체 곡"
+          artist={artist}
+        />
         <input
           type="search"
-          placeholder="ID, 곡명, 가사 검색"
+          placeholder="ID, 곡명, 가사, 초성 검색"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -161,8 +186,15 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
           />
           오류만 ({issuesById.size})
         </label>
+        {filtered && (
+          <button onClick={() => clearParams(["sort"])}>필터 초기화</button>
+        )}
         <span className="admin-spacer" />
-        <span className="muted">{visible.length}문제</span>
+        <span className="muted">
+          {filtered
+            ? `${visible.length} / ${questions.length}문제`
+            : `${questions.length}문제`}
+        </span>
         <CsvButton
           kind="questions"
           rows={() => [
@@ -228,11 +260,38 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
                   onChange={pickAll}
                 />
               </th>
-              <th>문제ID</th>
-              <th>곡</th>
+              <SortHeader
+                label="문제ID"
+                sortKey="id"
+                sort={sort}
+                onSort={setSort}
+              />
+              <SortHeader
+                label="곡"
+                sortKey="song"
+                sort={sort}
+                onSort={setSort}
+              />
               <th>가사</th>
-              <th>사용</th>
-              <th>상태</th>
+              <SortHeader
+                label="사용"
+                sortKey="active"
+                sort={sort}
+                onSort={setSort}
+              />
+              <SortHeader
+                label="상태"
+                sortKey="status"
+                sort={sort}
+                onSort={setSort}
+              />
+              <SortHeader
+                label="수정"
+                sortKey="updated"
+                sort={sort}
+                onSort={setSort}
+                firstDesc
+              />
               <th />
             </tr>
           </thead>
@@ -280,6 +339,7 @@ export function QuestionsTab({ issues }: { issues: Issue[] }) {
                       <span className="muted">정상</span>
                     )}
                   </td>
+                  <td className="muted nowrap">{shortTime(row.updated_at)}</td>
                   <td className="row-actions">
                     <button onClick={() => setEditing(row)}>수정</button>
                     <button

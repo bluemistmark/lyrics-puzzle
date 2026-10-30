@@ -1,4 +1,3 @@
-import { Trophy } from "lucide-react";
 import { useRanking } from "../../ranking";
 import { NicknameForm } from "../NicknameForm";
 
@@ -7,9 +6,6 @@ export function NicknameModal({ onClose }: { onClose: () => void }) {
   const skipNickname = useRanking((s) => s.skipNickname);
   return (
     <>
-      <span className="modal-icon">
-        <Trophy />
-      </span>
       <h2>데일리 랭킹에 등록할까요?</h2>
       <p>
         닉네임은 랭킹에 공개돼요. 건너뛰면 순위에는 나오지 않고 참여 인원에만

@@ -22,33 +22,10 @@ export function useTheme() {
       const activeTheme =
         theme === "system" ? (dark ? "dark" : "light") : theme;
       document.documentElement.dataset.theme = activeTheme;
-      document.documentElement.style.colorScheme =
-        activeTheme === "dark" ||
-        activeTheme === "console" ||
-        activeTheme === "space"
-          ? "dark"
-          : "light";
-      document.querySelector('meta[name="theme-color"]')?.setAttribute(
-        "content",
-        {
-          light: "#f7f8f4",
-          dark: "#141a16",
-          excel: "#e8ede9",
-          notebook: "#fff6ef",
-          console: "#17132b",
-          space: "#070a1c",
-          exam: "#fbfbf8",
-        }[activeTheme],
-      );
-      document.title = theme === "excel" ? "Sheet1 - 문서" : "네오 노래 퀴즈";
+      document.documentElement.style.colorScheme = activeTheme;
       document
-        .querySelector('link[rel="icon"]')
-        ?.setAttribute(
-          "href",
-          theme === "excel" || theme === "notebook"
-            ? `/favicon-${theme}.svg`
-            : "/favicon.svg",
-        );
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute("content", dark ? "#0f110f" : "#f2f3f0");
     };
     apply();
     media.addEventListener("change", apply);
