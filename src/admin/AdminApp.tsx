@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { buildCatalog } from "../data/build-catalog.ts";
 import { draftRelease } from "../data/releases.ts";
+import { AlbumsTab } from "./AlbumsTab";
 import { ArtistsTab } from "./ArtistsTab";
 import { DashboardTab } from "./DashboardTab";
 import { DictionaryTab } from "./DictionaryTab";
@@ -82,6 +83,7 @@ const TABS = [
   "dashboard",
   "artists",
   "songs",
+  "albums",
   "questions",
   "dictionary",
   "publish",
@@ -104,6 +106,7 @@ function AdminShell({
 }) {
   const artists = useAdmin((s) => s.artists);
   const songs = useAdmin((s) => s.songs);
+  const albums = useAdmin((s) => s.albums);
   const questions = useAdmin((s) => s.questions);
   const dictionary = useAdmin((s) => s.dictionary);
   const settings = useAdmin((s) => s.settings);
@@ -133,6 +136,7 @@ function AdminShell({
     status,
     artists,
     songs,
+    albums,
     questions,
     dictionary,
     settings,
@@ -165,6 +169,7 @@ function AdminShell({
         : { text: questions.length },
     ],
     ["songs", "곡", { text: songs.length }],
+    ["albums", "앨범", { text: albums.length }],
     ["artists", "가수", { text: artists.length }],
     ["dictionary", "영어 사전", { text: dictionary.length }],
     [
@@ -236,6 +241,8 @@ function AdminShell({
             <ArtistsTab />
           ) : tab === "songs" ? (
             <SongsTab />
+          ) : tab === "albums" ? (
+            <AlbumsTab />
           ) : tab === "questions" ? (
             <QuestionsTab issues={issues} />
           ) : tab === "dictionary" ? (

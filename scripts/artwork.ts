@@ -16,7 +16,7 @@ import {
   queryUrl,
   type ArtworkSong,
 } from "../src/data/artwork.ts";
-import type { ArtworkRow, SongRow } from "../src/data/build-catalog.ts";
+import type { ArtworkRow } from "../src/data/build-catalog.ts";
 import { fetchArtwork } from "../src/data/rows.ts";
 
 /** Songs with no cover found are looked up again after this long. */
@@ -36,6 +36,9 @@ const EXTENSIONS: Record<string, string> = {
   "image/png": "png",
   "image/webp": "webp",
 };
+
+/** A published song with its album's name and cover (albums table), when it has one. */
+export type ArtworkInput = ArtworkSong & { id: string; cover?: string };
 
 const sleep = (ms: number) => new Promise((done) => setTimeout(done, ms));
 
@@ -83,14 +86,16 @@ function itunes() {
 
 /** Looks up the songs that need it and returns song id → cover address for every song that
  *  has one. A failed lookup stops looking (the rest wait for the next build). */
-async function syncArtwork(client: SupabaseClient, songs: SongRow[]) {
+async function syncArtwork(client: SupabaseClient, songs: ArtworkInput[]) {
   const rows = new Map((await fetchArtwork(client)).map((r) => [r.song_id, r]));
   const retryBefore = Date.now() - RETRY_DAYS * 24 * 60 * 60 * 1000;
+  // A song on an album with a cover needs no lookup.
   const todo = songs.filter((s) => {
     const row = rows.get(s.id);
     return (
-      !row ||
-      (!row.url && !row.manual && Date.parse(row.checked_at) < retryBefore)
+      !s.cover &&
+      (!row ||
+        (!row.url && !row.manual && Date.parse(row.checked_at) < retryBefore))
     );
   });
   let found = 0;
@@ -117,8 +122,10 @@ async function syncArtwork(client: SupabaseClient, songs: SongRow[]) {
   }
   if (todo.length) console.log(`앨범아트 찾기: ${looked}곡 중 ${found}곡 찾음`);
   const covers: Record<string, string> = {};
+  // One set by hand first, then the album's, then the one looked up.
   for (const song of songs) {
-    const url = rows.get(song.id)?.url;
+    const row = rows.get(song.id);
+    const url = (row?.manual && row.url) || song.cover || row?.url;
     if (url) covers[song.id] = url;
   }
   return covers;
@@ -160,7 +167,10 @@ async function downloadArtwork(covers: Record<string, string>) {
 }
 
 /** Song id → path of its cover in the build, for the published songs. Never throws. */
-export async function buildArtwork(client: SupabaseClient, songs: SongRow[]) {
+export async function buildArtwork(
+  client: SupabaseClient,
+  songs: ArtworkInput[],
+) {
   try {
     return await downloadArtwork(await syncArtwork(client, songs));
   } catch (e) {

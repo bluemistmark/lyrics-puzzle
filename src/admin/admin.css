@@ -719,3 +719,23 @@ th:has(> .sort-header) {
 .art-field input {
   flex: 1;
 }
+.album-field {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.album-field select {
+  flex: 1;
+  min-width: 0;
+}
+/* 앨범 자동 채우기 progress, under the toolbar row. */
+.fill-status {
+  flex-basis: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+.fill-status details {
+  margin-top: 4px;
+}

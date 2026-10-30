@@ -26,11 +26,25 @@ export type SongRow = {
   aliases: string[];
   sort_order: number;
   // Admin only (not in the catalog); missing in rows from before the columns.
-  album?: string;
+  /** The album it's on (albums.id), or null when not set yet. */
+  album_id?: number | null;
   title_track?: boolean;
-  /** `YYYY-MM-DD`, or null when unknown. */
-  released_on?: string | null;
   /** Set by the DB on every write; the admin sorts by it. */
+  updated_at?: string;
+};
+export type AlbumKind = "" | "album" | "ep" | "single" | "compile";
+/** An album songs are grouped by (admin only; its cover also feeds 앨범아트). */
+export type AlbumRow = {
+  id: number;
+  title: string;
+  /** As credited (an NCT 2020 album is "NCT"), so not one of the artists rows. */
+  artist: string;
+  kind: AlbumKind;
+  /** `YYYY-MM-DD`, or null when unknown. */
+  released_on: string | null;
+  cover_url: string;
+  /** Where a looked-up album came from (e.g. "deezer:305127287"); "" when added by hand. */
+  external_id: string;
   updated_at?: string;
 };
 export type QuestionRow = {

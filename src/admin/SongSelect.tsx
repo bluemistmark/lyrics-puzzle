@@ -51,6 +51,13 @@ export function SongSelect({
 }: Props) {
   const artists = useAdmin((s) => s.artists);
   const songs = useAdmin((s) => s.songs);
+  const albums = useAdmin((s) => s.albums);
+  const albumTitle = useMemo(
+    () => new Map(albums.map((a) => [a.id, a.title])),
+    [albums],
+  );
+  const albumOf = (song: SongRow) =>
+    song.album_id == null ? undefined : albumTitle.get(song.album_id);
   const listId = useId();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -77,13 +84,19 @@ export function SongSelect({
     for (const song of ordered)
       if (
         matchesQuery(
-          [song.title, song.id, song.artist, song.album, ...song.aliases],
+          [
+            song.title,
+            song.id,
+            song.artist,
+            song.album_id == null ? "" : albumTitle.get(song.album_id),
+            ...song.aliases,
+          ],
           query,
         )
       )
         list.push({ song, group: song.artist });
     return list;
-  }, [ordered, query, recent, emptyLabel]);
+  }, [ordered, query, recent, emptyLabel, albumTitle]);
   const selected = songs.find((s) => s.id === value);
   const label = selected
     ? `${selected.title} · ${selected.artist}`
@@ -177,8 +190,8 @@ export function SongSelect({
                   <>
                     {option.song.title}{" "}
                     <span className="muted mono">{option.song.id}</span>
-                    {option.song.album && (
-                      <span className="muted"> · {option.song.album}</span>
+                    {albumOf(option.song) && (
+                      <span className="muted"> · {albumOf(option.song)}</span>
                     )}
                   </>
                 ) : (
