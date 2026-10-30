@@ -1,5 +1,5 @@
 // 랭킹 닉네임 규칙. api/ranking.ts가 같은 규칙을 복사해 쓰고(로컬 import 금지),
-// DB는 길이만 검사합니다. api/ranking.test.ts가 둘이 같은지 확인합니다.
+// DB는 길이만 검사합니다. tests/api/ranking.test.ts가 둘이 같은지 확인합니다.
 
 export const NICKNAME_MIN = 2;
 export const NICKNAME_MAX = 12;
