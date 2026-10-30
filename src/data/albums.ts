@@ -122,7 +122,8 @@ export function guessTitleTrack(
 }
 
 /** An album's name without its subtitle: "Glitch Mode - The 2nd Album" → "glitch mode". */
-const albumHead = (title: string) => normalize(title.split(/\s[-–]\s/)[0]);
+export const albumHead = (title: string) =>
+  normalize(title.split(/\s[-–]\s/)[0]);
 const firstWord = (artist: string) => normalize(artist).split(" ")[0];
 
 /** The saved album this one is: the same source, or the same name without subtitles (by the

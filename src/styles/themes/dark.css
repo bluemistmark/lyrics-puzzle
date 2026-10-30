@@ -142,7 +142,8 @@
     background: #ffc2ad;
   }
 
-  .achievement-toast svg {
+  .achievement-toast svg,
+  .achievement-toast.rare small {
     color: #6f9a00;
   }
 

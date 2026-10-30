@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { buildCatalog } from "../data/build-catalog.ts";
 import { draftRelease } from "../data/releases.ts";
+import { albumIssues } from "./album-issues.ts";
 import { AlbumsTab } from "./AlbumsTab";
 import { ArtistsTab } from "./ArtistsTab";
 import { DashboardTab } from "./DashboardTab";
@@ -158,6 +159,18 @@ function AdminShell({
     return d.added_questions + d.removed_questions;
   }, [catalog, releases]);
   const pending = unpublished ?? draftChanges;
+  const albumsToCheck = useMemo(
+    () =>
+      albums.filter(
+        (a) =>
+          albumIssues(
+            a,
+            songs.filter((s) => s.album_id === a.id),
+            albums,
+          ).length,
+      ).length,
+    [albums, songs],
+  );
   type Badge = { text: string | number; warn?: boolean };
   const tabs: [Tab, string, Badge | null][] = [
     ["dashboard", "대시보드", null],
@@ -169,7 +182,13 @@ function AdminShell({
         : { text: questions.length },
     ],
     ["songs", "곡", { text: songs.length }],
-    ["albums", "앨범", { text: albums.length }],
+    [
+      "albums",
+      "앨범",
+      albumsToCheck
+        ? { text: `확인 ${albumsToCheck}`, warn: true }
+        : { text: albums.length },
+    ],
     ["artists", "가수", { text: artists.length }],
     ["dictionary", "영어 사전", { text: dictionary.length }],
     [

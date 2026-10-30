@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
-import { KIND_LABELS } from "../data/albums.ts";
+import { albumHead, KIND_LABELS } from "../data/albums.ts";
 import {
   sortArtists,
   type AlbumKind,
   type AlbumRow,
 } from "../data/build-catalog.ts";
+import { albumIssues } from "./album-issues.ts";
 import { Cover } from "./Cover";
 import { CsvButton } from "./CsvButton";
 import { FormDialog } from "./FormDialog";
@@ -30,12 +31,16 @@ export function AlbumsTab() {
   /** An artist's name, or "none" for albums of several artists. */
   const [artist, setArtist] = useRouteParam("artist");
   const [kind, setKind] = useRouteParam("kind");
+  /** "1": only albums with something to check. */
+  const [checkParam, setCheckParam] = useRouteParam("check");
+  const onlyCheck = checkParam === "1";
   const [sort, setSort] = useSortParam(SORT_KEYS, {
     key: "released",
     desc: true,
   });
   const [editing, setEditing] = useState<AlbumRow | "new" | null>(null);
-  const filtered = Boolean(query || kind || artist);
+  const [merging, setMerging] = useState<AlbumRow | null>(null);
+  const filtered = Boolean(query || kind || artist || onlyCheck);
   const ordered = useMemo(() => sortArtists(artists), [artists]);
 
   const tracks = useMemo(() => {
@@ -49,6 +54,21 @@ export function AlbumsTab() {
     }
     return map;
   }, [songs]);
+  const issues = useMemo(
+    () =>
+      new Map(
+        albums.map((a) => [
+          a.id,
+          albumIssues(
+            a,
+            songs.filter((s) => s.album_id === a.id),
+            albums,
+          ),
+        ]),
+      ),
+    [albums, songs],
+  );
+  const toCheck = albums.filter((a) => issues.get(a.id)?.length).length;
   const count = (a: AlbumRow) => tracks.get(a.id)?.count ?? 0;
   const visible = useMemo(() => {
     const count = (a: AlbumRow) => tracks.get(a.id)?.count ?? 0;
@@ -61,6 +81,7 @@ export function AlbumsTab() {
       (a) =>
         (!kind || a.kind === (kind === "none" ? "" : kind)) &&
         (!artist || a.artist === (artist === "none" ? null : artist)) &&
+        (!onlyCheck || Boolean(issues.get(a.id)?.length)) &&
         matchesQuery([a.title, a.artist ?? SEVERAL, String(a.id)], query),
     );
     const compare = {
@@ -77,7 +98,7 @@ export function AlbumsTab() {
         byCode(a.updated_at ?? "", b.updated_at ?? ""),
     }[sort.key];
     return sortRows(rows, compare, sort.desc);
-  }, [albums, ordered, kind, artist, query, sort, tracks]);
+  }, [albums, ordered, kind, artist, onlyCheck, issues, query, sort, tracks]);
 
   const remove = async (album: AlbumRow) => {
     const n = count(album);
@@ -128,6 +149,14 @@ export function AlbumsTab() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={onlyCheck}
+            onChange={(e) => setCheckParam(e.target.checked ? "1" : "")}
+          />
+          확인 필요만{toCheck > 0 && ` (${toCheck})`}
+        </label>
         {filtered && (
           <button onClick={() => clearParams(["sort"])}>필터 초기화</button>
         )}
@@ -218,7 +247,14 @@ export function AlbumsTab() {
                 <td>
                   <Cover url={a.cover_url} />
                 </td>
-                <td>{a.title}</td>
+                <td>
+                  {a.title}
+                  {issues.get(a.id)?.map((issue) => (
+                    <span key={issue} className="badge warn album-issue">
+                      {issue}
+                    </span>
+                  ))}
+                </td>
                 <td>{a.artist ?? <span className="muted">{SEVERAL}</span>}</td>
                 <td className="nowrap">{KIND_LABELS[a.kind]}</td>
                 <td className="nowrap">{a.released_on}</td>
@@ -237,6 +273,12 @@ export function AlbumsTab() {
                 </td>
                 <td className="row-actions">
                   <button onClick={() => setEditing(a)}>수정</button>
+                  <button
+                    onClick={() => setMerging(a)}
+                    disabled={albums.length < 2}
+                  >
+                    합치기
+                  </button>
                   <button className="danger" onClick={() => remove(a)}>
                     삭제
                   </button>
@@ -247,6 +289,9 @@ export function AlbumsTab() {
         </table>
         {!visible.length && <p className="muted">앨범이 없어요.</p>}
       </div>
+      {merging && (
+        <MergeForm album={merging} onClose={() => setMerging(null)} />
+      )}
       {editing && (
         <AlbumForm
           album={editing === "new" ? null : editing}
@@ -344,6 +389,63 @@ function AlbumForm({
         <small>
           수록곡에 직접 넣은 앨범아트가 없으면 다음 게시 때 이 커버를 써요.
         </small>
+      </label>
+    </FormDialog>
+  );
+}
+
+/** Merges this album into another: its songs move there, then it is deleted. Albums with the
+ *  same name come first, then the same artist's. */
+function MergeForm({
+  album,
+  onClose,
+}: {
+  album: AlbumRow;
+  onClose: () => void;
+}) {
+  const albums = useAdmin((s) => s.albums);
+  const songs = useAdmin((s) => s.songs);
+  const mergeAlbum = useAdmin((s) => s.mergeAlbum);
+  const head = albumHead(album.title);
+  const others = albums
+    .filter((a) => a.id !== album.id)
+    .map((a) => ({
+      album: a,
+      rank: albumHead(a.title) === head ? 0 : a.artist === album.artist ? 1 : 2,
+    }))
+    .sort(
+      (a, b) =>
+        a.rank - b.rank ||
+        (b.album.released_on ?? "").localeCompare(a.album.released_on ?? ""),
+    );
+  const [into, setInto] = useState(String(others[0]?.album.id ?? ""));
+  const moving = songs.filter((s) => s.album_id === album.id).length;
+
+  return (
+    <FormDialog
+      title="앨범 합치기"
+      submitLabel="합치기"
+      submitDisabled={!into}
+      onClose={onClose}
+      onSubmit={() => mergeAlbum(album.id, Number(into))}
+    >
+      <p>
+        <b>{album.title}</b>
+        {album.released_on && ` (${album.released_on})`}의 수록곡 {moving}곡을
+        아래 앨범으로 옮기고 이 앨범은 삭제해요. 아래 앨범에 없는 종류·발매일·
+        커버는 이 앨범 것으로 채워요.
+      </p>
+      <label>
+        합칠 앨범
+        <select value={into} onChange={(e) => setInto(e.target.value)}>
+          {others.map(({ album: a }) => (
+            <option key={a.id} value={String(a.id)}>
+              {[a.title, a.artist ?? SEVERAL, a.released_on]
+                .filter(Boolean)
+                .join(" · ")}
+            </option>
+          ))}
+        </select>
       </label>
     </FormDialog>
   );
