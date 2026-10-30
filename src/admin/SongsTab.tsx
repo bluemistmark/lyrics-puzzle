@@ -4,6 +4,7 @@ import {
   sortArtists,
   type SongRow,
 } from "../data/build-catalog.ts";
+import { coverAt } from "../data/artwork.ts";
 import { CsvButton } from "./CsvButton";
 import { FormDialog } from "./FormDialog";
 import { joinList, nextSongId, splitList } from "./ids";
@@ -29,6 +30,7 @@ export function SongsTab() {
   const songs = useAdmin((s) => s.songs);
   const questions = useAdmin((s) => s.questions);
   const removeSong = useAdmin((s) => s.removeSong);
+  const artwork = useAdmin((s) => s.artwork);
   const go = useRoute((s) => s.go);
   const clearParams = useRoute((s) => s.clearParams);
   const releases = useAdmin((s) => s.releases);
@@ -185,6 +187,7 @@ export function SongsTab() {
         <table>
           <thead>
             <tr>
+              <th aria-label="앨범아트" />
               <SortHeader
                 label="곡ID"
                 sortKey="id"
@@ -244,6 +247,9 @@ export function SongsTab() {
               const c = counts.get(s.id);
               return (
                 <tr key={s.id}>
+                  <td>
+                    <SongArt url={artwork[s.id]?.url} />
+                  </td>
                   <td className="mono">{s.id}</td>
                   <td>{s.artist}</td>
                   <td>{s.title}</td>
@@ -306,6 +312,9 @@ function SongForm({
   const artists = useAdmin((s) => s.artists);
   const songs = useAdmin((s) => s.songs);
   const saveSong = useAdmin((s) => s.saveSong);
+  const saveArtwork = useAdmin((s) => s.saveArtwork);
+  const art = useAdmin((s) => (song ? s.artwork[song.id] : undefined));
+  const artworkError = useAdmin((s) => s.artworkError);
   const isNew = !song;
   const [artist, setArtist] = useState(song?.artist ?? defaultArtist);
   const [title, setTitle] = useState(song?.title ?? "");
@@ -313,6 +322,7 @@ function SongForm({
   const [album, setAlbum] = useState(song?.album ?? "");
   const [titleTrack, setTitleTrack] = useState(song?.title_track ?? false);
   const [releasedOn, setReleasedOn] = useState(song?.released_on ?? "");
+  const [artUrl, setArtUrl] = useState(art?.url ?? "");
   const [id, setId] = useState<string>();
   // Until the id is typed by hand, suggest the next one from the artist's prefix.
   const prefix = artists.find((a) => a.name === artist)?.prefix ?? "";
@@ -340,6 +350,9 @@ function SongForm({
           },
           isNew,
         );
+        // After the song: the cover row refers to it.
+        if (!artworkError && artUrl.trim() !== (art?.url ?? ""))
+          await saveArtwork(shownId.trim(), artUrl.trim());
       }}
     >
       <label>
@@ -389,8 +402,32 @@ function SongForm({
       </label>
       <small className="form-note">
         앨범·발매일·타이틀곡은 어드민 검색·정렬용이에요. 게임에는 표시되지
-        않아요.
+        않아요. 앨범은 앨범아트를 찾을 때도 써요.
       </small>
+      <label>
+        앨범아트 주소 <span className="muted">(선택)</span>
+        <span className="art-field">
+          <SongArt url={artUrl.trim()} large />
+          <input
+            type="url"
+            value={artUrl}
+            onChange={(e) => setArtUrl(e.target.value)}
+            disabled={Boolean(artworkError)}
+            placeholder="https://"
+          />
+        </span>
+        <small>
+          {artworkError
+            ? `앨범아트를 불러오지 못했어요: ${artworkError}`
+            : !art
+              ? "비워 두면 게시할 때 Deezer·iTunes에서 자동으로 찾아요."
+              : art.manual
+                ? "직접 넣은 주소예요. 비우면 다음 게시 때 자동으로 다시 찾아요."
+                : art.url
+                  ? "자동으로 찾은 커버예요. 틀렸으면 맞는 이미지 주소로 바꿔 주세요."
+                  : "자동으로 찾지 못했어요. 앨범명을 넣거나 이미지 주소를 넣어 주세요."}
+        </small>
+      </label>
       <label>
         곡ID
         <input
@@ -412,5 +449,19 @@ function SongForm({
         <small>여러 개는 | 로 구분해요.</small>
       </label>
     </FormDialog>
+  );
+}
+
+/** A cover thumbnail (an empty tile when there is none). */
+function SongArt({ url, large = false }: { url?: string; large?: boolean }) {
+  return url ? (
+    <img
+      className={large ? "song-art large" : "song-art"}
+      src={coverAt(url, large ? 200 : 100)}
+      alt=""
+      loading="lazy"
+    />
+  ) : (
+    <span className={large ? "song-art large" : "song-art"} />
   );
 }

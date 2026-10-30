@@ -696,3 +696,26 @@ th:has(> .sort-header) {
   display: block;
   margin: -4px 0 12px;
 }
+
+/* 앨범아트 thumbnails (songs table and form). */
+.song-art {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--bg);
+  object-fit: cover;
+}
+.song-art.large {
+  width: 72px;
+  height: 72px;
+  flex: none;
+}
+.art-field {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.art-field input {
+  flex: 1;
+}

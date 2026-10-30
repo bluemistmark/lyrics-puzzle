@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Rows, SettingsRow } from "./build-catalog.ts";
+import type { ArtworkRow, Rows, SettingsRow } from "./build-catalog.ts";
 import { RELEASE_COLUMNS, type ReleaseRow } from "./releases.ts";
 
 // Supabase returns at most 1000 rows per request by default. Pages are ordered
@@ -31,6 +31,7 @@ export const SONG_COLUMNS =
 export const QUESTION_COLUMNS = "id,song_id,lines,active,updated_at";
 export const DICTIONARY_COLUMNS =
   "english,pronunciation,alternatives,updated_at";
+export const ARTWORK_COLUMNS = "song_id,url,manual,checked_at";
 export const SETTINGS_COLUMNS =
   "id,known_weight,unknown_weight,min_signal_songs";
 
@@ -59,6 +60,10 @@ export async function fetchRows(client: SupabaseClient): Promise<Rows> {
   ]);
   return { artists, songs, questions, dictionary };
 }
+
+/** Every song_artwork row (the table may be missing before its migration runs). */
+export const fetchArtwork = (client: SupabaseClient) =>
+  fetchAll<ArtworkRow>(client, "song_artwork", ARTWORK_COLUMNS, "song_id");
 
 /** The 출제 설정 row, or null when there is none yet (the defaults apply). */
 export async function fetchSettings(client: SupabaseClient) {

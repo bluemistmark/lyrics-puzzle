@@ -4,6 +4,8 @@ dist/
 *.zip
 .openai/
 .vercel/
+# 앨범아트 downloaded by data:pull (scripts/artwork.ts)
+public/artwork/
 
 
 .vercel

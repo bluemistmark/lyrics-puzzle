@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   sortArtists,
   type ArtistRow,
+  type ArtworkRow,
   type DictionaryRow,
   type QuestionRow,
   type Rows,
@@ -12,6 +13,7 @@ import type { ReleaseRow } from "../data/releases.ts";
 import {
   ARTIST_COLUMNS,
   DICTIONARY_COLUMNS,
+  fetchArtwork,
   fetchReleases,
   fetchRows,
   fetchSettings,
@@ -31,6 +33,11 @@ type AdminStore = Rows & {
   settings: SettingsRow | null;
   settingsError: string;
   saveSettings: (row: SettingsRow) => Promise<void>;
+  /** 앨범아트 by song id. Loading may fail on its own (migration not run yet). */
+  artwork: Record<string, ArtworkRow>;
+  artworkError: string;
+  /** An address sets the song's cover by hand; "" clears it so the next build looks it up. */
+  saveArtwork: (songId: string, url: string) => Promise<void>;
   /** Unhandled 오류 제보 for the tab badge; null until counted or when counting failed. */
   newReports: number | null;
   countNewReports: () => Promise<void>;
@@ -112,6 +119,28 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
     if (error) throw Error(describeError(error));
     set({ settings: data as unknown as SettingsRow, settingsError: "" });
   },
+  artwork: {},
+  artworkError: "",
+  saveArtwork: async (songId, url) => {
+    const rest = { ...get().artwork };
+    delete rest[songId];
+    if (!url) {
+      await remove("song_artwork", "song_id", songId);
+      return set({ artwork: rest });
+    }
+    const { data, error } = await db()
+      .from("song_artwork")
+      .upsert({
+        song_id: songId,
+        url,
+        manual: true,
+        checked_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+    if (error) throw Error(describeError(error));
+    set({ artwork: { ...rest, [songId]: data as ArtworkRow } });
+  },
   newReports: null,
   countNewReports: async () => {
     const { count, error } = await db()
@@ -142,9 +171,17 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
       (error) =>
         set({ settings: null, settingsError: (error as Error).message }),
     );
+    const artwork = fetchArtwork(db()).then(
+      (rows) =>
+        set({
+          artwork: Object.fromEntries(rows.map((r) => [r.song_id, r])),
+          artworkError: "",
+        }),
+      (error) => set({ artwork: {}, artworkError: (error as Error).message }),
+    );
     try {
       set({ ...(await fetchRows(db())) });
-      await Promise.all([releases, settings]);
+      await Promise.all([releases, settings, artwork]);
       set({ status: "ready" });
     } catch (error) {
       set({ status: "error", error: (error as Error).message });
