@@ -1,6 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildCollection, recentSongIds, unitArts } from "./collection.ts";
+import {
+  buildCollection,
+  recentSongIds,
+  unitArts,
+  unitsByRecent,
+} from "./collection.ts";
 import type { Song } from "./game.ts";
 
 const song = (id: string, unit: string): Song => ({
@@ -70,4 +75,17 @@ test("최근 맞힌 곡은 최근 순서로 곡마다 한 번, 유닛 커버는 
   const [all] = buildCollection(withArt, qs, ["q4", "q1", "q5"]);
   assert.deepEqual(unitArts(all, ["A3", "A1"]), ["/y.jpg", "/x.jpg"]);
   assert.deepEqual(unitArts(all, ["A3", "A1"], 1), ["/y.jpg"]);
+});
+
+test("요약 도감 카드: 가장 최근에 맞힌 곡의 유닛부터, 맞힌 곡이 없는 유닛은 원래 순서로 뒤에", () => {
+  const units = buildCollection(
+    [...songs, song("C1", "C")],
+    [...questions, { id: "q5", songId: "C1" }],
+    ["q1", "q3"],
+  );
+  const order = (recent: string[]) =>
+    unitsByRecent(units, recent).map((u) => u.unit);
+  assert.deepEqual(order(["B1", "A1"]), ["B", "A", "C"]);
+  assert.deepEqual(order(["A1", "B1"]), ["A", "B", "C"]);
+  assert.deepEqual(order([]), ["A", "B", "C"]);
 });

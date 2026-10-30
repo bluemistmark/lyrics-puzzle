@@ -1,4 +1,4 @@
-import { Music, Sparkles } from "./icons";
+import { Music, Newspaper, Sparkles } from "./icons";
 import { news } from "../game";
 
 const SONGS_SHOWN = 8;
@@ -73,7 +73,10 @@ export function NewsPanel({ hidden }: { hidden: boolean }) {
           ))}
         </ol>
       ) : (
-        <p className="record-note">아직 소식이 없어요.</p>
+        <div className="news-empty">
+          <Newspaper size={36} aria-hidden="true" />
+          <p>아직 소식이 없어요.</p>
+        </div>
       )}
     </section>
   );

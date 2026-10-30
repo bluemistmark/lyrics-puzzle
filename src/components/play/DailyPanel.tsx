@@ -5,6 +5,7 @@ import { toast } from "../../toast";
 import { AudioLines } from "../icons";
 import { dailySummary } from "../../daily";
 import { useRound } from "../../hooks/useRound";
+import { useRanking } from "../../ranking";
 import { useGame } from "../../store";
 import type { ModalName } from "../Modal";
 import { HintButtons } from "./HintButtons";
@@ -20,6 +21,28 @@ type Props = {
   /** After today's title is guessed (the nickname question). */
   onSolve: () => void;
 };
+
+/** How many have finished today's quiz so far (from the ranking), shown before playing.
+ *  Nothing on failure or while no one has. */
+function Participants({ date }: { date: string }) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let live = true;
+    useRanking
+      .getState()
+      .load(date)
+      .then(
+        (board) => live && setCount(board.participants),
+        () => {},
+      );
+    return () => {
+      live = false;
+    };
+  }, [date]);
+  return count > 0 ? (
+    <span className="daily-participants">{count}명 도전</span>
+  ) : null;
+}
 
 export function DailyPanel({ hidden, onOpenModal, onSolve }: Props) {
   const { round, question, percent, full } = useRound("daily");
@@ -57,6 +80,7 @@ export function DailyPanel({ hidden, onOpenModal, onSolve }: Props) {
       <div className="daily-heading">
         <div>
           <span className="daily-date">{daily.date.replaceAll("-", ".")}</span>
+          {!finished && !hidden && <Participants date={daily.date} />}
           <h1>데일리 퀴즈</h1>
         </div>
         <div className="daily-heading-side">
@@ -73,8 +97,9 @@ export function DailyPanel({ hidden, onOpenModal, onSolve }: Props) {
       {(finished || full) && (
         <ResultBox question={question} round={round} daily />
       )}
-      {/* Input and actions; themes may pin this to the bottom (라이트). */}
-      <div className="play-dock">
+      {/* Input and actions; themes may pin this to the bottom (라이트). Once the title is
+          known only a small box for the rest of the lyrics stays. */}
+      <div className={finished ? "play-dock finished" : "play-dock"}>
         <WordForm
           key={`daily-${daily.date}-${round.id}-${asking}`}
           mode="daily"
@@ -86,12 +111,14 @@ export function DailyPanel({ hidden, onOpenModal, onSolve }: Props) {
             onSolve();
           }}
         />
-        <HintButtons
-          question={question}
-          round={round}
-          full={full}
-          mode="daily"
-        />
+        {!finished && (
+          <HintButtons
+            question={question}
+            round={round}
+            full={full}
+            mode="daily"
+          />
+        )}
         {!finished && asking === "word" && (
           <div className="bottom-actions">
             <button className="primary" onClick={() => setTitleFor(round.id)}>

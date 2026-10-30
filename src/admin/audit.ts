@@ -32,6 +32,7 @@ const FIELD_LABELS: Record<string, string> = {
   prefix: "접두어",
   sort_order: "순서",
   main: "NCT 유닛",
+  english_name: "영문 이름",
   artist: "가수",
   title: "곡명",
   aliases: "별칭",

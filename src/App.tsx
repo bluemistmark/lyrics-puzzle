@@ -132,18 +132,6 @@ export function App() {
     window.scrollTo(0, 0);
     if (tab === "news") markSeen();
   };
-  // A 도감 playlist's play button: a classic question from that unit (one not guessed yet
-  // when there is one), opened in the play tab.
-  const playUnit = (unit: string) => {
-    const { collected } = useGame.getState();
-    const pool = questions.filter((q) => q.unit === unit);
-    const fresh = pool.filter((q) => !collected.includes(q.id));
-    const list = fresh.length ? fresh : pool;
-    const pick = list[Math.floor(Math.random() * list.length)];
-    if (!pick) return;
-    useGame.getState().openQuestion(pick.id, "classic");
-    changeTab("play");
-  };
   // A clear sideways swipe moves to the next or previous tab (not from inputs or rows that
   // scroll sideways themselves).
   const swipe = useRef<{ x: number; y: number } | null>(null);
@@ -238,7 +226,6 @@ export function App() {
             onReset={() => setModal("reset")}
             onPlay={() => changeTab("play")}
             onDaily={() => changeTab("daily")}
-            onPlayUnit={playUnit}
           />
           <NewsPanel hidden={activeTab !== "news"} />
         </main>

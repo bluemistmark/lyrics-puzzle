@@ -74,3 +74,21 @@ export function unitArts(
     .filter((src) => src !== undefined);
   return [...new Set(arts)].slice(0, max);
 }
+
+/** Units by their latest guessed song (most recent first); units with none keep their order
+ *  after them. */
+export function unitsByRecent(
+  units: readonly UnitEntry[],
+  recent: readonly string[],
+): UnitEntry[] {
+  const rank = new Map<string, number>();
+  for (const unit of units)
+    for (const { song } of unit.songs) {
+      const i = recent.indexOf(song.id);
+      if (i >= 0 && i < (rank.get(unit.unit) ?? Infinity))
+        rank.set(unit.unit, i);
+    }
+  return [...units].sort(
+    (a, b) => (rank.get(a.unit) ?? Infinity) - (rank.get(b.unit) ?? Infinity),
+  );
+}

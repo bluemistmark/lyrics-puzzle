@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { unitArts, type UnitEntry } from "../collection";
+import { unitArts, unitsByRecent, type UnitEntry } from "../collection";
 import type { DailyHistory, DailySummary } from "../daily";
 import { ACHIEVEMENTS, type Stats } from "../store";
 import { useCountUp } from "../hooks/useCountUp";
-import { ChevronRight, Flame } from "./icons";
+import { Flame } from "./icons";
 import { PlaylistCover } from "./PlaylistCover";
 import { ScrollRow } from "./ScrollRow";
 
@@ -82,7 +82,7 @@ export function RecordDashboard({
         onMore={onCollection}
       >
         <ScrollRow className="unit-cards">
-          {units.map((u) => (
+          {unitsByRecent(units, recent).map((u) => (
             <button
               key={u.unit}
               type="button"
@@ -122,8 +122,8 @@ export function RecordDashboard({
   );
 }
 
-/** A dashboard block: a title row (a short note, and an arrow when the card opens its tab)
- *  and content. With onMore the whole card is the way to its tab. */
+/** A dashboard block: a title row (with a short note) and content. With onMore the whole
+ *  card is the way to its tab. */
 function Widget({
   title,
   aside,
@@ -155,13 +155,6 @@ function Widget({
           )}
         </h2>
         {aside && <span>{aside}</span>}
-        {onMore && (
-          <ChevronRight
-            className="widget-chevron"
-            size={16}
-            aria-hidden="true"
-          />
-        )}
       </div>
       {children}
     </section>

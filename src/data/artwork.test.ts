@@ -178,3 +178,25 @@ test("iTunes 보완: 괄호 뒤는 버전으로 보고 같은 규칙으로 고�
     "https://is1-ssl.mzstatic.com/image/thumb/Music/ab/cd/400x400bb.jpg",
   );
 });
+
+test("영문 이름: 검색어는 영문 이름으로, 가수 비교는 두 이름 모두 인정", () => {
+  const solo = {
+    artist: "도영",
+    englishArtist: "DOYOUNG",
+    title: "새봄의 노래 (Beginning)",
+    aliases: [],
+  };
+  assert.deepEqual(
+    artworkQueries(solo).map((q) => q.q),
+    ["DOYOUNG 새봄의 노래", "DOYOUNG Beginning"],
+  );
+  assert.ok(itunesUrls(solo)[0].includes("DOYOUNG"));
+  const hit = track(
+    "새봄의 노래 Beginning",
+    "DOYOUNG",
+    "YOUTH - The 1st Album",
+    "c",
+  );
+  assert.equal(pickTrackCover([hit], solo), "c");
+  assert.equal(pickTrackCover([hit], { ...solo, englishArtist: "" }), null);
+});

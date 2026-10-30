@@ -52,10 +52,11 @@ export function ArtistsTab() {
         <CsvButton
           kind="artists"
           rows={() => [
-            ["순서", "가수명", "NCT 유닛", "접두어", "곡 수"],
+            ["순서", "가수명", "영문 이름", "NCT 유닛", "접두어", "곡 수"],
             ...ordered.map((a, i) => [
               i + 1,
               a.name,
+              a.english_name ?? "",
               a.main,
               a.prefix,
               songCounts.get(a.name) ?? 0,
@@ -72,6 +73,7 @@ export function ArtistsTab() {
             <tr>
               <th>순서</th>
               <th>가수명</th>
+              <th>영문 이름</th>
               <th>구분</th>
               <th>접두어</th>
               <th>곡 수</th>
@@ -101,6 +103,7 @@ export function ArtistsTab() {
                     </button>
                   </td>
                   <td>{a.name}</td>
+                  <td className="muted">{a.english_name}</td>
                   <td>
                     {a.main ? (
                       <span className="badge">NCT</span>
@@ -155,6 +158,7 @@ function ArtistForm({
   const [name, setName] = useState(artist?.name ?? "");
   const [prefix, setPrefix] = useState(artist?.prefix ?? "");
   const [main, setMain] = useState(artist?.main ?? false);
+  const [english, setEnglish] = useState(artist?.english_name ?? "");
   const songCount = artist
     ? songs.filter((s) => s.artist === artist.name).length
     : 0;
@@ -188,6 +192,7 @@ function ArtistForm({
             name: trimmed,
             prefix: code,
             main,
+            english_name: english.trim(),
             sort_order:
               artist?.sort_order ??
               Math.max(-1, ...artists.map((a) => a.sort_order)) + 1,
@@ -204,6 +209,18 @@ function ArtistForm({
           required
         />
         <small>게임에서 유닛 이름으로 표시돼요.</small>
+      </label>
+      <label>
+        영문 이름 <span className="muted">(선택)</span>
+        <input
+          value={english}
+          onChange={(e) => setEnglish(e.target.value)}
+          placeholder="예: DOYOUNG"
+        />
+        <small>
+          Deezer·iTunes가 영문으로 올린 가수(도영 → DOYOUNG)의 앨범·앨범아트를
+          찾을 때 써요. 바꾸면 못 찾은 커버를 다음 게시 때 다시 찾아요.
+        </small>
       </label>
       <label>
         곡ID 접두어

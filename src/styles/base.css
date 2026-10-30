@@ -1508,12 +1508,6 @@ main [hidden] {
   border-radius: inherit;
 }
 
-.widget-chevron {
-  align-self: center;
-  margin-left: auto;
-  opacity: 0.4;
-}
-
 /* Buttons inside a linked card (도감's unit cards) stay above the card-wide one. */
 .widget.linked .unit-cards {
   position: relative;
@@ -1868,6 +1862,15 @@ main [hidden] {
   opacity: 0.7;
 }
 
+/* How many of the group are reached, after its name. */
+.achievement-group-count {
+  margin-left: 4px;
+  font-family: var(--number-font);
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
 .record-item.achievement.secret {
   border-style: dashed;
 }
@@ -1931,6 +1934,12 @@ main [hidden] {
   word-break: keep-all;
 }
 
+/* Share of players who reached it, under the rest. */
+.achievement-sheet .achievement-rate {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
 /* 업적 medal: a disc with an inner rim, a ribbon hanging below. Reached: neon disc and a
    green ribbon; the rest gray. */
 .medal {
@@ -1982,6 +1991,21 @@ main [hidden] {
 
 .achievement-sheet.earned .medal.large {
   box-shadow: inset 0 0 0 5px #11131118;
+}
+
+/* Rare (few players reached it): a ring around the medal, green once reached. */
+:is(.achievement, .achievement-sheet).rare .medal {
+  outline: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  outline-offset: 3px;
+}
+
+:is(.achievement, .achievement-sheet).rare .medal.large {
+  outline-width: 3px;
+  outline-offset: 5px;
+}
+
+:is(.achievement.earned, .achievement-sheet.earned).rare .medal {
+  outline-color: var(--rp-gauge-start, #6fbf2a);
 }
 
 .achievement-progress {
@@ -2048,6 +2072,19 @@ main [hidden] {
 
 .achievement-toast strong {
   font-size: 14px;
+}
+
+/* A rare one: a neon ring and its label lit. */
+.achievement-toast.rare {
+  box-shadow:
+    0 0 0 2px var(--rp-neon, #c4f53a),
+    0 10px 30px #0004;
+}
+
+.achievement-toast.rare small {
+  color: var(--rp-neon, #c4f53a);
+  font-weight: 700;
+  opacity: 1;
 }
 
 @keyframes toast-in {
@@ -2397,13 +2434,8 @@ main [hidden] {
   font-size: 12px;
 }
 
-/* A playlist page: the cover on the left, its name, count and play button beside it, then
+/* A playlist page: the cover on the left, its name, count and progress beside it, then
    the tracks. */
-.playlist-detail,
-.playlist-library {
-  scroll-margin-top: 72px;
-}
-
 .playlist-back {
   display: inline-flex;
   align-items: center;
@@ -2462,17 +2494,6 @@ main [hidden] {
   margin: 0;
 }
 
-.play-button {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--rp-neon, #c4f53a);
-  color: #111311;
-}
-
 /* Tracks: plain rows, each led by its cover (or its number while not guessed). */
 .tracklist {
   margin: 0;
@@ -2486,6 +2507,110 @@ main [hidden] {
   gap: 14px;
   min-height: 60px;
   font-size: 15px;
+}
+
+/* Songs not guessed yet, folded into one row: their count, then the list when opened. */
+.tracklist-more {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+}
+
+.tracklist-more svg {
+  flex: none;
+  transition: transform 0.2s ease;
+}
+
+.tracklist-more[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+/* A guessed track is a button that opens its lyrics. */
+.tracklist .track-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  min-height: 60px;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+/* A guessed song's sheet: its cover, title, unit, then the lyrics of each part guessed. */
+.track-sheet {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding-top: 8px;
+  text-align: center;
+}
+
+.track-sheet-art,
+.track-sheet .playlist-cover {
+  width: 160px;
+  height: 160px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.track-sheet h2 {
+  margin: 0;
+  font-size: 20px;
+  word-break: keep-all;
+}
+
+.track-sheet-unit {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* Each guessed part on its own soft card, so parts read apart. */
+.track-lyrics {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--rp-fill, #f2f3f0);
+  font-size: 15px;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.track-sheet-unit + .track-lyrics {
+  margin-top: 18px;
+}
+
+/* No news yet: a bell and one line in the middle of the page. */
+.news-empty {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 120px 0 40px;
+  color: var(--rp-ink-sub);
+  font-size: 14px;
+}
+
+.news-empty p {
+  margin: 0;
+}
+
+.track-lyrics p {
+  margin: 0;
 }
 
 .track-art {
@@ -2543,6 +2668,15 @@ main [hidden] {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 14px;
+}
+
+/* Players who finished today so far, under the date. */
+.daily-participants {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rp-ink-sub);
 }
 
 .daily-heading h1 {

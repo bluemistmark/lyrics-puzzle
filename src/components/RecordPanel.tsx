@@ -23,17 +23,9 @@ type Props = {
   onPlay: () => void;
   /** The 데일리 widget's 더보기: goes to the daily tab. */
   onDaily: () => void;
-  /** A 도감 playlist's play button: a question from that unit in the play tab. */
-  onPlayUnit: (unit: string) => void;
 };
 
-export function RecordPanel({
-  hidden,
-  onReset,
-  onPlay,
-  onDaily,
-  onPlayUnit,
-}: Props) {
+export function RecordPanel({ hidden, onReset, onPlay, onDaily }: Props) {
   const [view, setView] = useState<View>("stats");
   // The unit a 도감 cover was pressed for: its playlist opens in the 도감 tab.
   const [focusUnit, setFocusUnit] = useState<string | null>(null);
@@ -82,11 +74,7 @@ export function RecordPanel({
           {view === "achievements" ? (
             <Achievements today={today} />
           ) : view === "collection" ? (
-            <Collection
-              units={units}
-              focus={focusUnit}
-              onPlayUnit={onPlayUnit}
-            />
+            <Collection units={units} focus={focusUnit} />
           ) : (
             <>
               {!hidden && (

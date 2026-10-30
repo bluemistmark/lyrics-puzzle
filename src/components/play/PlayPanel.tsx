@@ -94,8 +94,9 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
       {(finished || full) && (
         <ResultBox question={question} round={round} playMode={playMode} />
       )}
-      {/* Input and actions; themes may pin this to the bottom (라이트). */}
-      <div className="play-dock">
+      {/* Input and actions; themes may pin this to the bottom (라이트). Once the title is
+          known only the next step and a small box for the rest of the lyrics stay. */}
+      <div className={finished ? "play-dock finished" : "play-dock"}>
         {/* Remount per mode, question and word/title so the draft is cleared. */}
         {(playMode !== "simple" || !finished) && (
           <WordForm
@@ -108,12 +109,14 @@ export function PlayPanel({ hidden, onOpenModal }: Props) {
             onSolved={celebrate}
           />
         )}
-        <HintButtons
-          question={question}
-          round={round}
-          full={full}
-          playMode={playMode}
-        />
+        {!finished && (
+          <HintButtons
+            question={question}
+            round={round}
+            full={full}
+            playMode={playMode}
+          />
+        )}
         <BottomActions
           finished={finished}
           onTitle={

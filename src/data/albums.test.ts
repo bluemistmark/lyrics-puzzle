@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  albumArtist,
   deezerAlbum,
   findAlbum,
   guessTitleTrack,
@@ -14,7 +15,7 @@ import type { AlbumRow } from "./build-catalog.ts";
 // Fixtures shaped like Deezer and iTunes responses, so real data can't break these rules.
 const found = (over: Partial<FoundAlbum>): FoundAlbum => ({
   title: "A",
-  artist: "X",
+  credited: "X",
   kind: "album",
   released_on: "2022-01-01",
   cover_url: "",
@@ -41,7 +42,7 @@ test("Deezer 앨범: 종류·발매일·출처를 읽고 모르는 종류는 비
     }),
     {
       title: "Glitch Mode - The 2nd Album",
-      artist: "NCT DREAM",
+      credited: "NCT DREAM",
       kind: "album",
       released_on: "2022-03-28",
       cover_url: "c",
@@ -124,7 +125,7 @@ test("저장된 앨범 찾기: 같은 출처, 또는 부제를 뺀 같은 이름
   const row = (over: Partial<AlbumRow>): AlbumRow => ({
     id: 1,
     title: "Glitch Mode",
-    artist: "",
+    artist: null,
     kind: "",
     released_on: null,
     cover_url: "",
@@ -147,16 +148,33 @@ test("저장된 앨범 찾기: 같은 출처, 또는 부제를 뺀 같은 이름
     2,
   );
   const typed = [row({ id: 3, artist: "NCT U", title: "Resonance" })];
-  const by = (artist: string) =>
-    matchAlbum(typed, found({ title: "RESONANCE Pt.1", artist }))?.id ?? null;
-  assert.equal(by("NCT"), null);
+  const by = (title: string, credited: string) =>
+    matchAlbum(typed, found({ title, credited }))?.id ?? null;
+  assert.equal(by("RESONANCE Pt.1", "NCT"), null);
+  assert.equal(by("Resonance", "NCT"), 3);
+  assert.equal(by("Resonance", "aespa"), null);
+});
+
+test("앨범 가수: 그 곡의 가수로 표기된 앨범만 그 가수, 그룹·컴필레이션 앨범은 비움", () => {
   assert.equal(
-    matchAlbum(typed, found({ title: "Resonance", artist: "NCT" }))?.id,
-    3,
+    albumArtist(found({ credited: "nct dream" }), { artist: "NCT DREAM" }),
+    "NCT DREAM",
   );
   assert.equal(
-    matchAlbum(typed, found({ title: "Resonance", artist: "aespa" })),
+    albumArtist(found({ credited: "NCT" }), { artist: "NCT U" }),
     null,
+  );
+  assert.equal(
+    albumArtist(found({ credited: "Various Artists" }), { artist: "aespa" }),
+    null,
+  );
+  // A solo artist credited in English is still theirs.
+  assert.equal(
+    albumArtist(found({ credited: "DOYOUNG" }), {
+      artist: "도영",
+      englishArtist: "DOYOUNG",
+    }),
+    "도영",
   );
 });
 

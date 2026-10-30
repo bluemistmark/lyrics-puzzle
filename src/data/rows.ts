@@ -30,7 +30,7 @@ async function fetchAll<T>(
   }
 }
 
-export const ARTIST_COLUMNS = "name,prefix,sort_order,main";
+export const ARTIST_COLUMNS = "name,prefix,sort_order,main,english_name";
 export const SONG_COLUMNS =
   "id,artist,title,aliases,sort_order,album_id,title_track,updated_at";
 export const ALBUM_COLUMNS =

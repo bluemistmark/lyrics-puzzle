@@ -18,6 +18,8 @@ export type ArtistRow = {
   sort_order: number;
   /** An NCT unit: default play range, daily quiz pool and "NCT 마스터". Others show as "다른 가수". */
   main: boolean;
+  /** How Deezer·iTunes credit them when not by `name` (도영 → DOYOUNG); admin and build only. */
+  english_name?: string;
 };
 export type SongRow = {
   id: string;
@@ -37,8 +39,8 @@ export type AlbumKind = "" | "album" | "ep" | "single" | "compile";
 export type AlbumRow = {
   id: number;
   title: string;
-  /** As credited (an NCT 2020 album is "NCT"), so not one of the artists rows. */
-  artist: string;
+  /** Its artist (artists.name); null when its songs are by several (NCT 2020, SMTOWN). */
+  artist: string | null;
   kind: AlbumKind;
   /** `YYYY-MM-DD`, or null when unknown. */
   released_on: string | null;

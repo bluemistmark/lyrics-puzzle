@@ -62,6 +62,8 @@ type AdminStore = Rows & {
   saveAlbum: (row: Omit<AlbumRow, "id"> & { id?: number }) => Promise<AlbumRow>;
   /** Its songs lose their album (`on delete set null`). */
   removeAlbum: (id: number) => Promise<void>;
+  /** Moves `from`'s songs to `into`, gives `into` what it lacks from `from`, then deletes `from`. */
+  mergeAlbum: (from: number, into: number) => Promise<void>;
   saveSong: (row: SongRow, isNew: boolean) => Promise<void>;
   removeSong: (id: string) => Promise<void>;
   saveQuestion: (row: QuestionRow, isNew: boolean) => Promise<void>;
@@ -212,7 +214,7 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
     const match: [string, string] | null =
       originalName === null ? null : ["name", originalName];
     const saved = await write("artists", ARTIST_COLUMNS, row, match);
-    const { artists, songs } = get();
+    const { artists, songs, albums } = get();
     const renamed = originalName !== null && originalName !== saved.name;
     set({
       artists: upsertLocal(
@@ -226,11 +228,22 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
             s.artist === originalName ? { ...s, artist: saved.name } : s,
           )
         : songs,
+      albums: renamed
+        ? albums.map((a) =>
+            a.artist === originalName ? { ...a, artist: saved.name } : a,
+          )
+        : albums,
     });
   },
   removeArtist: async (name) => {
     await remove("artists", "name", name);
-    set({ artists: get().artists.filter((a) => a.name !== name) });
+    set({
+      artists: get().artists.filter((a) => a.name !== name),
+      // Mirrors the `on delete set null` foreign key.
+      albums: get().albums.map((a) =>
+        a.artist === name ? { ...a, artist: null } : a,
+      ),
+    });
   },
   moveArtist: async (name, direction) => {
     const ordered = sortArtists(get().artists);
@@ -273,6 +286,31 @@ export const useAdmin = create<AdminStore>()((set, get) => ({
         s.album_id === id ? { ...s, album_id: null } : s,
       ),
     });
+  },
+  mergeAlbum: async (from, into) => {
+    const source = get().albums.find((a) => a.id === from);
+    const target = get().albums.find((a) => a.id === into);
+    if (!source || !target || from === into)
+      throw Error("합칠 앨범을 찾지 못했어요.");
+    const { data, error } = await db()
+      .from("songs")
+      .update({ album_id: into })
+      .eq("album_id", from)
+      .select(SONG_COLUMNS);
+    if (error) throw Error(describeError(error));
+    const moved = new Map((data as SongRow[]).map((s) => [s.id, s]));
+    set({ songs: get().songs.map((s) => moved.get(s.id) ?? s) });
+    const filled = {
+      ...target,
+      artist: target.artist ?? source.artist,
+      kind: target.kind || source.kind,
+      released_on: target.released_on ?? source.released_on,
+      cover_url: target.cover_url || source.cover_url,
+      external_id: target.external_id,
+    };
+    if (JSON.stringify(filled) !== JSON.stringify(target))
+      await get().saveAlbum(filled);
+    await get().removeAlbum(from);
   },
   saveSong: async (row, isNew) => {
     const saved = await write(

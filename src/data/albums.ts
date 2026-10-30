@@ -19,8 +19,10 @@ import {
 } from "./artwork.ts";
 import type { AlbumKind, AlbumRow } from "./build-catalog.ts";
 
-/** An album found online, before it is saved. `tracks` is its number of tracks. */
-export type FoundAlbum = Omit<AlbumRow, "id" | "updated_at"> & {
+/** An album found online, before it is saved: `credited` is the artist named on it (see
+ *  `albumArtist`), `tracks` its number of tracks. */
+export type FoundAlbum = Omit<AlbumRow, "id" | "updated_at" | "artist"> & {
+  credited: string;
   tracks: number;
 };
 
@@ -53,7 +55,7 @@ const QUOTA = 4;
 export function deezerAlbum(a: DeezerAlbumDetails): FoundAlbum {
   return {
     title: a.title,
-    artist: a.artist?.name ?? "",
+    credited: a.artist?.name ?? "",
     kind: (KINDS.has(a.record_type ?? "") ? a.record_type : "") as AlbumKind,
     released_on: /^\d{4}-\d{2}-\d{2}$/.test(a.release_date ?? "")
       ? a.release_date!
@@ -74,7 +76,7 @@ export function itunesAlbum(t: ItunesTrack): FoundAlbum {
       : "album";
   return {
     title: name.replace(/ - (Single|EP)$/, ""),
-    artist: t.artistName ?? "",
+    credited: t.artistName ?? "",
     kind,
     released_on: t.releaseDate?.slice(0, 10) ?? null,
     cover_url: t.artworkUrl100 ?? "",
@@ -120,14 +122,15 @@ export function guessTitleTrack(
 }
 
 /** An album's name without its subtitle: "Glitch Mode - The 2nd Album" → "glitch mode". */
-const albumHead = (title: string) => normalize(title.split(/\s[-–]\s/)[0]);
+export const albumHead = (title: string) =>
+  normalize(title.split(/\s[-–]\s/)[0]);
 const firstWord = (artist: string) => normalize(artist).split(" ")[0];
 
 /** The saved album this one is: the same source, or the same name without subtitles (by the
  *  same group, on the same day, when both say). */
 export function matchAlbum(
   albums: readonly AlbumRow[],
-  found: Pick<FoundAlbum, "title" | "artist" | "released_on" | "external_id">,
+  found: Pick<FoundAlbum, "title" | "credited" | "released_on" | "external_id">,
 ) {
   const head = albumHead(found.title);
   const both = (a: string | null, b: string | null) => !a || !b || a === b;
@@ -138,11 +141,23 @@ export function matchAlbum(
       (a) =>
         albumHead(a.title) === head &&
         both(a.released_on, found.released_on) &&
-        both(firstWord(a.artist), firstWord(found.artist)),
+        both(firstWord(a.artist ?? ""), firstWord(found.credited)),
     ) ||
     null
   );
 }
+
+/** The saved album's artist: the song's, when the album is credited to it; otherwise null (a
+ *  group album like NCT 2020's "NCT", or a compilation). */
+export const albumArtist = (
+  found: Pick<FoundAlbum, "credited">,
+  song: Pick<ArtworkSong, "artist" | "englishArtist">,
+) =>
+  [song.artist, song.englishArtist ?? ""].some(
+    (name) => name && normalize(found.credited) === normalize(name),
+  )
+    ? song.artist
+    : null;
 
 type DeezerError = { error?: { code?: number; message?: string } };
 function checkDeezer(body: unknown) {
